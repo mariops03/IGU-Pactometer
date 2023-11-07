@@ -34,12 +34,13 @@ namespace Pactometro
                 coleccionElecciones.Add(new ProcesoElectoral());
             }
 
-            for(int i = 0; i < 7; i++)
+            // ELECCIONES GENERALES 23/07/2023
+            for(int i = 0; i < 11; i++)
             {
                 coleccionElecciones[0].coleccionPartidos.Add(new Partido());
             }
 
-            // ELECCIONES GENERALES 23/07/2023
+            
             coleccionElecciones[0].nombre = "Elecciones Generales 23-07-2023";
             coleccionElecciones[0].fecha = new DateTime(2023, 07, 23);
             coleccionElecciones[0].numEscaños = 350;
@@ -90,6 +91,11 @@ namespace Pactometro
             coleccionElecciones[0].coleccionPartidos[10].color = "lightYellow";
 
             // ELECCIONES GENERALES 10/11/2019
+            for (int i = 0; i < 14; i++)
+            {
+                coleccionElecciones[1].coleccionPartidos.Add(new Partido());
+            }
+
             coleccionElecciones[1].nombre = "Elecciones Generales 10-11-2019";
             coleccionElecciones[1].fecha = new DateTime(2019, 11, 10);
             coleccionElecciones[1].numEscaños = 350;
@@ -152,6 +158,11 @@ namespace Pactometro
             coleccionElecciones[1].coleccionPartidos[13].color = "Gray";
 
             // ELECCIONES AUTONÓMICAS CyL 14/2/2022
+            for (int i = 0; i < 8; i++)
+            {
+                coleccionElecciones[2].coleccionPartidos.Add(new Partido());
+            }
+
             coleccionElecciones[2].nombre = "Elecciones Autonómicas CyL 14-2-2022";
             coleccionElecciones[2].fecha = new DateTime(2022, 2, 14);
             coleccionElecciones[2].numEscaños = 81;
@@ -190,6 +201,12 @@ namespace Pactometro
             coleccionElecciones[2].coleccionPartidos[7].color = "lightGreen";
 
             // ELECCIONES AUTONÓMICAS CyL 26/5/2019
+
+            for (int i = 0; i < 7; i++)
+            {
+                coleccionElecciones[3].coleccionPartidos.Add(new Partido());
+            }
+
             coleccionElecciones[3].nombre = "Elecciones Autonómicas CyL 26-5-2019";
             coleccionElecciones[3].fecha = new DateTime(2019, 5, 26);
             coleccionElecciones[3].numEscaños = 81;
