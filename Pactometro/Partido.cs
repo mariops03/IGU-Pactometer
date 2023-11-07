@@ -8,9 +8,9 @@ namespace Pactometro
 {
     internal class Partido
     {
-        string nombre { get; set; }
-        int escaños { get; set; }
-        String color { get; set; }
+        public string nombre { get; set; }
+        public int escaños { get; set; }
+        public String color { get; set; }
         public Partido()
         {
 
