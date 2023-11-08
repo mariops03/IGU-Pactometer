@@ -24,11 +24,31 @@ namespace Pactometro
         public MainWindow()
         {
             InitializeComponent();
+            Loaded += MainWindowLoaded;
+        }
+
+        private void MainWindowLoaded(object sender, RoutedEventArgs e)
+        {
+            VentanaSecundaria ventanaSecundaria = new VentanaSecundaria();
+
+            ventanaSecundaria.mainTable.ItemsSource = coleccionElecciones;
+
+            // Calcular la posición de la ventana secundaria en relación con la ventana principal
+            double distanciaEntreVentanas = 10; // Puedes ajustar esto a tu preferencia
+            double nuevaPosX = Left + Width + distanciaEntreVentanas;
+            double nuevaPosY = Top;
+
+            // Establecer la posición de la ventana secundaria
+            ventanaSecundaria.Left = nuevaPosX;
+            ventanaSecundaria.Top = nuevaPosY;
+
+            // Mostrar la ventana secundaria
+            ventanaSecundaria.Show();
         }
 
         private void añadirPatidos()
         {
-            Collection<ProcesoElectoral> coleccionElecciones = new Collection<ProcesoElectoral>();
+            ObservableCollection<ProcesoElectoral> coleccionElecciones = new ObservableCollection<ProcesoElectoral>();
             for (int i = 0; i < 5; i++)
             {
                 coleccionElecciones.Add(new ProcesoElectoral());

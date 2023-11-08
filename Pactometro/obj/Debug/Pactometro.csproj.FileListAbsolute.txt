@@ -1,0 +1,17 @@
+C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\bin\Debug\Pactometro.exe.config
+C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\bin\Debug\Pactometro.exe
+C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\bin\Debug\Pactometro.pdb
+C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\obj\Debug\Pactometro.csproj.AssemblyReference.cache
+C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\obj\Debug\MainWindow.g.cs
+C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\obj\Debug\VentanaSecundaria.g.cs
+C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\obj\Debug\App.g.cs
+C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\obj\Debug\Pactometro_MarkupCompile.cache
+C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\obj\Debug\Pactometro_MarkupCompile.lref
+C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\obj\Debug\MainWindow.baml
+C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\obj\Debug\VentanaSecundaria.baml
+C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\obj\Debug\Pactometro.g.resources
+C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\obj\Debug\Pactometro.Properties.Resources.resources
+C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\obj\Debug\Pactometro.csproj.GenerateResource.cache
+C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\obj\Debug\Pactometro.csproj.CoreCompileInputs.cache
+C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\obj\Debug\Pactometro.exe
+C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\obj\Debug\Pactometro.pdb

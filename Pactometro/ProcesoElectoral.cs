@@ -12,7 +12,7 @@ namespace Pactometro
         public string nombre { get; set; }
         public DateTime fecha { get; set; }
         public int numEscaños { get; set; }
-        public Collection<Partido> coleccionPartidos = new Collection<Partido>();
+        public ObservableCollection<Partido> coleccionPartidos = new ObservableCollection<Partido>();
         public int mayoriaAbsoluta { get; set; }
 
         public ProcesoElectoral()
