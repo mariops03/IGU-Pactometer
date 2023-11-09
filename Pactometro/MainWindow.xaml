@@ -22,9 +22,9 @@
                 <MenuItem Header="Gráfico 1"/>
                 <MenuItem Header="Gráfico 2"/>
                 <MenuItem Header="Gráfico 3"/>
-                <MenuItem Header="Ventana Secundaria" Click=""/>
+                <MenuItem Header="Ventana Secundaria" Click="menuVentanaSecundaria"/>
                 <Separator/>
-                <MenuItem Header="Salir" Click="MenuItem_Click"/>
+                <MenuItem Header="Salir" Click="menuSalir"/>
             </MenuItem>
         </Menu>
     </Grid>

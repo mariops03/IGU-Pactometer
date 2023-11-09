@@ -21,6 +21,7 @@ namespace Pactometro
     /// </summary>
     public partial class MainWindow : Window
     {
+        private VentanaSecundaria ventanaSecundaria;
         public MainWindow()
         {
             InitializeComponent();
@@ -29,31 +30,45 @@ namespace Pactometro
 
         private void MainWindowLoaded(object sender, RoutedEventArgs e)
         {
-            VentanaSecundaria ventanaSecundaria = new VentanaSecundaria();
-
-            //ventanaSecundaria.mainTable.ItemsSource = coleccionElecciones;
-
-            // Calcular la posición de la ventana secundaria en relación con la ventana principal
-            double distanciaEntreVentanas = 10; // Puedes ajustar esto a tu preferencia
-            double nuevaPosX = Left + Width + distanciaEntreVentanas;
-            double nuevaPosY = Top;
-
-            // Establecer la posición de la ventana secundaria
-            ventanaSecundaria.Left = nuevaPosX;
-            ventanaSecundaria.Top = nuevaPosY;
-
-            // Mostrar la ventana secundaria
-            ventanaSecundaria.Show();
+            // Abre la ventana secundaria automáticamente al cargar la aplicación
+            AbrirVentanaSecundaria();
         }
 
-        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        private void menuVentanaSecundaria(object sender, RoutedEventArgs e)
         {
-
+            AbrirVentanaSecundaria();
         }
 
-        private void MenuItem_Click_1(object sender, RoutedEventArgs e)
+        private void AbrirVentanaSecundaria()
         {
+            if (ventanaSecundaria == null)
+            {
+                ventanaSecundaria = new VentanaSecundaria();
 
+                double distanciaEntreVentanas = 10; // Puedes ajustar esto a tu preferencia
+                double nuevaPosX = Left + Width + distanciaEntreVentanas;
+                double nuevaPosY = Top;
+
+                ventanaSecundaria.Left = nuevaPosX;
+                ventanaSecundaria.Top = nuevaPosY;
+
+                ventanaSecundaria.Closed += VentanaSecundaria_Closed; // Suscribe un controlador para el evento Closed
+                ventanaSecundaria.Show(); // Muestra la ventana secundaria
+            }
+            else
+            {
+                ventanaSecundaria.Activate(); // Si la ventana ya existe, ábrela y enfócala
+            }
+        }
+
+        private void VentanaSecundaria_Closed(object sender, EventArgs e)
+        {
+            ventanaSecundaria = null; // Establece la referencia de ventanaSecundaria a null cuando se cierra la ventana
+        }
+
+        private void menuSalir(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Shutdown();
         }
     }
 }
