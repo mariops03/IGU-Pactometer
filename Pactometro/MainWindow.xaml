@@ -8,15 +8,24 @@
         Title="MainWindow" Height="450" Width="800">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="1*"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="20*"/>
-            <RowDefinition Height="3*"/>
+            <RowDefinition Height="2*"/>
         </Grid.RowDefinitions>
-        <Button Grid.Row="0" Grid.ColumnSpan="3" Content="Opciones"/>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
             <ColumnDefinition/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
+        <Menu Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3">
+            <MenuItem Header="Configuración">
+                <MenuItem Header="Gráfico 1"/>
+                <MenuItem Header="Gráfico 2"/>
+                <MenuItem Header="Gráfico 3"/>
+                <MenuItem Header="Ventana Secundaria" Click=""/>
+                <Separator/>
+                <MenuItem Header="Salir" Click="MenuItem_Click"/>
+            </MenuItem>
+        </Menu>
     </Grid>
 </Window>

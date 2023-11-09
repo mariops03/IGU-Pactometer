@@ -30,13 +30,17 @@ namespace Pactometro
 
         private void mainTable_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (mainTable.SelectedItems.Count > 0)
+            if (mainTable.SelectedItem != null)
             {
                 var selectedData = mainTable.SelectedItem as ProcesoElectoral;
 
                 if (selectedData != null)
                 {
                     secondaryTable.ItemsSource = selectedData.coleccionPartidos;
+                    if (secondaryTable.Items.Count > 0)
+                    {
+                        secondaryTable.ScrollIntoView(secondaryTable.Items[0]);
+                    }
                 }
             }
         }
