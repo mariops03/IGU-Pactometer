@@ -1,31 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Pactometro
 {
-    /// <summary>
-    /// Lógica de interacción para MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         private VentanaSecundaria ventanaSecundaria;
+        private ObservableCollection<ProcesoElectoral> coleccionElecciones;
+
         public MainWindow()
         {
             InitializeComponent();
             Loaded += MainWindowLoaded;
+            coleccionElecciones = new ObservableCollection<ProcesoElectoral>();
+            Closed += MainWindow_Closed; // Suscribe un controlador para el evento Closed de la ventana principal
         }
 
         private void MainWindowLoaded(object sender, RoutedEventArgs e)
@@ -43,7 +32,8 @@ namespace Pactometro
         {
             if (ventanaSecundaria == null)
             {
-                ventanaSecundaria = new VentanaSecundaria();
+                // Pasarle los datos de la ventana principal a la secundaria
+                ventanaSecundaria = new VentanaSecundaria(coleccionElecciones);
 
                 double distanciaEntreVentanas = 10; // Puedes ajustar esto a tu preferencia
                 double nuevaPosX = Left + Width + distanciaEntreVentanas;
@@ -63,12 +53,18 @@ namespace Pactometro
 
         private void VentanaSecundaria_Closed(object sender, EventArgs e)
         {
-            ventanaSecundaria = null; // Establece la referencia de ventanaSecundaria a null cuando se cierra la ventana
+            // Manejar el evento Closed de la ventana secundaria si es necesario
+            ventanaSecundaria = null; // Liberar la referencia a la ventana secundaria
+        }
+
+        private void MainWindow_Closed(object sender, EventArgs e)
+        {
+            Application.Current.Shutdown(); // Cierra la aplicación cuando la ventana principal se cierra
         }
 
         private void menuSalir(object sender, RoutedEventArgs e)
         {
-            Application.Current.Shutdown();
+            Close(); // Cierra la ventana principal, lo que también activará el evento Closed
         }
     }
 }

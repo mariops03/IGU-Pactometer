@@ -24,8 +24,8 @@
         <ListView Name="secondaryTable" Grid.Row="1" Margin="15">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="PARTIDO" Width="100" DisplayMemberBinding="{Binding nombre}"/>
-                    <GridViewColumn Header="ESCAÑOS" Width="100" DisplayMemberBinding="{Binding escaños}"/>
+                    <GridViewColumn Header="PARTIDO" Width="Auto" DisplayMemberBinding="{Binding Nombre}"/>
+                    <GridViewColumn Header="ESCAÑOS" Width="Auto" DisplayMemberBinding="{Binding Escaños}"/>
                 </GridView>
             </ListView.View>
         </ListView>

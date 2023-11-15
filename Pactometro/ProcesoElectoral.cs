@@ -1,35 +1,33 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Pactometro
 {
-    internal class ProcesoElectoral
+    public class ProcesoElectoral
     {
         public string nombre { get; set; }
         public DateTime fecha { get; set; }
         public int numEscaños { get; set; }
-        public ObservableCollection<Partido> coleccionPartidos = new ObservableCollection<Partido>();
+        public ObservableCollection<Partido> coleccionPartidos { get; set; }
         public int mayoriaAbsoluta { get; set; }
 
         public ProcesoElectoral()
         {
-
+            coleccionPartidos = new ObservableCollection<Partido>();
         }
+
         public ProcesoElectoral(string nombre, DateTime fecha, int numEscaños, int mayoriaAbsoluta)
         {
             this.nombre = nombre;
             this.fecha = fecha;
             this.numEscaños = numEscaños;
             this.mayoriaAbsoluta = mayoriaAbsoluta;
+            coleccionPartidos = new ObservableCollection<Partido>();
         }
 
         public override string ToString()
         {
-            return nombre + " " + fecha + "" + numEscaños + "" + mayoriaAbsoluta;
+            return $"{nombre} {fecha} {numEscaños} {mayoriaAbsoluta}";
         }
     }
 }

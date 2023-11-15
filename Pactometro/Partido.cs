@@ -1,33 +1,31 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Pactometro
 {
-    internal class Partido
+    public class Partido
     {
-        public string nombre { get; set; }
-        public int escaños { get; set; }
-        public String color { get; set; }
+        public string Nombre { get; set; }
+        public int Escaños { get; set; }
+        public string Color { get; set; }
+
         public Partido()
         {
-
+            // Inicialización explícita para el constructor por defecto
+            this.Nombre = string.Empty;
+            this.Escaños = 0;
+            this.Color = string.Empty;
         }
 
-        public Partido(string nombre, int escaños, String color)
-            {
-                this.nombre = nombre;
-                this.escaños = escaños;
-                this.color = color;
-            }
+        public Partido(string nombre, int escaños, string color)
+        {
+            this.Nombre = nombre;
+            this.Escaños = escaños;
+            this.Color = color;
+        }
 
         public override string ToString()
         {
-            return nombre + " " + escaños;
+            return Nombre + " " + Escaños;
         }
     }
-
-    
 }

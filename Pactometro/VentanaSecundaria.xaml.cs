@@ -20,13 +20,14 @@ namespace Pactometro
     /// </summary>
     public partial class VentanaSecundaria : Window
     {
-        public VentanaSecundaria()
+        private ObservableCollection<ProcesoElectoral> ColeccionElecciones;
+
+        public VentanaSecundaria(ObservableCollection<ProcesoElectoral> coleccionElecciones)
         {
             InitializeComponent();
-            añadirDatos();
+            ColeccionElecciones = coleccionElecciones;
+            añadirDatos(coleccionElecciones);
         }
-
-        //AQUI?
 
         private void mainTable_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -36,7 +37,9 @@ namespace Pactometro
 
                 if (selectedData != null)
                 {
+                    // Asegúrate de que coleccionPartidos es una propiedad en ProcesoElectoral
                     secondaryTable.ItemsSource = selectedData.coleccionPartidos;
+
                     if (secondaryTable.Items.Count > 0)
                     {
                         secondaryTable.ScrollIntoView(secondaryTable.Items[0]);
@@ -45,9 +48,9 @@ namespace Pactometro
             }
         }
 
-        private void añadirDatos()
+        private void añadirDatos(ObservableCollection<ProcesoElectoral> coleccionElecciones)
         {
-            ObservableCollection<ProcesoElectoral> coleccionElecciones = new ObservableCollection<ProcesoElectoral>();
+            
             for (int i = 0; i < 4; i++)
             {
                 coleccionElecciones.Add(new ProcesoElectoral());
@@ -65,49 +68,49 @@ namespace Pactometro
             coleccionElecciones[0].numEscaños = 350;
             coleccionElecciones[0].mayoriaAbsoluta = 176;
 
-            coleccionElecciones[0].coleccionPartidos[0].nombre = "PP";
-            coleccionElecciones[0].coleccionPartidos[0].escaños = 136;
-            coleccionElecciones[0].coleccionPartidos[0].color = "Blue";
+            coleccionElecciones[0].coleccionPartidos[0].Nombre = "PP";
+            coleccionElecciones[0].coleccionPartidos[0].Escaños = 136;
+            coleccionElecciones[0].coleccionPartidos[0].Color = "Blue";
 
-            coleccionElecciones[0].coleccionPartidos[1].nombre = "PSOE";
-            coleccionElecciones[0].coleccionPartidos[1].escaños = 122;
-            coleccionElecciones[0].coleccionPartidos[1].color = "Red";
+            coleccionElecciones[0].coleccionPartidos[1].Nombre = "PSOE";
+            coleccionElecciones[0].coleccionPartidos[1].Escaños = 122;
+            coleccionElecciones[0].coleccionPartidos[1].Color = "Red";
 
-            coleccionElecciones[0].coleccionPartidos[2].nombre = "VOX";
-            coleccionElecciones[0].coleccionPartidos[2].escaños = 33;
-            coleccionElecciones[0].coleccionPartidos[2].color = "Green";
+            coleccionElecciones[0].coleccionPartidos[2].Nombre = "VOX";
+            coleccionElecciones[0].coleccionPartidos[2].Escaños = 33;
+            coleccionElecciones[0].coleccionPartidos[2].Color = "Green";
 
-            coleccionElecciones[0].coleccionPartidos[3].nombre = "Sumar";
-            coleccionElecciones[0].coleccionPartidos[3].escaños = 31;
-            coleccionElecciones[0].coleccionPartidos[3].color = "Purple";
+            coleccionElecciones[0].coleccionPartidos[3].Nombre = "Sumar";
+            coleccionElecciones[0].coleccionPartidos[3].Escaños = 31;
+            coleccionElecciones[0].coleccionPartidos[3].Color = "Purple";
 
-            coleccionElecciones[0].coleccionPartidos[4].nombre = "ERC";
-            coleccionElecciones[0].coleccionPartidos[4].escaños = 7;
-            coleccionElecciones[0].coleccionPartidos[4].color = "Yellow";
+            coleccionElecciones[0].coleccionPartidos[4].Nombre = "ERC";
+            coleccionElecciones[0].coleccionPartidos[4].Escaños = 7;
+            coleccionElecciones[0].coleccionPartidos[4].Color = "Yellow";
 
-            coleccionElecciones[0].coleccionPartidos[5].nombre = "JUNTS";
-            coleccionElecciones[0].coleccionPartidos[5].escaños = 7;
-            coleccionElecciones[0].coleccionPartidos[5].color = "lightGreen";
+            coleccionElecciones[0].coleccionPartidos[5].Nombre = "JUNTS";
+            coleccionElecciones[0].coleccionPartidos[5].Escaños = 7;
+            coleccionElecciones[0].coleccionPartidos[5].Color = "lightGreen";
 
-            coleccionElecciones[0].coleccionPartidos[6].nombre = "EH Bildu";
-            coleccionElecciones[0].coleccionPartidos[6].escaños = 6;
-            coleccionElecciones[0].coleccionPartidos[6].color = "lightBlue";
+            coleccionElecciones[0].coleccionPartidos[6].Nombre = "EH Bildu";
+            coleccionElecciones[0].coleccionPartidos[6].Escaños = 6;
+            coleccionElecciones[0].coleccionPartidos[6].Color = "lightBlue";
 
-            coleccionElecciones[0].coleccionPartidos[7].nombre = "PNV";
-            coleccionElecciones[0].coleccionPartidos[7].escaños = 5;
-            coleccionElecciones[0].coleccionPartidos[7].color = "darkGreen";
+            coleccionElecciones[0].coleccionPartidos[7].Nombre = "PNV";
+            coleccionElecciones[0].coleccionPartidos[7].Escaños = 5;
+            coleccionElecciones[0].coleccionPartidos[7].Color = "darkGreen";
 
-            coleccionElecciones[0].coleccionPartidos[8].nombre = "BNG";
-            coleccionElecciones[0].coleccionPartidos[8].escaños = 1;
-            coleccionElecciones[0].coleccionPartidos[8].color = "lightPurple";
+            coleccionElecciones[0].coleccionPartidos[8].Nombre = "BNG";
+            coleccionElecciones[0].coleccionPartidos[8].Escaños = 1;
+            coleccionElecciones[0].coleccionPartidos[8].Color = "lightPurple";
 
-            coleccionElecciones[0].coleccionPartidos[9].nombre = "CCA";
-            coleccionElecciones[0].coleccionPartidos[9].escaños = 1;
-            coleccionElecciones[0].coleccionPartidos[9].color = "lightRed";
+            coleccionElecciones[0].coleccionPartidos[9].Nombre = "CCA";
+            coleccionElecciones[0].coleccionPartidos[9].Escaños = 1;
+            coleccionElecciones[0].coleccionPartidos[9].Color = "lightRed";
 
-            coleccionElecciones[0].coleccionPartidos[10].nombre = "UPN";
-            coleccionElecciones[0].coleccionPartidos[10].escaños = 1;
-            coleccionElecciones[0].coleccionPartidos[10].color = "lightYellow";
+            coleccionElecciones[0].coleccionPartidos[10].Nombre = "UPN";
+            coleccionElecciones[0].coleccionPartidos[10].Escaños = 1;
+            coleccionElecciones[0].coleccionPartidos[10].Color = "lightYellow";
 
             // ELECCIONES GENERALES 10/11/2019
             for (int i = 0; i < 14; i++)
@@ -120,61 +123,61 @@ namespace Pactometro
             coleccionElecciones[1].numEscaños = 350;
             coleccionElecciones[1].mayoriaAbsoluta = 176;
 
-            coleccionElecciones[1].coleccionPartidos[0].nombre = "PSOE";
-            coleccionElecciones[1].coleccionPartidos[0].escaños = 120;
-            coleccionElecciones[1].coleccionPartidos[0].color = "Red";
+            coleccionElecciones[1].coleccionPartidos[0].Nombre = "PSOE";
+            coleccionElecciones[1].coleccionPartidos[0].Escaños = 120;
+            coleccionElecciones[1].coleccionPartidos[0].Color = "Red";
 
-            coleccionElecciones[1].coleccionPartidos[1].nombre = "PP";
-            coleccionElecciones[1].coleccionPartidos[1].escaños = 89;
-            coleccionElecciones[1].coleccionPartidos[1].color = "Blue";
+            coleccionElecciones[1].coleccionPartidos[1].Nombre = "PP";
+            coleccionElecciones[1].coleccionPartidos[1].Escaños = 89;
+            coleccionElecciones[1].coleccionPartidos[1].Color = "Blue";
 
-            coleccionElecciones[1].coleccionPartidos[2].nombre = "VOX";
-            coleccionElecciones[1].coleccionPartidos[2].escaños = 52;
-            coleccionElecciones[1].coleccionPartidos[2].color = "Green";
+            coleccionElecciones[1].coleccionPartidos[2].Nombre = "VOX";
+            coleccionElecciones[1].coleccionPartidos[2].Escaños = 52;
+            coleccionElecciones[1].coleccionPartidos[2].Color = "Green";
 
-            coleccionElecciones[1].coleccionPartidos[3].nombre = "PODEMOS";
-            coleccionElecciones[1].coleccionPartidos[3].escaños = 35;
-            coleccionElecciones[1].coleccionPartidos[3].color = "Purple";
+            coleccionElecciones[1].coleccionPartidos[3].Nombre = "PODEMOS";
+            coleccionElecciones[1].coleccionPartidos[3].Escaños = 35;
+            coleccionElecciones[1].coleccionPartidos[3].Color = "Purple";
 
-            coleccionElecciones[1].coleccionPartidos[4].nombre = "ERC";
-            coleccionElecciones[1].coleccionPartidos[4].escaños = 13;
-            coleccionElecciones[1].coleccionPartidos[4].color = "Yellow";
+            coleccionElecciones[1].coleccionPartidos[4].Nombre = "ERC";
+            coleccionElecciones[1].coleccionPartidos[4].Escaños = 13;
+            coleccionElecciones[1].coleccionPartidos[4].Color = "Yellow";
 
-            coleccionElecciones[1].coleccionPartidos[5].nombre = "CS";
-            coleccionElecciones[1].coleccionPartidos[5].escaños = 10;
-            coleccionElecciones[1].coleccionPartidos[5].color = "Orange";
+            coleccionElecciones[1].coleccionPartidos[5].Nombre = "CS";
+            coleccionElecciones[1].coleccionPartidos[5].Escaños = 10;
+            coleccionElecciones[1].coleccionPartidos[5].Color = "Orange";
 
-            coleccionElecciones[1].coleccionPartidos[6].nombre = "JUNTS";
-            coleccionElecciones[1].coleccionPartidos[6].escaños = 8;
-            coleccionElecciones[1].coleccionPartidos[6].color = "lightGreen";
+            coleccionElecciones[1].coleccionPartidos[6].Nombre = "JUNTS";
+            coleccionElecciones[1].coleccionPartidos[6].Escaños = 8;
+            coleccionElecciones[1].coleccionPartidos[6].Color = "lightGreen";
 
-            coleccionElecciones[1].coleccionPartidos[7].nombre = "EAJ_PNV";
-            coleccionElecciones[1].coleccionPartidos[7].escaños = 6;
-            coleccionElecciones[1].coleccionPartidos[7].color = "darkGreen";
+            coleccionElecciones[1].coleccionPartidos[7].Nombre = "EAJ_PNV";
+            coleccionElecciones[1].coleccionPartidos[7].Escaños = 6;
+            coleccionElecciones[1].coleccionPartidos[7].Color = "darkGreen";
 
-            coleccionElecciones[1].coleccionPartidos[8].nombre = "EH_BILDU";
-            coleccionElecciones[1].coleccionPartidos[8].escaños = 5;
-            coleccionElecciones[1].coleccionPartidos[8].color = "lightBlue";
+            coleccionElecciones[1].coleccionPartidos[8].Nombre = "EH_BILDU";
+            coleccionElecciones[1].coleccionPartidos[8].Escaños = 5;
+            coleccionElecciones[1].coleccionPartidos[8].Color = "lightBlue";
 
-            coleccionElecciones[1].coleccionPartidos[9].nombre = "MASPAIS";
-            coleccionElecciones[1].coleccionPartidos[9].escaños = 3;
-            coleccionElecciones[1].coleccionPartidos[9].color = "Magenta";
+            coleccionElecciones[1].coleccionPartidos[9].Nombre = "MASPAIS";
+            coleccionElecciones[1].coleccionPartidos[9].Escaños = 3;
+            coleccionElecciones[1].coleccionPartidos[9].Color = "Magenta";
 
-            coleccionElecciones[1].coleccionPartidos[10].nombre = "CUP_PR";
-            coleccionElecciones[1].coleccionPartidos[10].escaños = 2;
-            coleccionElecciones[1].coleccionPartidos[10].color = "lightPurple";
+            coleccionElecciones[1].coleccionPartidos[10].Nombre = "CUP_PR";
+            coleccionElecciones[1].coleccionPartidos[10].Escaños = 2;
+            coleccionElecciones[1].coleccionPartidos[10].Color = "lightPurple";
 
-            coleccionElecciones[1].coleccionPartidos[11].nombre = "CCA";
-            coleccionElecciones[1].coleccionPartidos[11].escaños = 2;
-            coleccionElecciones[1].coleccionPartidos[11].color = "lightRed";
+            coleccionElecciones[1].coleccionPartidos[11].Nombre = "CCA";
+            coleccionElecciones[1].coleccionPartidos[11].Escaños = 2;
+            coleccionElecciones[1].coleccionPartidos[11].Color = "lightRed";
 
-            coleccionElecciones[1].coleccionPartidos[12].nombre = "BNG";
-            coleccionElecciones[1].coleccionPartidos[12].escaños = 1;
-            coleccionElecciones[1].coleccionPartidos[12].color = "lightOrange";
+            coleccionElecciones[1].coleccionPartidos[12].Nombre = "BNG";
+            coleccionElecciones[1].coleccionPartidos[12].Escaños = 1;
+            coleccionElecciones[1].coleccionPartidos[12].Color = "lightOrange";
 
-            coleccionElecciones[1].coleccionPartidos[13].nombre = "OTROS";
-            coleccionElecciones[1].coleccionPartidos[13].escaños = 4;
-            coleccionElecciones[1].coleccionPartidos[13].color = "Gray";
+            coleccionElecciones[1].coleccionPartidos[13].Nombre = "OTROS";
+            coleccionElecciones[1].coleccionPartidos[13].Escaños = 4;
+            coleccionElecciones[1].coleccionPartidos[13].Color = "Gray";
 
             // ELECCIONES AUTONÓMICAS CyL 14/2/2022
             for (int i = 0; i < 8; i++)
@@ -187,37 +190,37 @@ namespace Pactometro
             coleccionElecciones[2].numEscaños = 81;
             coleccionElecciones[2].mayoriaAbsoluta = 41;
 
-            coleccionElecciones[2].coleccionPartidos[0].nombre = "PP";
-            coleccionElecciones[2].coleccionPartidos[0].escaños = 31;
-            coleccionElecciones[2].coleccionPartidos[0].color = "Blue";
+            coleccionElecciones[2].coleccionPartidos[0].Nombre = "PP";
+            coleccionElecciones[2].coleccionPartidos[0].Escaños = 31;
+            coleccionElecciones[2].coleccionPartidos[0].Color = "Blue";
 
-            coleccionElecciones[2].coleccionPartidos[1].nombre = "PSOE";
-            coleccionElecciones[2].coleccionPartidos[1].escaños = 28;
-            coleccionElecciones[2].coleccionPartidos[1].color = "Red";
+            coleccionElecciones[2].coleccionPartidos[1].Nombre = "PSOE";
+            coleccionElecciones[2].coleccionPartidos[1].Escaños = 28;
+            coleccionElecciones[2].coleccionPartidos[1].Color = "Red";
 
-            coleccionElecciones[2].coleccionPartidos[2].nombre = "VOX";
-            coleccionElecciones[2].coleccionPartidos[2].escaños = 13;
-            coleccionElecciones[2].coleccionPartidos[2].color = "Green";
+            coleccionElecciones[2].coleccionPartidos[2].Nombre = "VOX";
+            coleccionElecciones[2].coleccionPartidos[2].Escaños = 13;
+            coleccionElecciones[2].coleccionPartidos[2].Color = "Green";
 
-            coleccionElecciones[2].coleccionPartidos[3].nombre = "UPL";
-            coleccionElecciones[2].coleccionPartidos[3].escaños = 3;
-            coleccionElecciones[2].coleccionPartidos[3].color = "lightPurple";
+            coleccionElecciones[2].coleccionPartidos[3].Nombre = "UPL";
+            coleccionElecciones[2].coleccionPartidos[3].Escaños = 3;
+            coleccionElecciones[2].coleccionPartidos[3].Color = "lightPurple";
 
-            coleccionElecciones[2].coleccionPartidos[4].nombre = "SY";
-            coleccionElecciones[2].coleccionPartidos[4].escaños = 3;
-            coleccionElecciones[2].coleccionPartidos[4].color = "lightBlue";
+            coleccionElecciones[2].coleccionPartidos[4].Nombre = "SY";
+            coleccionElecciones[2].coleccionPartidos[4].Escaños = 3;
+            coleccionElecciones[2].coleccionPartidos[4].Color = "lightBlue";
 
-            coleccionElecciones[2].coleccionPartidos[5].nombre = "PODEMOS";
-            coleccionElecciones[2].coleccionPartidos[5].escaños = 1;
-            coleccionElecciones[2].coleccionPartidos[5].color = "Purple";
+            coleccionElecciones[2].coleccionPartidos[5].Nombre = "PODEMOS";
+            coleccionElecciones[2].coleccionPartidos[5].Escaños = 1;
+            coleccionElecciones[2].coleccionPartidos[5].Color = "Purple";
 
-            coleccionElecciones[2].coleccionPartidos[6].nombre = "CS";
-            coleccionElecciones[2].coleccionPartidos[6].escaños = 1;
-            coleccionElecciones[2].coleccionPartidos[6].color = "Orange";
+            coleccionElecciones[2].coleccionPartidos[6].Nombre = "CS";
+            coleccionElecciones[2].coleccionPartidos[6].Escaños = 1;
+            coleccionElecciones[2].coleccionPartidos[6].Color = "Orange";
 
-            coleccionElecciones[2].coleccionPartidos[7].nombre = "XAV";
-            coleccionElecciones[2].coleccionPartidos[7].escaños = 1;
-            coleccionElecciones[2].coleccionPartidos[7].color = "lightGreen";
+            coleccionElecciones[2].coleccionPartidos[7].Nombre = "XAV";
+            coleccionElecciones[2].coleccionPartidos[7].Escaños = 1;
+            coleccionElecciones[2].coleccionPartidos[7].Color = "lightGreen";
 
             // ELECCIONES AUTONÓMICAS CyL 26/5/2019
 
@@ -231,33 +234,33 @@ namespace Pactometro
             coleccionElecciones[3].numEscaños = 81;
             coleccionElecciones[3].mayoriaAbsoluta = 41;
 
-            coleccionElecciones[3].coleccionPartidos[0].nombre = "PSOE";
-            coleccionElecciones[3].coleccionPartidos[0].escaños = 35;
-            coleccionElecciones[3].coleccionPartidos[0].color = "Red";
+            coleccionElecciones[3].coleccionPartidos[0].Nombre = "PSOE";
+            coleccionElecciones[3].coleccionPartidos[0].Escaños = 35;
+            coleccionElecciones[3].coleccionPartidos[0].Color = "Red";
 
-            coleccionElecciones[3].coleccionPartidos[1].nombre = "PP";
-            coleccionElecciones[3].coleccionPartidos[1].escaños = 29;
-            coleccionElecciones[3].coleccionPartidos[1].color = "Blue";
+            coleccionElecciones[3].coleccionPartidos[1].Nombre = "PP";
+            coleccionElecciones[3].coleccionPartidos[1].Escaños = 29;
+            coleccionElecciones[3].coleccionPartidos[1].Color = "Blue";
 
-            coleccionElecciones[3].coleccionPartidos[2].nombre = "CS";
-            coleccionElecciones[3].coleccionPartidos[2].escaños = 12;
-            coleccionElecciones[3].coleccionPartidos[2].color = "Orange";
+            coleccionElecciones[3].coleccionPartidos[2].Nombre = "CS";
+            coleccionElecciones[3].coleccionPartidos[2].Escaños = 12;
+            coleccionElecciones[3].coleccionPartidos[2].Color = "Orange";
 
-            coleccionElecciones[3].coleccionPartidos[3].nombre = "PODEMOS";
-            coleccionElecciones[3].coleccionPartidos[3].escaños = 2;
-            coleccionElecciones[3].coleccionPartidos[3].color = "Purple";
+            coleccionElecciones[3].coleccionPartidos[3].Nombre = "PODEMOS";
+            coleccionElecciones[3].coleccionPartidos[3].Escaños = 2;
+            coleccionElecciones[3].coleccionPartidos[3].Color = "Purple";
 
-            coleccionElecciones[3].coleccionPartidos[4].nombre = "VOX";
-            coleccionElecciones[3].coleccionPartidos[4].escaños = 1;
-            coleccionElecciones[3].coleccionPartidos[4].color = "Green";
+            coleccionElecciones[3].coleccionPartidos[4].Nombre = "VOX";
+            coleccionElecciones[3].coleccionPartidos[4].Escaños = 1;
+            coleccionElecciones[3].coleccionPartidos[4].Color = "Green";
 
-            coleccionElecciones[3].coleccionPartidos[5].nombre = "UPL";
-            coleccionElecciones[3].coleccionPartidos[5].escaños = 1;
-            coleccionElecciones[3].coleccionPartidos[5].color = "lightPurple";
+            coleccionElecciones[3].coleccionPartidos[5].Nombre = "UPL";
+            coleccionElecciones[3].coleccionPartidos[5].Escaños = 1;
+            coleccionElecciones[3].coleccionPartidos[5].Color = "lightPurple";
 
-            coleccionElecciones[3].coleccionPartidos[6].nombre = "XAV";
-            coleccionElecciones[3].coleccionPartidos[6].escaños = 1;
-            coleccionElecciones[3].coleccionPartidos[6].color = "lightGreen";
+            coleccionElecciones[3].coleccionPartidos[6].Nombre = "XAV";
+            coleccionElecciones[3].coleccionPartidos[6].Escaños = 1;
+            coleccionElecciones[3].coleccionPartidos[6].Color = "lightGreen";
 
             mainTable.ItemsSource = coleccionElecciones;
 
