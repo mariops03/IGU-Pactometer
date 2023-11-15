@@ -22,6 +22,9 @@ namespace Pactometro
     {
         private ObservableCollection<ProcesoElectoral> ColeccionElecciones;
 
+        // Definir el evento para notificar la selección
+        public event EventHandler<string> ProcesoEleccionSeleccionado;
+
         public VentanaSecundaria(ObservableCollection<ProcesoElectoral> coleccionElecciones)
         {
             InitializeComponent();
@@ -44,6 +47,9 @@ namespace Pactometro
                     {
                         secondaryTable.ScrollIntoView(secondaryTable.Items[0]);
                     }
+
+                    // Disparar el evento para notificar a la MainWindow sobre la selección
+                    ProcesoEleccionSeleccionado?.Invoke(this, selectedData.nombre);
                 }
             }
         }

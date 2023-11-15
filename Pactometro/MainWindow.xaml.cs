@@ -6,6 +6,9 @@ namespace Pactometro
 {
     public partial class MainWindow : Window
     {
+        // Definir el evento para notificar la selección
+        public event EventHandler<string> ProcesoEleccionSeleccionado;
+
         private VentanaSecundaria ventanaSecundaria;
         private ObservableCollection<ProcesoElectoral> coleccionElecciones;
 
@@ -32,7 +35,7 @@ namespace Pactometro
         {
             if (ventanaSecundaria == null)
             {
-                // Pasarle los datos de la ventana principal a la secundaria
+                // Crear una nueva instancia de VentanaSecundaria con la colección de elecciones
                 ventanaSecundaria = new VentanaSecundaria(coleccionElecciones);
 
                 double distanciaEntreVentanas = 10; // Puedes ajustar esto a tu preferencia
@@ -42,6 +45,9 @@ namespace Pactometro
                 ventanaSecundaria.Left = nuevaPosX;
                 ventanaSecundaria.Top = nuevaPosY;
 
+                // Suscribirse al evento de la VentanaSecundaria para recibir notificaciones de selección
+                ventanaSecundaria.ProcesoEleccionSeleccionado += VentanaSecundaria_ProcesoEleccionSeleccionado;
+
                 ventanaSecundaria.Closed += VentanaSecundaria_Closed; // Suscribe un controlador para el evento Closed
                 ventanaSecundaria.Show(); // Muestra la ventana secundaria
             }
@@ -49,6 +55,12 @@ namespace Pactometro
             {
                 ventanaSecundaria.Activate(); // Si la ventana ya existe, ábrela y enfócala
             }
+        }
+
+        private void VentanaSecundaria_ProcesoEleccionSeleccionado(object sender, string nombreProceso)
+        {
+            // Actualizar el TextBlock con el nombre del proceso electoral seleccionado
+            txtTitulo.Text = nombreProceso;
         }
 
         private void VentanaSecundaria_Closed(object sender, EventArgs e)
