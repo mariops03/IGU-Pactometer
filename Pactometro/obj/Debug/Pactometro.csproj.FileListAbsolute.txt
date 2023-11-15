@@ -32,3 +32,5 @@ C:\Users\Mario\Desktop\USAL\TERCERO\INTERFACES GRAFICAS\TRABAJO\IGU-Pactometer\P
 C:\Users\Mario\Desktop\USAL\TERCERO\INTERFACES GRAFICAS\TRABAJO\IGU-Pactometer\Pactometro\obj\Debug\Pactometro.Properties.Resources.resources
 C:\Users\Mario\Desktop\USAL\TERCERO\INTERFACES GRAFICAS\TRABAJO\IGU-Pactometer\Pactometro\obj\Debug\Pactometro.csproj.GenerateResource.cache
 C:\Users\Mario\Desktop\USAL\TERCERO\INTERFACES GRAFICAS\TRABAJO\IGU-Pactometer\Pactometro\obj\Debug\Pactometro.csproj.CoreCompileInputs.cache
+C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\obj\Debug\VentanaAgregar.g.cs
+C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\obj\Debug\VentanaAgregar.baml

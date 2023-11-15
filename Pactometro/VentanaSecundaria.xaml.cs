@@ -56,11 +56,15 @@ namespace Pactometro
 
         private void añadirDatos(ObservableCollection<ProcesoElectoral> coleccionElecciones)
         {
-            
-            for (int i = 0; i < 4; i++)
+            //si el numero de colecciones es menor que 4, añade 4 colecciones
+            if (coleccionElecciones.Count == 0)
             {
-                coleccionElecciones.Add(new ProcesoElectoral());
+                for (int i = 0; i < 4; i++)
+                {
+                    coleccionElecciones.Add(new ProcesoElectoral());
+                }
             }
+
 
             // ELECCIONES GENERALES 23/07/2023
             for (int i = 0; i < 11; i++)
@@ -272,5 +276,28 @@ namespace Pactometro
 
         }
 
+        private static VentanaAgregar ventanaAñadirProceso;
+
+        private void btnAñadir_Click(object sender, RoutedEventArgs e)
+        {
+            // Verifica si ya hay una instancia abierta
+            if (ventanaAñadirProceso == null || !ventanaAñadirProceso.IsVisible)
+            {
+                ventanaAñadirProceso = new VentanaAgregar(ColeccionElecciones);
+                ventanaAñadirProceso.Closed += VentanaAñadirProceso_Closed;
+                ventanaAñadirProceso.Show();
+            }
+            else
+            {
+                // La ventana ya está abierta, puedes llevarla al frente si es necesario
+                ventanaAñadirProceso.Activate();
+            }
+        }
+
+        private void VentanaAñadirProceso_Closed(object sender, EventArgs e)
+        {
+            // Manejar el evento de cierre, por ejemplo, establecer la referencia a null
+            ventanaAñadirProceso = null;
+        }
     }
 }

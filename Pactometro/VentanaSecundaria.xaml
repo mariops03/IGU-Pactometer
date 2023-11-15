@@ -10,6 +10,7 @@
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <ListView Name="mainTable" Grid.Row="0" Margin="15" SelectionChanged="mainTable_SelectionChanged">
             <ListView.View>
@@ -29,5 +30,6 @@
                 </GridView>
             </ListView.View>
         </ListView>
+        <Button Name="btnAñadir" Grid.Row="2" Margin="15" Padding="5" Content="AÑADIR NUEVO PROCESO ELECTORAL" Click="btnAñadir_Click"/>
     </Grid>
 </Window>
