@@ -285,7 +285,7 @@ namespace Pactometro
             {
                 ventanaAñadirProceso = new VentanaAgregar(ColeccionElecciones);
                 ventanaAñadirProceso.Closed += VentanaAñadirProceso_Closed;
-                ventanaAñadirProceso.Show();
+                ventanaAñadirProceso.ShowDialog();
             }
             else
             {
