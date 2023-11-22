@@ -45,3 +45,6 @@ C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\bin\Debug\Micr
 C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\bin\Debug\Microsoft.Xaml.Behaviors.xml
 C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\bin\Debug\WPFCustomMessageBox.xml
 C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\obj\Debug\Pactometro.csproj.CopyComplete
+C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\bin\Debug\WriteableBitmapEx.Wpf.dll
+C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\bin\Debug\WriteableBitmapEx.Wpf.pdb
+C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\bin\Debug\WriteableBitmapEx.Wpf.xml
