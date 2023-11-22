@@ -76,13 +76,25 @@ namespace Pactometro
             Partido nuevoPartido = new Partido(nombrePartido, escañosPartido, colorPartido);
             PartidosTemporales.Add(nuevoPartido);
 
+            // Ordenar la lista de partidos de mayor a menor por el número de escaños
+            PartidosTemporales = new ObservableCollection<Pactometro.Partido>(PartidosTemporales.OrderByDescending(partido => partido.Escaños));
+
             // Actualizar la lista de partidos en el ListView
-            lvPartidos.ItemsSource = null;
             lvPartidos.ItemsSource = PartidosTemporales;
 
             // Puedes realizar otras acciones aquí, como limpiar los campos de entrada
             LimpiarCamposPartido();
         }
+
+        private void ColorPicker_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<System.Windows.Media.Color?> e)
+        {
+            if (e.NewValue.HasValue)
+            {
+                System.Windows.Media.Color selectedColor = e.NewValue.Value;
+                MessageBox.Show($"Color seleccionado: {selectedColor.ToString()}");
+            }
+        }
+
 
         private void BtnEliminarPartido_Click(object sender, RoutedEventArgs e)
         {
@@ -132,7 +144,7 @@ namespace Pactometro
             }
 
             // Verificar que no haya un proceso con el mismo nombre
-            string nombreProceso = $"{tipoProceso} {fechaProceso.ToString("dd/MM/yyyy")}";
+            string nombreProceso = $"{tipoProceso} {fechaProceso.ToString("dd-MM-yyyy")}";
             if (ColeccionElecciones.Any(proceso => proceso.nombre == nombreProceso))
             {
                 MessageBox.Show("Ya hay un proceso con el mismo nombre.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);

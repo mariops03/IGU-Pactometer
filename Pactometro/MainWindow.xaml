@@ -20,14 +20,15 @@
         </Grid.ColumnDefinitions>
         <Menu Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3">
             <MenuItem Header="Configuración">
-                <MenuItem Header="Gráfico 1"/>
-                <MenuItem Header="Gráfico 2"/>
-                <MenuItem Header="Gráfico 3"/>
+                <MenuItem Header="Gráfico 1" Click="Grafico1_Click"/>
+                <MenuItem Header="Gráfico 2" Click="Grafico2_Click"/>
+                <MenuItem Header="Gráfico 3" Click="Grafico3_Click"/>
                 <MenuItem Header="Ventana Secundaria" Click="menuVentanaSecundaria"/>
                 <Separator/>
                 <MenuItem Header="Salir" Click="menuSalir"/>
             </MenuItem>
         </Menu>
         <TextBlock Name="txtTitulo" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Center" FontSize="20"/>
+        <Canvas Name="chartCanvas" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Margin="10" Background="AliceBlue"/>
     </Grid>
 </Window>

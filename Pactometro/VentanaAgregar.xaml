@@ -51,7 +51,8 @@
             <TextBox Width="50" Name="txtEscaños" Margin="10,0,10,0" PreviewTextInput="txtEscaños_PreviewTextInput"/>
 
             <Label Content="Color:" VerticalAlignment="Center"/>
-            <TextBox Width="80" Name="txtColor" Margin="10,0,10,0"/>
+
+            <TextBox Width="50" Name="txtColor" Margin="10,0,10,0" PreviewTextInput="txtEscaños_PreviewTextInput"/>
 
             <Button Width="120" Content="Añadir Partido" Margin="10,0" Click="BtnAñadirPartido_Click"/>
         </StackPanel>
