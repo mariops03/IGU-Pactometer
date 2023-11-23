@@ -281,23 +281,24 @@ namespace Pactometro
             // Establecer el título del gráfico
             txtTitulo.Text = "Comparación de " + procesoElectoralActual.nombre;
 
-            // Establecer el espaciado entre barras
-            double barSpacing = 10;
-
             double xPosition = 30; // Establecer la posición inicial de la primera barra
 
-            // Recorrer cada proceso electoral en la colección
+            double barSpacing = 5; // Espaciado entre barras
+
+            //Encuentra el numero maximo de escaños de un partido en todos los procesos electorales
+
+            int numPartidos = 0;
+            double maxEscaños = 0;
+            double barWidth = 0;
+
             foreach (var procesoComparativo in procesosComparativos)
             {
                 if (procesoComparativo != null)
                 {
                     // Obtener el número total de partidos en el proceso electoral actual
-                    int numPartidos = procesoComparativo.coleccionPartidos.Count;
+                    numPartidos += procesoComparativo.coleccionPartidos.Count;
 
-                    // Calcular el ancho de cada barra de manera que se ajusten en el Canvas
-                    double barWidth = (chartCanvas.ActualWidth - (numPartidos - 1) * barSpacing) / numPartidos;
-
-                    double maxEscaños =procesoComparativo.coleccionPartidos.Max(partido => partido.Escaños);
+                    maxEscaños += procesoComparativo.coleccionPartidos.Max(partido => partido.Escaños);
 
                     // Recorrer la colección de partidos y crear una barra para cada uno
                     for (int i = 0; i < numPartidos; i++)
@@ -338,13 +339,14 @@ namespace Pactometro
 
                         // Calcular la posición vertical para que el nombre aparezca debajo de la barra
                         double yPosition = chartCanvas.ActualHeight + 5;
-
-                        Canvas.SetLeft(nombrePartido, xPosition - barWidth - barSpacing); // Alinear el nombre con la barra correspondiente
-                        Canvas.SetTop(nombrePartido, yPosition);
-                        chartCanvas.Children.Add(nombrePartido);
                     }
                 }
             }
+
+            barWidth = (chartCanvas.ActualWidth - (numPartidos - 1) * barSpacing) / numPartidos;
+
+            // Recorrer cada proceso electoral en la colección
+           
         }
 
 
