@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
@@ -17,6 +19,7 @@ namespace Pactometro
         private VentanaSecundaria ventanaSecundaria;
         private ObservableCollection<ProcesoElectoral> coleccionElecciones;
         private ProcesoElectoral procesoElectoralActual;
+
         private bool grafico1 = false;
         private bool grafico2 = false;
         private bool grafico3 = false;
@@ -71,11 +74,30 @@ namespace Pactometro
         {
 
             procesoElectoralActual = procesoElectoral;
-        // Actualizar el TextBlock con el nombre del proceso electoral seleccionado
+            // Dependiendo del gráfico seleccionado, llamar al método que crea el gráfico
+            procesoSeleccionado();
         
         }
 
+        private void procesoSeleccionado()
+        {
+            if (grafico1 == true)
+            {
+                mostrarGrafico1();
+            }
+            else if (grafico2 == true)
+            {
+                // Obtener otros procesos electorales equivalentes para la comparación
+                Collection<ProcesoElectoral> procesosEquivalentes = ObtenerProcesosEquivalentesPorNombre(procesoElectoralActual);
 
+                // Llamar al método que crea el gráfico comparativo
+                mostrarGrafico2(procesosEquivalentes);
+            }
+            else if (grafico3 == true)
+            {
+                // Agregar código para grafico3 si es necesario
+            }
+        }
 
         private void VentanaSecundaria_Closed(object sender, EventArgs e)
         {
@@ -113,26 +135,8 @@ namespace Pactometro
                 return; // Salir del método si no hay proceso seleccionado
             }
 
-            // Actualizar el gráfico cuando cambie el tamaño de la ventana
-            if (grafico1 == true)
-            {
-                mostrarGrafico1();
-            }
-            else if (grafico2 == true)
-            {
-                // Obtener otros procesos electorales equivalentes para la comparación
-                Collection<ProcesoElectoral> procesosEquivalentes = ObtenerProcesosEquivalentesPorNombre(procesoElectoralActual);
-
-                // Llamar al método que crea el gráfico comparativo
-                mostrarGrafico2(procesosEquivalentes);
-            }
-            else if (grafico3 == true)
-            {
-                // Agregar código para grafico3 si es necesario
-            }
+            procesoSeleccionado();
         }
-
-
         private void mostrarGrafico1()
         {
             grafico1 = true;
@@ -153,7 +157,9 @@ namespace Pactometro
                 int numPartidos = procesoElectoralActual.coleccionPartidos.Count;
 
                 // Calcular el ancho de cada barra de manera que ocupen todo el Canvas
-                double barWidth = (chartCanvas.ActualWidth - (numPartidos - 1) * barSpacing) / numPartidos;
+                double barWidth = (chartCanvas.ActualWidth - (numPartidos - 1) * barSpacing) / (numPartidos + 1);
+
+                double inicioProporcional = barWidth * (numPartidos / (barSpacing*5));
 
                 for (int i = 0; i < numPartidos; i++)
                 {
@@ -175,18 +181,11 @@ namespace Pactometro
                         barra.Fill = Brushes.Gray;
                     }
 
-                    Canvas.SetLeft(barra, i * (barWidth + barSpacing));
-                    Canvas.SetTop(barra, chartCanvas.ActualHeight - barHeight);
-
+                    // Ajusta la posición horizontal para comenzar de manera proporcional al número total de partidos
+                    double posicionInicio = i * (barWidth + barSpacing) + inicioProporcional;
+                    Canvas.SetLeft(barra, posicionInicio);
+                    Canvas.SetTop(barra, (chartCanvas.ActualHeight - barHeight));
                     chartCanvas.Children.Add(barra);
-
-                    // No agregamos el TextBlock aquí
-                }
-
-                // Añadir los nombres de los partidos debajo de las barras después de crear todas las barras
-                for (int i = 0; i < numPartidos; i++)
-                {
-                    var partido = procesoElectoralActual.coleccionPartidos[i];
 
                     // Agregar el nombre del partido debajo de la barra centrado
                     TextBlock nombrePartido = new TextBlock();
@@ -199,10 +198,43 @@ namespace Pactometro
                     // Calcular la posición vertical para que el nombre aparezca debajo de la barra
                     double yPosition = chartCanvas.ActualHeight + 5;
 
-                    Canvas.SetLeft(nombrePartido, i * (barWidth + barSpacing));
+                    // Ajusta la posición horizontal para que esté centrado debajo de la barra
+                    Canvas.SetLeft(nombrePartido, posicionInicio);
                     Canvas.SetTop(nombrePartido, yPosition);
                     chartCanvas.Children.Add(nombrePartido);
                 }
+
+                // Agregar la leyenda indicando el número de escaños
+                for (int i = 7; i >= 0; i--)
+                {
+                    TextBlock leyenda = new TextBlock();
+
+                    if (i == 0)
+                    {
+                        leyenda.Text = "0";
+                        Canvas.SetLeft(leyenda, 0);
+                        Canvas.SetBottom(leyenda, 0);
+                    }
+                    else if (i == 7)
+                    {
+                        leyenda.Text = maxEscaños.ToString("0");
+                        Canvas.SetLeft(leyenda, 0);
+                        Canvas.SetTop(leyenda, 0);
+                    }
+                    else
+                    {
+                        // Calcular la posición proporcional al número total de escaños
+                        double escanosPorPaso = maxEscaños / 7.0;
+                        double posicionY = (7 - i) * (chartCanvas.ActualHeight / 7.3);
+
+                        leyenda.Text = (i * escanosPorPaso).ToString("0");
+                        Canvas.SetLeft(leyenda, 0);
+                        Canvas.SetTop(leyenda, posicionY);
+                    }
+
+                    chartCanvas.Children.Add(leyenda);
+                }
+
             }
             else
             {
@@ -212,7 +244,250 @@ namespace Pactometro
             }
         }
 
+        private Canvas checkBoxCanvas = null;
 
+        private void mostrarGrafico2(Collection<ProcesoElectoral> procesosComparativos)
+        {
+            grafico1 = false;
+            grafico2 = true;
+            grafico3 = false;
+
+            // Limpiar el Canvas antes de agregar nuevos elementos
+            chartCanvas.Children.Clear();
+
+            txtTitulo.Text = "Comparación de " + procesosComparativos.FirstOrDefault()?.nombre;
+            // Limpiar el Canvas de los CheckBox antes de agregar nuevos elementos
+            if (checkBoxCanvas != null)
+            {
+                gridPrincipal.Children.Remove(checkBoxCanvas);
+            }
+
+            // Vaciar la colección de partidos seleccionados
+            partidosSeleccionados.Clear();
+
+            // Crear un nuevo Canvas para los CheckBox
+            checkBoxCanvas = new Canvas();
+            checkBoxCanvas.Background = Brushes.LightGray;
+            checkBoxCanvas.Margin = new Thickness(15);
+            checkBoxCanvas.Width = 90; // Ajusta el tamaño según tus necesidades
+            checkBoxCanvas.Height = procesosComparativos.Count() * 30; // Ajusta el tamaño según tus necesidades
+            checkBoxCanvas.VerticalAlignment = VerticalAlignment.Top;
+            Grid.SetColumn(checkBoxCanvas, 3);
+            Grid.SetRow(checkBoxCanvas, 2);
+            gridPrincipal.Children.Add(checkBoxCanvas);
+                    
+
+            double fechaY = 0;
+
+            foreach (ProcesoElectoral proceso in procesosComparativos)
+            {
+                CheckBox fechaCheckBox = new CheckBox();
+                fechaCheckBox.Content = proceso.fecha.ToString("dd/MM/yyyy");
+                fechaCheckBox.IsChecked = false;
+                fechaCheckBox.Foreground = Brushes.Black;
+                fechaCheckBox.FontSize = 12;
+
+                // Establecer propiedades de estilo directamente en el código
+                fechaCheckBox.BorderBrush = Brushes.Black;
+                fechaCheckBox.BorderThickness = new Thickness(1);
+                fechaCheckBox.Margin = new Thickness(5);
+
+                Canvas.SetRight(fechaCheckBox, 0);
+                Canvas.SetTop(fechaCheckBox, fechaY);
+                checkBoxCanvas.Children.Add(fechaCheckBox);
+
+                fechaY += 30;
+
+                // Manejar el evento Checked para agregar el proceso a la colección
+                fechaCheckBox.Checked += (sender, e) => ManejarSeleccion(proceso, true);
+
+                // Manejar el evento Unchecked para quitar el proceso de la colección
+                fechaCheckBox.Unchecked += (sender, e) => ManejarSeleccion(proceso, false);
+
+                // Manejar el evento KeyDown para permitir la navegación con flechas y la selección con Enter
+                fechaCheckBox.KeyDown += (sender, e) =>
+                {
+                    if (e.Key == Key.Enter)
+                    {
+                        fechaCheckBox.IsChecked = !fechaCheckBox.IsChecked;
+                    }
+                };
+
+                
+            }
+        }
+
+        // Definir una lista para los partidos seleccionados
+        private List<List<Partido>> partidosSeleccionados = new List<List<Partido>>();
+
+        private void ManejarSeleccion(ProcesoElectoral proceso, bool seleccionado)
+        {
+            // Eliminar los partidos relacionados con este proceso en caso de desmarcar el CheckBox
+            if (!seleccionado)
+            {
+                LimpiarPartidos(proceso, partidosSeleccionados);
+                //ImprimirPartidosSeleccionados(partidosSeleccionados);
+            }
+            else
+            {
+                // Agregar partidos al listado de partidos seleccionados
+                foreach (Partido partido in proceso.coleccionPartidos)
+                {
+                    // Buscar en la lista si ya hay partidos con el mismo nombre
+                    List<Partido> partidosConMismoNombre = partidosSeleccionados.FirstOrDefault(p => p.Any() && p.First().Nombre == partido.Nombre);
+
+                    if (partidosConMismoNombre != null)
+                    {
+                        // Si ya hay partidos con el mismo nombre, agregar el partido a esa colección
+                        partidosConMismoNombre.Add(partido);
+                    }
+                    else
+                    {
+                        // Si no hay partidos con el mismo nombre, crear una nueva colección con este partido
+                        partidosSeleccionados.Add(new List<Partido> { partido });
+                    }
+                }
+                // Ordenar las sublistas en partidosSeleccionados según el número de escaños de cada partido
+                partidosSeleccionados = partidosSeleccionados.OrderByDescending(lista => lista.Any() ? lista.Max(partido => partido.Escaños) : 0).ToList();
+
+                // Imprimir los partidos seleccionados
+                ImprimirPartidosSeleccionados(partidosSeleccionados);
+            }
+        }
+
+        private void ImprimirPartidosSeleccionados(List<List<Partido>> partidosSeleccionados)
+        {
+            chartCanvas.Children.Clear();
+
+            // Verificar si hay elementos en la secuencia antes de calcular el máximo
+            if (partidosSeleccionados.Any() && partidosSeleccionados.SelectMany(lista => lista).Any())
+            {
+                double barSpacing = 5;
+                double maxEscaños = partidosSeleccionados.SelectMany(lista => lista).Max(partido => partido.Escaños);
+
+                // Calcular el ancho de cada barra
+                int numPartidos = partidosSeleccionados.SelectMany(lista => lista).Count();
+                double barWidth = (chartCanvas.ActualWidth - (numPartidos - 1) * barSpacing) / (numPartidos+1);
+
+                double inicioProporcional = barWidth * (numPartidos / (barSpacing * 5));
+                double yPosition = chartCanvas.ActualHeight; // Comenzar desde la parte inferior
+
+                double baseOpacity = 1; // Ajusta la opacidad base según tus preferencias
+
+                
+                foreach (var listaDePartidos in partidosSeleccionados)
+                {
+                    int flag = 1;
+                    foreach (var partido in listaDePartidos)
+                    {
+                        double barHeight = (partido.Escaños / maxEscaños) * (chartCanvas.ActualHeight);
+                        Rectangle barra = new Rectangle();
+                        barra.Width = barWidth;
+                        barra.Height = barHeight;
+                        barra.ToolTip = $"{partido.Nombre}: {partido.Escaños} escaños";
+
+                        try
+                        {
+                            Color originalColor = (Color)ColorConverter.ConvertFromString(partido.Color);
+
+                            // Ajusta la opacidad basada en el índice del partido
+
+                            double adjustedOpacity = baseOpacity / flag;
+
+                            Color adjustedColor = Color.FromArgb((byte)(originalColor.A * adjustedOpacity), originalColor.R, originalColor.G, originalColor.B);
+
+                            // Crear una brocha con el color ajustado
+                            SolidColorBrush brocha = new SolidColorBrush(adjustedColor);
+                            barra.Fill = brocha;  
+                            
+                        }
+                        catch (FormatException)
+                        {
+                            barra.Fill = Brushes.Gray;
+                        }
+
+                        double posicionInicio = yPosition - barHeight;
+                        Canvas.SetLeft(barra, inicioProporcional);
+                        Canvas.SetTop(barra, posicionInicio);
+                        chartCanvas.Children.Add(barra);
+
+                        // Agregar el nombre del partido debajo de la barra centrado
+                        TextBlock nombrePartido = new TextBlock();
+                        nombrePartido.Text = partido.Nombre;
+                        nombrePartido.TextAlignment = TextAlignment.Center;
+                        nombrePartido.FontSize = 10; // Tamaño inicial de la letra
+                        nombrePartido.Width = barWidth; // Ancho igual al de la barra
+                        nombrePartido.TextTrimming = TextTrimming.CharacterEllipsis; // Truncar el texto si es demasiado largo
+
+                        // Calcular la posición vertical para que el nombre aparezca debajo de la barra
+                        double yNombrePartido = chartCanvas.ActualHeight + 5;
+
+                        // Ajusta la posición horizontal para que esté centrado debajo de la barra
+                        Canvas.SetLeft(nombrePartido, inicioProporcional);
+                        Canvas.SetTop(nombrePartido, yNombrePartido);
+                        chartCanvas.Children.Add(nombrePartido);
+
+                        // Incrementar la posición proporcional para la siguiente iteración
+                        inicioProporcional += barWidth + barSpacing;
+                        flag++;
+                    }
+                    
+                }
+                // Agregar la leyenda indicando el número de escaños
+                for (int i = 7; i >= 0; i--)
+                {
+                    TextBlock leyenda = new TextBlock();
+
+                    if (i == 0)
+                    {
+                        leyenda.Text = "0";
+                        Canvas.SetLeft(leyenda, 0);
+                        Canvas.SetBottom(leyenda, 0);
+                    }
+                    else if (i == 7)
+                    {
+                        leyenda.Text = maxEscaños.ToString("0");
+                        Canvas.SetLeft(leyenda, 0);
+                        Canvas.SetTop(leyenda, 0);
+                    }
+                    else
+                    {
+                        // Calcular la posición proporcional al número total de escaños
+                        double escanosPorPaso = maxEscaños / 7.0;
+                        double posicionY = (7 - i) * (chartCanvas.ActualHeight / 7.3);
+
+                        leyenda.Text = (i * escanosPorPaso).ToString("0");
+                        Canvas.SetLeft(leyenda, 0);
+                        Canvas.SetTop(leyenda, posicionY);
+                    }
+                    chartCanvas.Children.Add(leyenda);
+                }
+            }
+        }
+
+        private void LimpiarPartidos(ProcesoElectoral proceso, List<List<Partido>> partidosSeleccionados)
+        {
+            foreach (List<Partido> listaDePartidos in partidosSeleccionados)
+            {
+                // Encuentra el primer partido que coincida con la colección de partidos del proceso
+                Partido partidoAEliminar = listaDePartidos.FirstOrDefault(partido =>
+                    proceso.coleccionPartidos.Any(p =>
+                        p.Nombre == partido.Nombre &&
+                        p.Escaños == partido.Escaños &&
+                        p.Color == partido.Color
+                    )
+                );
+
+                // Elimina solo el primer partido que coincida (si existe)
+                if (partidoAEliminar != null)
+                {
+                    listaDePartidos.Remove(partidoAEliminar);
+                }
+
+                // Imprimir los partidos eliminados actualizados
+                ImprimirPartidosSeleccionados(partidosSeleccionados);
+            }
+        }
 
         private void Grafico2_Click(object sender, RoutedEventArgs e)
         {
@@ -242,11 +517,16 @@ namespace Pactometro
 
             foreach (ProcesoElectoral proceso in coleccionElecciones)
             {
-                // Filtrar los procesos equivalentes por la parte de caracteres del nombre (sin números)
-                if (ObtenerParteAlfabética(proceso.nombre) == ObtenerParteAlfabética(procesoElectoralBase.nombre))
+                // Verificar si el proceso actual es nulo
+                if (proceso != null)
                 {
-                    procesosEquivalentes.Add(proceso);
+                    // Filtrar los procesos equivalentes por la parte de caracteres del nombre (sin números)
+                    if (ObtenerParteAlfabética(proceso.nombre) == ObtenerParteAlfabética(procesoElectoralBase.nombre))
+                    {
+                        procesosEquivalentes.Add(proceso);
+                    }
                 }
+                                
             }
 
             return procesosEquivalentes;
@@ -269,90 +549,21 @@ namespace Pactometro
             return nombre;
         }
 
-        private void mostrarGrafico2(Collection<ProcesoElectoral> procesosComparativos)
-        {
-            grafico1 = false;
-            grafico2 = true;
-            grafico3 = false;
-
-            // Limpiar el Canvas antes de agregar nuevos elementos
-            chartCanvas.Children.Clear();
-
-            // Establecer el título del gráfico
-            txtTitulo.Text = "Comparación de " + procesoElectoralActual.nombre;
-
-            double xPosition = 30; // Establecer la posición inicial de la primera barra
-
-            double barSpacing = 5; // Espaciado entre barras
-
-            //Encuentra el numero maximo de escaños de un partido en todos los procesos electorales
-
-            int numPartidos = 0;
-            double maxEscaños = 0;
-            double barWidth = 0;
-
-            foreach (var procesoComparativo in procesosComparativos)
-            {
-                if (procesoComparativo != null)
-                {
-                    // Obtener el número total de partidos en el proceso electoral actual
-                    numPartidos += procesoComparativo.coleccionPartidos.Count;
-
-                    maxEscaños += procesoComparativo.coleccionPartidos.Max(partido => partido.Escaños);
-
-                    // Recorrer la colección de partidos y crear una barra para cada uno
-                    for (int i = 0; i < numPartidos; i++)
-                    {
-                        var partido = procesoComparativo.coleccionPartidos[i];
-
-                        double barHeight = (partido.Escaños / maxEscaños) * (chartCanvas.ActualHeight);
-
-                        Rectangle barra = new Rectangle();
-                        barra.Width = barWidth;
-                        barra.Height = barHeight;
-                        barra.ToolTip = partido.Nombre + ": " + partido.Escaños + " escaños";
-
-                        try
-                        {
-                            barra.Fill = (Brush)new BrushConverter().ConvertFromString(partido.Color);
-                        }
-                        catch (FormatException)
-                        {
-                            barra.Fill = Brushes.Gray;
-                        }
-
-                        Canvas.SetLeft(barra, xPosition);
-                        Canvas.SetTop(barra, chartCanvas.ActualHeight - barHeight);
-
-                        chartCanvas.Children.Add(barra);
-
-                        // Incrementar la posición horizontal para la siguiente barra
-                        xPosition += barWidth + barSpacing;
-
-                        // Agregar el nombre del partido debajo de la barra centrado
-                        TextBlock nombrePartido = new TextBlock();
-                        nombrePartido.Text = partido.Nombre;
-                        nombrePartido.TextAlignment = TextAlignment.Center;
-                        nombrePartido.FontSize = 10; // Tamaño inicial de la letra
-                        nombrePartido.Width = barWidth; // Ancho igual al de la barra
-                        nombrePartido.TextTrimming = TextTrimming.CharacterEllipsis; // Truncar el texto si es demasiado largo
-
-                        // Calcular la posición vertical para que el nombre aparezca debajo de la barra
-                        double yPosition = chartCanvas.ActualHeight + 5;
-                    }
-                }
-            }
-
-            barWidth = (chartCanvas.ActualWidth - (numPartidos - 1) * barSpacing) / numPartidos;
-
-            // Recorrer cada proceso electoral en la colección
-           
-        }
-
 
         private void Grafico3_Click(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        // Funcion para mostrar el grafico 3
+        private void mostrarGrafico3()
+        {
+            grafico1 = false;
+            grafico2 = false;
+            grafico3 = true;
+
+
+            
         }
     }
 }

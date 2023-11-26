@@ -16,7 +16,7 @@
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="ELECCIÓN" DisplayMemberBinding="{Binding nombre}"/>
-                    <GridViewColumn Header="FECHA" DisplayMemberBinding="{Binding fecha}"/>
+                    <GridViewColumn Header="FECHA" DisplayMemberBinding="{Binding fecha, StringFormat={}{0: dd/MM/yyyy}}"/>
                     <GridViewColumn Header="NUMERO DE ESCAÑOS" DisplayMemberBinding="{Binding numEscaños}"/>
                     <GridViewColumn Header="MAYORÍA ABSOLUTA" DisplayMemberBinding="{Binding mayoriaAbsoluta}"/>
                 </GridView>

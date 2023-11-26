@@ -52,7 +52,7 @@
 
             <Label Content="Color:" VerticalAlignment="Center"/>
 
-            <TextBox Width="50" Name="txtColor" Margin="10,0,10,0" PreviewTextInput="txtEscaños_PreviewTextInput"/>
+            <TextBox Width="50" Name="txtColor" Margin="10,0,10,0"/>
 
             <Button Width="120" Content="Añadir Partido" Margin="10,0" Click="BtnAñadirPartido_Click"/>
         </StackPanel>

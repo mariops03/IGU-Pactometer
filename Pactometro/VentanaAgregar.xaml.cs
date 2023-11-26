@@ -86,15 +86,6 @@ namespace Pactometro
             LimpiarCamposPartido();
         }
 
-        private void ColorPicker_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<System.Windows.Media.Color?> e)
-        {
-            if (e.NewValue.HasValue)
-            {
-                System.Windows.Media.Color selectedColor = e.NewValue.Value;
-                MessageBox.Show($"Color seleccionado: {selectedColor.ToString()}");
-            }
-        }
-
 
         private void BtnEliminarPartido_Click(object sender, RoutedEventArgs e)
         {
@@ -193,8 +184,6 @@ namespace Pactometro
             procesoAñadido = true;
         }
 
-
-
         private void LimpiarCamposProceso()
         {
             cmbTipoProceso.SelectedIndex = -1;
@@ -218,7 +207,6 @@ namespace Pactometro
                 e.Handled = true;
             }
         }
-
 
         private void txtNumEscaños_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
