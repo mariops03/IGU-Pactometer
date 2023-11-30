@@ -29,6 +29,6 @@
             </MenuItem>
         </Menu>
         <TextBlock Name="txtTitulo" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Center" FontSize="20"/>
-        <Canvas Name="chartCanvas" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Margin="10" Background="AliceBlue"/>
+        <Canvas Name="chartCanvas" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Margin="10" Background="LavenderBlush"/>
     </Grid>
 </Window>

@@ -56,7 +56,6 @@ namespace Pactometro
             ProcesoEleccionSeleccionado?.Invoke(this, selectedData);
         }
 
-
         private void añadirDatos(ObservableCollection<ProcesoElectoral> coleccionElecciones)
         {
             //si el numero de colecciones es menor que 4, añade 4 colecciones

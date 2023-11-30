@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -76,6 +77,7 @@ namespace Pactometro
             if(procesoElectoral == null)
             {
                 noHayProcesoElectoralSeleccionado();
+                procesoElectoralActual = null;
             }
             else
             {
@@ -147,7 +149,7 @@ namespace Pactometro
             }
             else if (grafico3 == true)
             {
-                // Agregar código para grafico3 si es necesario
+               mostrarGrafico3();
             }
             else
             {
@@ -173,11 +175,16 @@ namespace Pactometro
 
         private void Grafico1_Click(object sender, RoutedEventArgs e)
         {
-            // Suscribir al evento SizeChanged de la ventana o del contenedor que contiene el Canvas
             SizeChanged += Window_SizeChanged;
-
-            // Llamar al método que crea el gráfico utilizando el proceso electoral actual
-            mostrarGrafico1();
+            if (procesoElectoralActual == null)
+            {
+                noHayProcesoElectoralSeleccionado();
+            }
+            else
+            {
+                // Llamar al método que crea el gráfico utilizando el proceso electoral actual
+                mostrarGrafico1();
+            }
         }
 
         private Dictionary<string, bool> estadosMarcado = new Dictionary<string, bool>();
@@ -186,26 +193,28 @@ namespace Pactometro
 
         private void comprobarGrafico()
         {
-            if (grafico2)
+            if (procesoElectoralActual == null)
             {
-                if (procesoElectoralActual == null)
-                {
-                    MessageBox.Show("No se ha seleccionado un proceso electoral.");
-                    return; // Salir del método si no hay proceso seleccionado
-                }
-
-                coleccionEleccionesCheckBox.Clear();
-                GuardarEstadosMarcado();
-
-                procesoSeleccionado();
-
-                RestaurarEstadosMarcado();
+                noHayProcesoElectoralSeleccionado();
             }
             else
             {
-                procesoSeleccionado();
+                if (grafico2)
+                {
+                    coleccionEleccionesCheckBox.Clear();
+                    GuardarEstadosMarcado();
+
+                    procesoSeleccionado();
+
+                    RestaurarEstadosMarcado();
+                }
+                else
+                {
+                    procesoSeleccionado();
+                }
             }
         }
+            
 
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
         {
@@ -222,8 +231,7 @@ namespace Pactometro
                 {
                     estadosMarcado[checkBox.Content.ToString()] = checkBox.IsChecked ?? false;
                 }
-            }
-            
+            } 
         }
 
         private void GuardarEstadosMarcado2()
@@ -236,9 +244,7 @@ namespace Pactometro
                 {
                     estadosMarcado2[checkBox.Content.ToString()] = checkBox.IsChecked ?? false;
                 }
-            }
-
-            
+            }            
         }
 
         private void RestaurarEstadosMarcado()
@@ -376,7 +382,11 @@ namespace Pactometro
             // Limpiar el Canvas antes de agregar nuevos elementos
             chartCanvas.Children.Clear();
 
-            txtTitulo.Text = "Comparación de " + procesosComparativos.FirstOrDefault()?.nombre;
+            var nombreProceso = procesosComparativos.FirstOrDefault()?.nombre;
+
+            var nombreSinNumeros = Regex.Replace(nombreProceso, @"[\d-]+", "");
+
+            txtTitulo.Text = "Comparación de " + nombreSinNumeros;
 
             // Ordenar la colección de procesos electorales por fecha de forma que el más reciente esté primero
             procesosComparativos = new Collection<ProcesoElectoral>(procesosComparativos.OrderByDescending(p => p.fecha).ToList());
@@ -463,9 +473,6 @@ namespace Pactometro
                 coleccionEleccionesCheckBox.Add(proceso);
                 // Ordenar la colección de elecciones por fecha de forma inversa
                 coleccionEleccionesCheckBox = new Collection<ProcesoElectoral>(coleccionEleccionesCheckBox.OrderByDescending(p => p.fecha).ToList());
-
-                // Pon en el titulo el nombre del primer proceso electoral de la coleccion
-                txtTitulo.Text = "Comparación de " + coleccionEleccionesCheckBox.FirstOrDefault()?.nombre;
                 
                 // Recorrer la coleccion de procesos electorales de los checkBox
 
@@ -698,7 +705,11 @@ namespace Pactometro
 
             SizeChanged += Window_SizeChanged;
             // Verificar si hay un proceso electoral actual antes de crear el gráfico
-            if (procesoElectoralActual != null)
+            if (procesoElectoralActual == null)
+            {
+                noHayProcesoElectoralSeleccionado();
+            }
+            else
             {
                 // Obtener otros procesos electorales equivalentes para la comparación
                 Collection<ProcesoElectoral> procesosEquivalentes = ObtenerProcesosEquivalentesPorNombre(procesoElectoralActual);
@@ -706,12 +717,8 @@ namespace Pactometro
                 // Llamar al método que crea el gráfico comparativo
                 mostrarGrafico2(procesosEquivalentes);
             }
-            else
-            {
-                // Manejar el caso en el que no hay un proceso electoral actual seleccionado
-                // Puedes mostrar un mensaje de error, por ejemplo
-                MessageBox.Show("No se ha seleccionado un proceso electoral.");
-            }
+
+            
         }
 
         private Collection<ProcesoElectoral> ObtenerProcesosEquivalentesPorNombre(ProcesoElectoral procesoElectoralBase)
@@ -755,18 +762,244 @@ namespace Pactometro
 
         private void Grafico3_Click(object sender, RoutedEventArgs e)
         {
-
+            // Suscribir al evento SizeChanged de la ventana o del contenedor que contiene el Canvas
+            SizeChanged += Window_SizeChanged;
+            if (procesoElectoralActual == null)
+            {
+                noHayProcesoElectoralSeleccionado();
+            }
+            else
+            {
+                // Llamar al método que crea el gráfico utilizando el proceso electoral actual
+                mostrarGrafico3();
+            }
         }
 
-        // Funcion para mostrar el grafico 3
+        // Additional fields to keep track of the clicked rectangles and their order
+        private Dictionary<Rectangle, double> originalPositions = new Dictionary<Rectangle, double>();
+        private List<Partido> partidosEnSegundaBarra = new List<Partido>();
+        private List<Rectangle> clickedRectangles = new List<Rectangle>();
+        private double emptyBarYPos;
+        private double yPos;
+
+        private void Rectangle_Click(object sender, MouseButtonEventArgs e)
+        {
+            Rectangle clickedRect = sender as Rectangle;
+            if (clickedRect != null)
+            {
+                // Check which bar the rectangle is in by its Y position
+                bool isInFirstBar = Canvas.GetTop(clickedRect) == yPos;
+
+                // Move the rectangle to the other bar
+                double newYPos = isInFirstBar ? emptyBarYPos : yPos;
+                Canvas.SetTop(clickedRect, newYPos);
+
+                // Determine the new X position based on the bar it's moving to
+                double newXPos;
+                if (isInFirstBar)
+                {
+                    // If moving to the second bar, simply add to the end
+                    newXPos = clickedRectangles.Sum(r => r.Width);
+                    clickedRectangles.Add(clickedRect);
+                }
+                else
+                {
+                    // If moving back to the first bar, restore the original position
+                    newXPos = originalPositions[clickedRect];
+                    clickedRectangles.Remove(clickedRect);
+                }
+
+                // Set the new X position for the moved rectangle
+                Canvas.SetLeft(clickedRect, newXPos);
+            }
+        }
+
+
         private void mostrarGrafico3()
         {
             grafico1 = false;
             grafico2 = false;
             grafico3 = true;
 
+            // Clear the canvas from previous drawings
+            chartCanvas.Children.Clear();
 
+            // Remove the checkBoxCanvas from the gridPrincipal if it exists
+            if (checkBoxCanvas != null)
+            {
+                gridPrincipal.Children.Remove(checkBoxCanvas);
+            }
+
+            txtTitulo.Text = procesoElectoralActual.nombre;
+
+            // Set the height of each bar and the gap between the bars
+            double barHeight = 60; // height of each bar
+            double barGap = 40; // gap between the bars
+
+            yPos = chartCanvas.ActualHeight / 4;
+            emptyBarYPos = yPos + barHeight + barGap;
+
+            // Create the first empty bar that represents the total number of seats
+            Rectangle firstEmptyBar = new Rectangle
+            {
+                Height = barHeight,
+                Width = chartCanvas.ActualWidth,
+                Stroke = Brushes.Black,
+                StrokeThickness = 1
+            };
+
+            // Position the first empty bar on the canvas
+            Canvas.SetTop(firstEmptyBar, yPos);
+            Canvas.SetLeft(firstEmptyBar, 0); // Align to the left
+            chartCanvas.Children.Add(firstEmptyBar);
+
+            // Initialize the starting X position for the filled rectangles
+            double xPos = 0;
+
+            // Draw a filled rectangle for each party, within the bounds of the first empty rectangle
+            foreach (var partido in procesoElectoralActual.coleccionPartidos)
+            {
+                // Calculate the width of each filled rectangle based on the number of seats
+                double rectWidth = (firstEmptyBar.Width / procesoElectoralActual.numEscaños) * partido.Escaños;
+
+                // Create the filled rectangle
+                Rectangle filledBar = new Rectangle
+                {
+                    Height = barHeight,
+                    Width = rectWidth
+                };
+
+                filledBar.MouseLeftButtonDown += Rectangle_Click;
+
+                // Try to set the actual color of the filled rectangle
+                try
+                {
+                    filledBar.Fill = (Brush)new BrushConverter().ConvertFromString(partido.Color);
+                }
+                catch (FormatException)
+                {
+                    filledBar.Fill = Brushes.Gray; // Use gray if there's an exception
+                }
+
+                // Position the filled rectangle within the first empty bar
+                Canvas.SetTop(filledBar, yPos);
+                Canvas.SetLeft(filledBar, xPos); // Align the left edge with the current x position
+
+                // Add the filled rectangle to the canvas
+                chartCanvas.Children.Add(filledBar);
+                originalPositions[filledBar] = xPos;
+
+                // Increment the X position for the next filled rectangle
+                xPos += rectWidth;
+            }
+
+            // Create a second empty bar below the first one
+            Rectangle secondEmptyBar = new Rectangle
+            {
+                Height = barHeight,
+                Width = firstEmptyBar.Width, // Match the width of the first empty bar
+                Stroke = Brushes.Black,
+                StrokeThickness = 1
+            };
+
+            // Position the second empty bar below the first one with a gap
+            Canvas.SetTop(secondEmptyBar, yPos + barHeight + barGap);
+            Canvas.SetLeft(secondEmptyBar, 0); // Align to the left
+
+            // Add the second empty bar to the canvas
+            chartCanvas.Children.Add(secondEmptyBar);
+
+            // Calcular la posición X de la barra de mayoría absoluta
+            int mayoriaAbsoluta = procesoElectoralActual.mayoriaAbsoluta;
+            double anchoTotalBarra = firstEmptyBar.Width;
+            double posicionBarraMayoria = (anchoTotalBarra / procesoElectoralActual.numEscaños) * mayoriaAbsoluta;
+
+            // Crear la barra de mayoría absoluta
+            Rectangle barraMayoriaAbsoluta = new Rectangle
+            {
+                Height = barHeight,
+                Width = 2, // Un ancho pequeño para que sea una línea delgada
+                Fill = Brushes.Red // Color rojo para destacar
+            };
+
+            // Posicionar la barra de mayoría absoluta en la barra inferior
+            Canvas.SetTop(barraMayoriaAbsoluta, emptyBarYPos);
+            Canvas.SetLeft(barraMayoriaAbsoluta, posicionBarraMayoria);
+
+            // Añadir la barra de mayoría absoluta al canvas
+            chartCanvas.Children.Add(barraMayoriaAbsoluta);
+
+            emptyBarYPos = yPos + barHeight + barGap;
+
+            //Añade un boton para reiniciar el grafico
+            Button reiniciar = new Button();
+            reiniciar.Content = "Reiniciar";
+            reiniciar.Width = 100;
+            reiniciar.Height = 30;
+            reiniciar.Click += Reiniciar_Click;
+            reiniciar.HorizontalAlignment = HorizontalAlignment.Center;
+            reiniciar.VerticalAlignment = VerticalAlignment.Top;
+
+            //Añadirlo al grid
+            Grid.SetColumn(reiniciar, 0);
+            Grid.SetRow(reiniciar, 5);
+            gridPrincipal.Children.Add(reiniciar);
+            //Ajustar la posicion del boton
+
+            //Añade un boton para completar un pacto
+            Button pacto = new Button();
+            pacto.Content = "Pacto";
+            pacto.Width = 100;
+            pacto.Height = 30;
+            pacto.Click += Pacto_Click;
+            pacto.HorizontalAlignment = HorizontalAlignment.Center;
+            pacto.VerticalAlignment = VerticalAlignment.Top;
+            Grid.SetColumn(pacto, 1);
+            Grid.SetRow(pacto, 5);
+            gridPrincipal.Children.Add(pacto);
 
         }
+
+        //Crea un evento para reiniciar el grafico
+        private void Reiniciar_Click(object sender, RoutedEventArgs e)
+        {
+            mostrarGrafico3();
+        }
+
+        //Crea un evento para completar un pacto
+        private void Pacto_Click(object sender, RoutedEventArgs e)
+        {
+            int totalEscañosSeleccionados = 0;
+            string partidosPacto = "";
+
+            // Iterar sobre los rectángulos seleccionados para sumar los escaños y formar el nombre del pacto
+            foreach (var rect in clickedRectangles)
+            {
+                // Encuentra el partido asociado al rectángulo
+                var partido = procesoElectoralActual.coleccionPartidos.FirstOrDefault(p => p.Color == rect.Fill.ToString());
+
+                if (partido != null)
+                {
+                    totalEscañosSeleccionados += partido.Escaños;
+                    partidosPacto += partido.Nombre + ", ";
+                }
+            }
+
+            // Verificar si se alcanza la mayoría absoluta
+            if (totalEscañosSeleccionados >= procesoElectoralActual.mayoriaAbsoluta)
+            {
+                // Remover la última coma y espacio
+                partidosPacto = partidosPacto.TrimEnd(new char[] { ',', ' ' });
+
+                // Mostrar mensaje de pacto creado
+                MessageBox.Show("Pacto creado con los partidos: " + partidosPacto);
+            }
+            else
+            {
+                // Mostrar mensaje de error si no se alcanza la mayoría absoluta
+                MessageBox.Show("No se ha alcanzado la mayoría absoluta. Pacto no posible.");
+            }
+        }
+
     }
 }
