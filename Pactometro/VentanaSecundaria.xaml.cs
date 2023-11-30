@@ -34,32 +34,35 @@ namespace Pactometro
 
         private void mainTable_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (mainTable.SelectedItem != null)
+            // Obtiene el elemento seleccionado, que puede ser null si no hay selección
+            var selectedData = mainTable.SelectedItem as ProcesoElectoral;
+
+            if (selectedData != null)
             {
-                var selectedData = mainTable.SelectedItem as ProcesoElectoral;
-
-                if (selectedData != null)
+                // Actualiza secondaryTable si hay una selección
+                secondaryTable.ItemsSource = selectedData.coleccionPartidos;
+                if (secondaryTable.Items.Count > 0)
                 {
-                    // Asegúrate de que coleccionPartidos es una propiedad en ProcesoElectoral
-                    secondaryTable.ItemsSource = selectedData.coleccionPartidos;
-
-                    if (secondaryTable.Items.Count > 0)
-                    {
-                        secondaryTable.ScrollIntoView(secondaryTable.Items[0]);
-                    }
-
-                    // Disparar el evento para notificar a la VentanaPrincipal sobre la selección
-                    ProcesoEleccionSeleccionado?.Invoke(this, selectedData);
+                    secondaryTable.ScrollIntoView(secondaryTable.Items[0]);
                 }
             }
+            else
+            {
+                // Limpia secondaryTable si no hay selección
+                secondaryTable.ItemsSource = null;
+            }
+
+            // Dispara el evento con el elemento seleccionado o null
+            ProcesoEleccionSeleccionado?.Invoke(this, selectedData);
         }
+
 
         private void añadirDatos(ObservableCollection<ProcesoElectoral> coleccionElecciones)
         {
             //si el numero de colecciones es menor que 4, añade 4 colecciones
             if (coleccionElecciones.Count == 0)
             {
-                for (int i = 0; i < 4; i++)
+                for (int i = 0; i < 5; i++)
                 {
                     coleccionElecciones.Add(new ProcesoElectoral());
                 }
@@ -271,6 +274,45 @@ namespace Pactometro
             coleccionElecciones[3].coleccionPartidos[6].Nombre = "XAV";
             coleccionElecciones[3].coleccionPartidos[6].Escaños = 1;
             coleccionElecciones[3].coleccionPartidos[6].Color = "lightGreen";
+
+            // Añadir otrs elecciones generales a fecha de hoy
+            for (int i = 0; i < 11; i++)
+            {
+                coleccionElecciones[4].coleccionPartidos.Add(new Partido());
+            }
+
+            coleccionElecciones[4].nombre = "Elecciones Generales 30-11-2023";
+            coleccionElecciones[4].fecha = new DateTime(2023, 11, 30);
+            coleccionElecciones[4].numEscaños = 350;
+            coleccionElecciones[4].mayoriaAbsoluta = 176;
+
+            coleccionElecciones[4].coleccionPartidos[0].Nombre = "PP";
+            coleccionElecciones[4].coleccionPartidos[0].Escaños = 166;
+            coleccionElecciones[4].coleccionPartidos[0].Color = "Blue";
+
+            coleccionElecciones[4].coleccionPartidos[1].Nombre = "PSOE";
+            coleccionElecciones[4].coleccionPartidos[1].Escaños = 100;
+            coleccionElecciones[4].coleccionPartidos[1].Color = "Red";
+
+            coleccionElecciones[4].coleccionPartidos[2].Nombre = "VOX";
+            coleccionElecciones[4].coleccionPartidos[2].Escaños = 40;
+            coleccionElecciones[4].coleccionPartidos[2].Color = "Green";
+
+            coleccionElecciones[4].coleccionPartidos[3].Nombre = "PODEMOS";
+            coleccionElecciones[4].coleccionPartidos[3].Escaños = 20;
+            coleccionElecciones[4].coleccionPartidos[3].Color = "Purple";
+
+            coleccionElecciones[4].coleccionPartidos[4].Nombre = "ERC";
+            coleccionElecciones[4].coleccionPartidos[4].Escaños = 10;
+            coleccionElecciones[4].coleccionPartidos[4].Color = "Yellow";
+
+            coleccionElecciones[4].coleccionPartidos[5].Nombre = "JUNTS";
+            coleccionElecciones[4].coleccionPartidos[5].Escaños = 10;
+            coleccionElecciones[4].coleccionPartidos[5].Color = "lightGreen";
+
+            coleccionElecciones[4].coleccionPartidos[6].Nombre = "EH Bildu";
+            coleccionElecciones[4].coleccionPartidos[6].Escaños = 10;
+            coleccionElecciones[4].coleccionPartidos[6].Color = "lightBlue";
 
             mainTable.ItemsSource = coleccionElecciones;
 

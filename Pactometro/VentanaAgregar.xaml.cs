@@ -167,14 +167,14 @@ namespace Pactometro
                 {
                     MessageBox.Show("Dos partidos no pueden tener el mismo color.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
-                }
+                } 
                 nuevoProceso.coleccionPartidos.Add(partido);
             }
 
             // Limpiar la colección temporal de partidos
             PartidosTemporales.Clear();
 
-            // Agregar el nuevo proceso a la colección principal
+            // Agregar el nuevo proceso a la colección principal de forma ordenada por fecha de mayor a menor
             ColeccionElecciones.Add(nuevoProceso);
 
             // Puedes realizar otras acciones aquí, como limpiar otros campos de entrada

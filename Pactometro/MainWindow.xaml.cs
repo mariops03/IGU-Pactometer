@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -24,7 +25,6 @@ namespace Pactometro
         private bool grafico2 = false;
         private bool grafico3 = false;
         double flag = 1.0;
-
         public MainWindow()
         {
             InitializeComponent();
@@ -73,12 +73,63 @@ namespace Pactometro
         //Hacer que la ventana principal maneje el evento de selección de la ventana secundaria, recibiendo una colección de partidos
         private void VentanaSecundaria_ProcesoEleccionSeleccionado(object sender, ProcesoElectoral procesoElectoral)
         {
+            if(procesoElectoral == null)
+            {
+                noHayProcesoElectoralSeleccionado();
+            }
+            else
+            {
+                procesoElectoralActual = procesoElectoral;
 
-            procesoElectoralActual = procesoElectoral;
-            // Dependiendo del gráfico seleccionado, llamar al método que crea el gráfico
-            procesoSeleccionado();
-        
+                comprobarGrafico();
+            }
         }
+
+        //Funcion que cree un textblock en el canvas indicando que no hay ningun proceso electoral seleccionado, que por favor seleccione uno
+        private void noHayProcesoElectoralSeleccionado()
+        {
+            //Borra el canvas
+            chartCanvas.Children.Clear();
+            //Borra el titulo
+            txtTitulo.Text = "";
+            //Borra el canvas de los checkBox
+            if (checkBoxCanvas != null)
+            {
+                gridPrincipal.Children.Remove(checkBoxCanvas);
+            }
+           //Crea un textblock en el canvas indicando que no hay ningun proceso electoral seleccionado, que por favor seleccione uno
+            TextBlock informar = new TextBlock();
+            informar.Text = "POR FAVOR, SELECCIONA UN PROCESO ELECTORAL";
+            informar.TextAlignment = TextAlignment.Center;
+            informar.FontSize = 20;
+            informar.Width = 500;
+            informar.Height = 100;
+            chartCanvas.Children.Add(informar);
+            //Ajusta la posicion del textblock al centro del canvas
+            Canvas.SetLeft(informar, (chartCanvas.ActualWidth - informar.Width) / 2);
+            Canvas.SetTop(informar, (chartCanvas.ActualHeight - informar.Height) / 2);
+        }
+
+        private void noHayGraficoSeleccionado()
+        {
+            chartCanvas.Children.Clear();
+            txtTitulo.Text = "";
+            if (checkBoxCanvas != null)
+            {
+                gridPrincipal.Children.Remove(checkBoxCanvas);
+            }
+            TextBlock informar = new TextBlock();
+            informar.Text = "POR FAVOR, SELECCIONA UN GRAFICO";
+            informar.TextAlignment = TextAlignment.Center;
+            informar.FontSize = 20;
+            informar.Width = 500;
+            informar.Height = 100;
+            chartCanvas.Children.Add(informar);
+            Canvas.SetLeft(informar, (chartCanvas.ActualWidth - informar.Width) / 2);
+            Canvas.SetTop(informar, (chartCanvas.ActualHeight - informar.Height) / 2);
+
+        }
+
 
         private void procesoSeleccionado()
         {
@@ -97,6 +148,10 @@ namespace Pactometro
             else if (grafico3 == true)
             {
                 // Agregar código para grafico3 si es necesario
+            }
+            else
+            {
+                noHayGraficoSeleccionado();
             }
         }
 
@@ -126,48 +181,64 @@ namespace Pactometro
         }
 
         private Dictionary<string, bool> estadosMarcado = new Dictionary<string, bool>();
+        // Crea otro diccionario para guardar los estados de marcado antes de cambiar el gráfico
+        private Dictionary<string, bool> estadosMarcado2 = new Dictionary<string, bool>();
 
-        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
+        private void comprobarGrafico()
         {
             if (grafico2)
             {
                 if (procesoElectoralActual == null)
                 {
-                    // Manejar el caso en el que no hay un proceso electoral actual seleccionado
-                    // Puedes mostrar un mensaje de error, por ejemplo
                     MessageBox.Show("No se ha seleccionado un proceso electoral.");
                     return; // Salir del método si no hay proceso seleccionado
                 }
 
-            
-
-                // Guardar los estados de marcado antes de cambiar el gráfico
+                coleccionEleccionesCheckBox.Clear();
                 GuardarEstadosMarcado();
 
                 procesoSeleccionado();
 
-                // Restaurar los estados de marcado después de cambiar el gráfico
                 RestaurarEstadosMarcado();
             }
             else
             {
                 procesoSeleccionado();
             }
-            // Verificar si se ha deseleccionado el proceso actual
-            
+        }
 
-            
+        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            comprobarGrafico();
         }
 
         private void GuardarEstadosMarcado()
         {
             estadosMarcado.Clear();
-
-            // Guardar los estados de marcado de los CheckBox en el checkBoxCanvas
-            foreach (CheckBox checkBox in checkBoxCanvas.Children.OfType<CheckBox>())
+            if(checkBoxCanvas != null)
             {
-                estadosMarcado[checkBox.Content.ToString()] = checkBox.IsChecked ?? false;
+                // Guardar los estados de marcado de los CheckBox en el checkBoxCanvas
+                foreach (CheckBox checkBox in checkBoxCanvas.Children.OfType<CheckBox>())
+                {
+                    estadosMarcado[checkBox.Content.ToString()] = checkBox.IsChecked ?? false;
+                }
             }
+            
+        }
+
+        private void GuardarEstadosMarcado2()
+        {
+            estadosMarcado2.Clear();
+            if(checkBoxCanvas != null)
+            {
+                // Guardar los estados de marcado de los CheckBox en el checkBoxCanvas
+                foreach (CheckBox checkBox in checkBoxCanvas.Children.OfType<CheckBox>())
+                {
+                    estadosMarcado2[checkBox.Content.ToString()] = checkBox.IsChecked ?? false;
+                }
+            }
+
+            
         }
 
         private void RestaurarEstadosMarcado()
@@ -182,7 +253,7 @@ namespace Pactometro
                 {
                     checkBox.IsChecked = estadosMarcado[checkBox.Content.ToString()];
                 }
-            } 
+            }
         }
 
         private void mostrarGrafico1()
@@ -212,7 +283,7 @@ namespace Pactometro
                 // Calcular el ancho de cada barra de manera que ocupen todo el Canvas
                 double barWidth = (chartCanvas.ActualWidth - (numPartidos - 1) * barSpacing) / (numPartidos + 1);
 
-                double inicioProporcional = barWidth * (numPartidos / (barSpacing*5));
+                double inicioProporcional = barWidth * (numPartidos / (barSpacing * 5));
 
                 for (int i = 0; i < numPartidos; i++)
                 {
@@ -301,15 +372,15 @@ namespace Pactometro
 
         private void mostrarGrafico2(Collection<ProcesoElectoral> procesosComparativos)
         {
-            grafico1 = false;
-            grafico2 = true;
-            grafico3 = false;
-
            
             // Limpiar el Canvas antes de agregar nuevos elementos
             chartCanvas.Children.Clear();
 
             txtTitulo.Text = "Comparación de " + procesosComparativos.FirstOrDefault()?.nombre;
+
+            // Ordenar la colección de procesos electorales por fecha de forma que el más reciente esté primero
+            procesosComparativos = new Collection<ProcesoElectoral>(procesosComparativos.OrderByDescending(p => p.fecha).ToList());
+
             // Limpiar el Canvas de los CheckBox antes de agregar nuevos elementos
             if (checkBoxCanvas != null)
             {
@@ -324,12 +395,12 @@ namespace Pactometro
             checkBoxCanvas.Background = Brushes.LightGray;
             checkBoxCanvas.Margin = new Thickness(15);
             checkBoxCanvas.Width = 112; // Ajusta el tamaño según tus necesidades
-            checkBoxCanvas.Height = procesosComparativos.Count() * 30; // Ajusta el tamaño según tus necesidades
+            checkBoxCanvas.Height = procesosComparativos.Count() * 29; // Ajusta el tamaño según tus necesidades
             checkBoxCanvas.VerticalAlignment = VerticalAlignment.Top;
             Grid.SetColumn(checkBoxCanvas, 3);
             Grid.SetRow(checkBoxCanvas, 2);
             gridPrincipal.Children.Add(checkBoxCanvas);
-                    
+
 
             double fechaY = 0;
 
@@ -358,7 +429,6 @@ namespace Pactometro
                 // Manejar el evento Unchecked para quitar el proceso de la colección
                 fechaCheckBox.Unchecked += (sender, e) => ManejarSeleccion(proceso, false);
 
-                // Manejar el evento KeyDown para permitir la navegación con flechas y la selección con Enter
                 fechaCheckBox.KeyDown += (sender, e) =>
                 {
                     if (e.Key == Key.Enter)
@@ -371,86 +441,104 @@ namespace Pactometro
 
         // Definir una lista para los partidos seleccionados
         private List<List<Partido>> partidosSeleccionados = new List<List<Partido>>();
+        //Crea una coleccion de elecciones para guardar los procesos electorales de los checkBox
+        private Collection<ProcesoElectoral> coleccionEleccionesCheckBox = new Collection<ProcesoElectoral>();
 
         private void ManejarSeleccion(ProcesoElectoral proceso, bool seleccionado)
         {
             // Eliminar los partidos relacionados con este proceso en caso de desmarcar el CheckBox
             if (!seleccionado)
             {
+                // Eliminar el proceso de la colección de elecciones en orden de fecha
+                coleccionEleccionesCheckBox.Remove(proceso);
+                coleccionEleccionesCheckBox = new Collection<ProcesoElectoral>(coleccionEleccionesCheckBox.OrderByDescending(p => p.fecha).ToList());
                 LimpiarPartidos(proceso, partidosSeleccionados);
-                QuitarCuadradoCheckBox(proceso.fecha.ToString("dd/MM/yyyy"));
-                
+                //QuitarCuadradoCheckBox(proceso.fecha.ToString("dd/MM/yyyy"));
             }
             else
             {
-                // Agregar partidos al listado de partidos seleccionados
-                foreach (Partido partido in proceso.coleccionPartidos)
+                //Eliminar partidos seleccionados
+                partidosSeleccionados.Clear();
+                //Agregar el proceso a la coleccion de elecciones en orden de fecha
+                coleccionEleccionesCheckBox.Add(proceso);
+                // Ordenar la colección de elecciones por fecha de forma inversa
+                coleccionEleccionesCheckBox = new Collection<ProcesoElectoral>(coleccionEleccionesCheckBox.OrderByDescending(p => p.fecha).ToList());
+
+                // Pon en el titulo el nombre del primer proceso electoral de la coleccion
+                txtTitulo.Text = "Comparación de " + coleccionEleccionesCheckBox.FirstOrDefault()?.nombre;
+                
+                // Recorrer la coleccion de procesos electorales de los checkBox
+
+                foreach (ProcesoElectoral procesoCheckBox in coleccionEleccionesCheckBox)
                 {
-                    // Buscar en la lista si ya hay partidos con el mismo nombre
-                    List<Partido> partidosConMismoNombre = partidosSeleccionados.FirstOrDefault(p => p.Any() && p.First().Nombre == partido.Nombre);
-
-                    if (partidosConMismoNombre != null)
+                    foreach (Partido partido in procesoCheckBox.coleccionPartidos)
                     {
-                        // Si ya hay partidos con el mismo nombre, agregar el partido a esa colección
-                        partidosConMismoNombre.Add(partido);
-                    }
-                    else
-                    {
-                        // Si no hay partidos con el mismo nombre, crear una nueva colección con este partido
-                        partidosSeleccionados.Add(new List<Partido> { partido });
-                        
+                        // Buscar en la lista si ya hay partidos con el mismo nombre
+                        List<Partido> partidosConMismoNombre = partidosSeleccionados.FirstOrDefault(p => p.Any() && p.First().Nombre == partido.Nombre);
 
+                        if (partidosConMismoNombre != null)
+                        {
+                            // Si ya hay partidos con el mismo nombre, agregar el partido a esa colección
+                            partidosConMismoNombre.Add(partido);
+                        }
+                        else
+                        {
+                            // Si no hay partidos con el mismo nombre, crear una nueva colección con este partido
+                            partidosSeleccionados.Add(new List<Partido> { partido });
+
+
+                        }
                     }
                 }
                 // Ordenar las sublistas en partidosSeleccionados según el número de escaños de cada partido
                 partidosSeleccionados = partidosSeleccionados.OrderByDescending(lista => lista.Any() ? lista.Max(partido => partido.Escaños) : 0).ToList();
-                AgregarCuadradoCheckBox(proceso.fecha.ToString("dd/MM/yyyy"));
-                // Imprimir los partidos seleccionados
+                
                 ImprimirPartidosSeleccionados(partidosSeleccionados);
+
             }
+            ActualizarCuadrados();
         }
 
-        private void AgregarCuadradoCheckBox(string fecha)
+        private void ActualizarCuadrados()
         {
-
-            // Crear un rectángulo (o cuadrado) para agregar a la derecha del CheckBox seleccionado
-            Rectangle cuadrado = new Rectangle();
-            cuadrado.Width = 20; // Ajusta el tamaño según tus necesidades
-            cuadrado.Height = 20;
-            //Pon un margen al cuadrado
-            cuadrado.Margin = new Thickness(3);
-            // Establece la opacidad segun la variable flag
-
-            cuadrado.Opacity = 1.0 / flag;
-            cuadrado.Fill = Brushes.Red;
-            txtTitulo.Text = flag.ToString();
-
-            
-
-            // Posicionar el rectángulo a la derecha del CheckBox correspondiente
-            CheckBox checkBoxCorrespondiente = checkBoxCanvas.Children.OfType<CheckBox>().FirstOrDefault(cb => cb.Content.ToString() == fecha);
-            if (checkBoxCorrespondiente != null)
+            GuardarEstadosMarcado2();
+            var cuadradosExistentes = checkBoxCanvas.Children.OfType<Rectangle>().ToList();
+            foreach (var cuadrado in cuadradosExistentes)
             {
-                double cuadradoLeft = Canvas.GetLeft(checkBoxCorrespondiente) + checkBoxCorrespondiente.ActualWidth + 5; // Ajusta el espaciado según tus necesidades
-                double cuadradoTop = Canvas.GetTop(checkBoxCorrespondiente);
-                Canvas.SetRight(cuadrado, 0);
-                Canvas.SetTop(cuadrado, cuadradoTop);
-                checkBoxCanvas.Children.Add(cuadrado);
-
-                // Asociar el cuadrado al CheckBox correspondiente
-                cuadrado.Tag = fecha;
+                checkBoxCanvas.Children.Remove(cuadrado);
             }
-        }
+            int indice = 0;
+            var checkBoxesMarcados = estadosMarcado2
+                .Where(kvp => kvp.Value)
+                .Select(kvp => new { Key = DateTime.ParseExact(kvp.Key, "dd/MM/yyyy", CultureInfo.InvariantCulture), Value = kvp.Value })
+                .OrderByDescending(kvp => kvp.Key)
+                .ToList();
 
-        private void QuitarCuadradoCheckBox(string fecha)
-        {
-            // Buscar el cuadrado asociado al CheckBox
-            Rectangle cuadradoAsociado = checkBoxCanvas.Children.OfType<Rectangle>().FirstOrDefault(c => c.Tag?.ToString() == fecha);
-
-            if (cuadradoAsociado != null)
+            foreach (var kvp in checkBoxesMarcados)
             {
-                // Quitar el cuadrado del Canvas
-                checkBoxCanvas.Children.Remove(cuadradoAsociado);
+                DateTime fecha = kvp.Key;
+                indice++;
+                Rectangle cuadrado = new Rectangle
+                {
+                    Width = 20,
+                    Height = 20,
+                    Margin = new Thickness(3),
+                    Opacity = 1.0 / indice,
+                    Fill = Brushes.Blue
+                };
+
+                string fechaTexto = fecha.ToString("dd/MM/yyyy");
+                CheckBox checkBoxCorrespondiente = checkBoxCanvas.Children.OfType<CheckBox>().FirstOrDefault(cb => cb.Content.ToString().Equals(fechaTexto));
+
+                if (checkBoxCorrespondiente != null)
+                {
+                    double cuadradoTop = Canvas.GetTop(checkBoxCorrespondiente);
+                    Canvas.SetTop(cuadrado, cuadradoTop);
+                    // Ajustar la posición horizontal según la disposición de tus CheckBoxes
+                    // Por ejemplo, puedes usar Canvas.SetLeft si quieres alinearlos a la izquierda del CheckBox
+                    Canvas.SetRight(cuadrado, 0); // Ajusta esto según sea necesario
+                    checkBoxCanvas.Children.Add(cuadrado);
+                }
             }
         }
 
@@ -467,14 +555,15 @@ namespace Pactometro
 
                 // Calcular el ancho de cada barra
                 int numPartidos = partidosSeleccionados.SelectMany(lista => lista).Count();
-                double barWidth = (chartCanvas.ActualWidth - (numPartidos - 1) * barSpacing) / (numPartidos+1);
-
+                double barWidth = (chartCanvas.ActualWidth - (numPartidos - 1) * barSpacing) / (numPartidos + 1);
                 double inicioProporcional = barWidth * (numPartidos / (barSpacing * 5));
+                double acumuladorInicio = inicioProporcional;
                 double yPosition = chartCanvas.ActualHeight; // Comenzar desde la parte inferior
 
                 double baseOpacity = 1; // Ajusta la opacidad base según tus preferencias
+                //Ordenar las sublistas en partidosSeleccionados según el número de escaños de cada partido
+                partidosSeleccionados = partidosSeleccionados.OrderByDescending(lista => lista.Any() ? lista.Max(partido => partido.Escaños) : 0).ToList();
 
-                
                 foreach (var listaDePartidos in partidosSeleccionados)
                 {
                     flag = 1.0;
@@ -498,8 +587,8 @@ namespace Pactometro
 
                             // Crear una brocha con el color ajustado
                             SolidColorBrush brocha = new SolidColorBrush(adjustedColor);
-                            barra.Fill = brocha;  
-                            
+                            barra.Fill = brocha;
+
                         }
                         catch (FormatException)
                         {
@@ -511,28 +600,39 @@ namespace Pactometro
                         Canvas.SetTop(barra, posicionInicio);
                         chartCanvas.Children.Add(barra);
 
-                        // Agregar el nombre del partido debajo de la barra centrado
-                        TextBlock nombrePartido = new TextBlock();
-                        nombrePartido.Text = partido.Nombre;
-                        nombrePartido.TextAlignment = TextAlignment.Center;
-                        nombrePartido.FontSize = 10; // Tamaño inicial de la letra
-                        nombrePartido.Width = barWidth; // Ancho igual al de la barra
-                        nombrePartido.TextTrimming = TextTrimming.CharacterEllipsis; // Truncar el texto si es demasiado largo
-
-                        // Calcular la posición vertical para que el nombre aparezca debajo de la barra
-                        double yNombrePartido = chartCanvas.ActualHeight + 5;
-
-                        // Ajusta la posición horizontal para que esté centrado debajo de la barra
-                        Canvas.SetLeft(nombrePartido, inicioProporcional);
-                        Canvas.SetTop(nombrePartido, yNombrePartido);
-                        chartCanvas.Children.Add(nombrePartido);
+                        
 
                         // Incrementar la posición proporcional para la siguiente iteración
                         inicioProporcional += barWidth + barSpacing;
                         flag++;
                     }
+                    if (listaDePartidos != null && listaDePartidos.Any())
+                    {
+                        int numeroDeBarras = listaDePartidos.Count;
+                        double posicionFinalGrupo = acumuladorInicio + (barWidth + barSpacing) * (numeroDeBarras - 1) + barWidth;
+                        double puntoMedioGrupo = (acumuladorInicio + posicionFinalGrupo) / 2;
 
-                    
+                        TextBlock nombrePartido = new TextBlock();
+                        nombrePartido.Text = listaDePartidos.FirstOrDefault().Nombre;
+                        nombrePartido.TextAlignment = TextAlignment.Center;
+                        nombrePartido.FontSize = 10;
+                        // Establece un ancho para el TextBlock, por ejemplo, basado en el texto
+                        nombrePartido.Width = barWidth * numeroDeBarras + barSpacing * (numeroDeBarras - 1);
+
+                        double xNombrePartido = puntoMedioGrupo - (nombrePartido.Width / 2);
+
+                        double yNombrePartido = chartCanvas.ActualHeight + 5;
+                        Canvas.SetLeft(nombrePartido, xNombrePartido);
+                        Canvas.SetTop(nombrePartido, yNombrePartido);
+                        chartCanvas.Children.Add(nombrePartido);
+
+                        // Actualizar acumuladorInicio para el siguiente grupo de barras
+                        acumuladorInicio = posicionFinalGrupo + barSpacing;
+                    }
+
+                    // Agregar el nombre del partido debajo de la barra centrado
+
+
                 }
                 // Agregar la leyenda indicando el número de escaños
                 for (int i = 7; i >= 0; i--)
@@ -592,6 +692,10 @@ namespace Pactometro
 
         private void Grafico2_Click(object sender, RoutedEventArgs e)
         {
+            grafico1 = false;
+            grafico2 = true;
+            grafico3 = false;
+
             SizeChanged += Window_SizeChanged;
             // Verificar si hay un proceso electoral actual antes de crear el gráfico
             if (procesoElectoralActual != null)
@@ -626,7 +730,7 @@ namespace Pactometro
                     {
                         procesosEquivalentes.Add(proceso);
                     }
-                }            
+                }
             }
             return procesosEquivalentes;
         }
@@ -662,7 +766,7 @@ namespace Pactometro
             grafico3 = true;
 
 
-            
+
         }
     }
 }
