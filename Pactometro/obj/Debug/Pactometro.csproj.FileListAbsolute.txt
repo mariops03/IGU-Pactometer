@@ -48,3 +48,19 @@ C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\obj\Debug\Pact
 C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\bin\Debug\WriteableBitmapEx.Wpf.dll
 C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\bin\Debug\WriteableBitmapEx.Wpf.pdb
 C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\bin\Debug\WriteableBitmapEx.Wpf.xml
+C:\Users\Mario\Desktop\USAL\TERCERO\INTERFACES GRAFICAS\TRABAJO\IGU-Pactometer\Pactometro\bin\Debug\MaterialDesignColors.dll
+C:\Users\Mario\Desktop\USAL\TERCERO\INTERFACES GRAFICAS\TRABAJO\IGU-Pactometer\Pactometro\bin\Debug\MaterialDesignThemes.Wpf.dll
+C:\Users\Mario\Desktop\USAL\TERCERO\INTERFACES GRAFICAS\TRABAJO\IGU-Pactometer\Pactometro\bin\Debug\Microsoft.Xaml.Behaviors.dll
+C:\Users\Mario\Desktop\USAL\TERCERO\INTERFACES GRAFICAS\TRABAJO\IGU-Pactometer\Pactometro\bin\Debug\WPFCustomMessageBox.dll
+C:\Users\Mario\Desktop\USAL\TERCERO\INTERFACES GRAFICAS\TRABAJO\IGU-Pactometer\Pactometro\bin\Debug\WriteableBitmapEx.Wpf.dll
+C:\Users\Mario\Desktop\USAL\TERCERO\INTERFACES GRAFICAS\TRABAJO\IGU-Pactometer\Pactometro\bin\Debug\MaterialDesignColors.pdb
+C:\Users\Mario\Desktop\USAL\TERCERO\INTERFACES GRAFICAS\TRABAJO\IGU-Pactometer\Pactometro\bin\Debug\MaterialDesignThemes.Wpf.pdb
+C:\Users\Mario\Desktop\USAL\TERCERO\INTERFACES GRAFICAS\TRABAJO\IGU-Pactometer\Pactometro\bin\Debug\MaterialDesignThemes.Wpf.xml
+C:\Users\Mario\Desktop\USAL\TERCERO\INTERFACES GRAFICAS\TRABAJO\IGU-Pactometer\Pactometro\bin\Debug\Microsoft.Xaml.Behaviors.pdb
+C:\Users\Mario\Desktop\USAL\TERCERO\INTERFACES GRAFICAS\TRABAJO\IGU-Pactometer\Pactometro\bin\Debug\Microsoft.Xaml.Behaviors.xml
+C:\Users\Mario\Desktop\USAL\TERCERO\INTERFACES GRAFICAS\TRABAJO\IGU-Pactometer\Pactometro\bin\Debug\WPFCustomMessageBox.xml
+C:\Users\Mario\Desktop\USAL\TERCERO\INTERFACES GRAFICAS\TRABAJO\IGU-Pactometer\Pactometro\bin\Debug\WriteableBitmapEx.Wpf.pdb
+C:\Users\Mario\Desktop\USAL\TERCERO\INTERFACES GRAFICAS\TRABAJO\IGU-Pactometer\Pactometro\bin\Debug\WriteableBitmapEx.Wpf.xml
+C:\Users\Mario\Desktop\USAL\TERCERO\INTERFACES GRAFICAS\TRABAJO\IGU-Pactometer\Pactometro\obj\Debug\VentanaAgregar.g.cs
+C:\Users\Mario\Desktop\USAL\TERCERO\INTERFACES GRAFICAS\TRABAJO\IGU-Pactometer\Pactometro\obj\Debug\VentanaAgregar.baml
+C:\Users\Mario\Desktop\USAL\TERCERO\INTERFACES GRAFICAS\TRABAJO\IGU-Pactometer\Pactometro\obj\Debug\Pactometro.csproj.CopyComplete

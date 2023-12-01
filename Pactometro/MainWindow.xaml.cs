@@ -777,6 +777,7 @@ namespace Pactometro
 
         // Additional fields to keep track of the clicked rectangles and their order
         private Dictionary<Rectangle, double> originalPositions = new Dictionary<Rectangle, double>();
+        private List<Partido> partidosEnPrimeraBarra = new List<Partido>();
         private List<Partido> partidosEnSegundaBarra = new List<Partido>();
         private List<Rectangle> clickedRectangles = new List<Rectangle>();
         private double emptyBarYPos;
@@ -799,7 +800,7 @@ namespace Pactometro
                 if (isInFirstBar)
                 {
                     // If moving to the second bar, simply add to the end
-                    newXPos = clickedRectangles.Sum(r => r.Width);
+                    newXPos = clickedRectangles.Sum(r => r.Width) + 15;
                     clickedRectangles.Add(clickedRect);
                 }
                 else
@@ -811,10 +812,32 @@ namespace Pactometro
 
                 // Set the new X position for the moved rectangle
                 Canvas.SetLeft(clickedRect, newXPos);
+
+                // Update the list of parties in the first and second bars
+                if (isInFirstBar)
+                {
+                    partidosEnPrimeraBarra.Remove(clickedRect.Tag as Partido);
+                    partidosEnSegundaBarra.Add(clickedRect.Tag as Partido);
+                }
+                else
+                {
+                    partidosEnSegundaBarra.Remove(clickedRect.Tag as Partido);
+                    partidosEnPrimeraBarra.Add(clickedRect.Tag as Partido);
+                }
+                //Desactivar el boton de pacto si la suma de los escaños de los partidos de la primera barra es menor que la mayoria absoluta
+                if (partidosEnPrimeraBarra.Sum(partido => partido.Escaños) > procesoElectoralActual.mayoriaAbsoluta)
+                {
+                    pacto.IsEnabled = false;
+                }
+                else
+                {
+                    pacto.IsEnabled = true;
+                }
+
             }
         }
 
-
+        private Button pacto;
         private void mostrarGrafico3()
         {
             grafico1 = false;
@@ -843,30 +866,35 @@ namespace Pactometro
             Rectangle firstEmptyBar = new Rectangle
             {
                 Height = barHeight,
-                Width = chartCanvas.ActualWidth,
+                Width = chartCanvas.ActualWidth-30,
                 Stroke = Brushes.Black,
                 StrokeThickness = 1
             };
 
             // Position the first empty bar on the canvas
             Canvas.SetTop(firstEmptyBar, yPos);
-            Canvas.SetLeft(firstEmptyBar, 0); // Align to the left
+            Canvas.SetLeft(firstEmptyBar, 15); // Align to the left
             chartCanvas.Children.Add(firstEmptyBar);
 
             // Initialize the starting X position for the filled rectangles
-            double xPos = 0;
+            double xPos = 15;
+
+            double anchoTotalBarras = firstEmptyBar.Width;
 
             // Draw a filled rectangle for each party, within the bounds of the first empty rectangle
             foreach (var partido in procesoElectoralActual.coleccionPartidos)
             {
                 // Calculate the width of each filled rectangle based on the number of seats
-                double rectWidth = (firstEmptyBar.Width / procesoElectoralActual.numEscaños) * partido.Escaños;
+                double rectWidth = (anchoTotalBarras / procesoElectoralActual.numEscaños) * partido.Escaños;
+
 
                 // Create the filled rectangle
                 Rectangle filledBar = new Rectangle
                 {
                     Height = barHeight,
-                    Width = rectWidth
+                    Width = rectWidth,
+                    ToolTip = partido.Nombre + ": " + partido.Escaños + " escaños",
+                    Tag = partido
                 };
 
                 filledBar.MouseLeftButtonDown += Rectangle_Click;
@@ -891,6 +919,10 @@ namespace Pactometro
 
                 // Increment the X position for the next filled rectangle
                 xPos += rectWidth;
+
+                // Añade el partido a la lista de partidos de la primera barra
+                partidosEnPrimeraBarra.Add(partido);
+
             }
 
             // Create a second empty bar below the first one
@@ -904,7 +936,7 @@ namespace Pactometro
 
             // Position the second empty bar below the first one with a gap
             Canvas.SetTop(secondEmptyBar, yPos + barHeight + barGap);
-            Canvas.SetLeft(secondEmptyBar, 0); // Align to the left
+            Canvas.SetLeft(secondEmptyBar, 15); // Align to the left
 
             // Add the second empty bar to the canvas
             chartCanvas.Children.Add(secondEmptyBar);
@@ -912,7 +944,7 @@ namespace Pactometro
             // Calcular la posición X de la barra de mayoría absoluta
             int mayoriaAbsoluta = procesoElectoralActual.mayoriaAbsoluta;
             double anchoTotalBarra = firstEmptyBar.Width;
-            double posicionBarraMayoria = (anchoTotalBarra / procesoElectoralActual.numEscaños) * mayoriaAbsoluta;
+            double posicionBarraMayoria = ((anchoTotalBarra / procesoElectoralActual.numEscaños) * mayoriaAbsoluta)+15;
 
             // Crear la barra de mayoría absoluta
             Rectangle barraMayoriaAbsoluta = new Rectangle
@@ -947,17 +979,19 @@ namespace Pactometro
             //Ajustar la posicion del boton
 
             //Añade un boton para completar un pacto
-            Button pacto = new Button();
+            pacto = new Button();
             pacto.Content = "Pacto";
             pacto.Width = 100;
             pacto.Height = 30;
             pacto.Click += Pacto_Click;
             pacto.HorizontalAlignment = HorizontalAlignment.Center;
             pacto.VerticalAlignment = VerticalAlignment.Top;
+            pacto.IsEnabled = false;
             Grid.SetColumn(pacto, 1);
             Grid.SetRow(pacto, 5);
             gridPrincipal.Children.Add(pacto);
-
+            //Desactivar el boton de pacto si la suma de los escaños de los partidos de la segunda barra es menor que la mayoria absoluta
+            
         }
 
         //Crea un evento para reiniciar el grafico
@@ -969,36 +1003,36 @@ namespace Pactometro
         //Crea un evento para completar un pacto
         private void Pacto_Click(object sender, RoutedEventArgs e)
         {
-            int totalEscañosSeleccionados = 0;
-            string partidosPacto = "";
-
-            // Iterar sobre los rectángulos seleccionados para sumar los escaños y formar el nombre del pacto
-            foreach (var rect in clickedRectangles)
+            // Verificar si hay partidos en la segunda barra, y si los hay imprime un mensaje con los partidos
+            if (partidosEnSegundaBarra.Any())
             {
-                // Encuentra el partido asociado al rectángulo
-                var partido = procesoElectoralActual.coleccionPartidos.FirstOrDefault(p => p.Color == rect.Fill.ToString());
-
-                if (partido != null)
+                //Calcula el numero de escaños de los partidos de la segunda barra
+                int numeroDeEscaños = partidosEnSegundaBarra.Sum(partido => partido.Escaños);
+                string mensaje = "SE HA PRODUCIDO UN PACTO CON UN TOTAL DE " + numeroDeEscaños + " ESCAÑOS\n";
+                foreach (var partido in partidosEnSegundaBarra)
                 {
-                    totalEscañosSeleccionados += partido.Escaños;
-                    partidosPacto += partido.Nombre + ", ";
+                    if(partido != null)
+                    {
+                        if (partido != partidosEnSegundaBarra.Last())
+                        {
+                            mensaje += partido.Nombre + ", ";
+                        }
+                        else
+                        {
+                            //Borra la ultima coma
+                            mensaje = mensaje.Remove(mensaje.Length - 2);
+                            mensaje += " y " + partido.Nombre;
+                        }
+                    }                   
+                    
                 }
-            }
-
-            // Verificar si se alcanza la mayoría absoluta
-            if (totalEscañosSeleccionados >= procesoElectoralActual.mayoriaAbsoluta)
-            {
-                // Remover la última coma y espacio
-                partidosPacto = partidosPacto.TrimEnd(new char[] { ',', ' ' });
-
-                // Mostrar mensaje de pacto creado
-                MessageBox.Show("Pacto creado con los partidos: " + partidosPacto);
+                MessageBox.Show(mensaje);
             }
             else
             {
-                // Mostrar mensaje de error si no se alcanza la mayoría absoluta
-                MessageBox.Show("No se ha alcanzado la mayoría absoluta. Pacto no posible.");
+                MessageBox.Show("No hay partidos en la segunda barra.");
             }
+
         }
 
     }
