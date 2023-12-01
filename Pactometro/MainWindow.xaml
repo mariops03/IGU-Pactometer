@@ -18,7 +18,7 @@
             <ColumnDefinition/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <Menu Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3">
+        <Menu Name="menu" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3">
             <MenuItem Header="Configuración">
                 <MenuItem Header="Gráfico 1" Click="Grafico1_Click"/>
                 <MenuItem Header="Gráfico 2" Click="Grafico2_Click"/>
@@ -30,5 +30,6 @@
         </Menu>
         <TextBlock Name="txtTitulo" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Center" FontSize="20"/>
         <Canvas Name="chartCanvas" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Margin="10" Background="LavenderBlush"/>
+        <Button Name="exportar" Grid.Row="2" Grid.Column="2" Content="Exportar" Margin="20" Padding="5" VerticalAlignment="Top" HorizontalAlignment="Right" Click="Exportar_Click" Visibility="Hidden"/>
     </Grid>
 </Window>

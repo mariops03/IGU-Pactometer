@@ -76,6 +76,9 @@
     <Compile Include="VentanaAgregar.xaml.cs">
       <DependentUpon>VentanaAgregar.xaml</DependentUpon>
     </Compile>
+    <Compile Include="VentanaExportar.xaml.cs">
+      <DependentUpon>VentanaExportar.xaml</DependentUpon>
+    </Compile>
     <Compile Include="VentanaSecundaria.xaml.cs">
       <DependentUpon>VentanaSecundaria.xaml</DependentUpon>
     </Compile>
@@ -92,6 +95,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="VentanaAgregar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="VentanaExportar.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

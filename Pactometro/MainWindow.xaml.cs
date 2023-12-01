@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -10,6 +9,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using System.Windows.Media.Imaging;
 
 namespace Pactometro
 {
@@ -149,7 +149,11 @@ namespace Pactometro
             }
             else if (grafico3 == true)
             {
-               mostrarGrafico3();
+                partidosEnPrimeraBarra.Clear();
+                partidosEnSegundaBarra.Clear();
+                clickedRectangles.Clear();
+                rectangulosNoClicados.Clear();
+                mostrarGrafico3();
             }
             else
             {
@@ -175,6 +179,9 @@ namespace Pactometro
 
         private void Grafico1_Click(object sender, RoutedEventArgs e)
         {
+            grafico1 = true;
+            grafico2 = false;
+            grafico3 = false;
             SizeChanged += Window_SizeChanged;
             if (procesoElectoralActual == null)
             {
@@ -182,7 +189,6 @@ namespace Pactometro
             }
             else
             {
-                // Llamar al método que crea el gráfico utilizando el proceso electoral actual
                 mostrarGrafico1();
             }
         }
@@ -261,117 +267,114 @@ namespace Pactometro
                 }
             }
         }
-
         private void mostrarGrafico1()
         {
-            grafico1 = true;
-            grafico2 = false;
-            grafico3 = false;
-            if (procesoElectoralActual != null)
+            // Eliminar el canvas de los CheckBox si existe
+            if (checkBoxCanvas != null)
             {
-                // Eliminar el canvas de los CheckBox si existe
-                if (checkBoxCanvas != null)
-                {
-                    gridPrincipal.Children.Remove(checkBoxCanvas);
-                }
-                // Llamar al método que crea el gráfico utilizando el proceso electoral actual
-                txtTitulo.Text = procesoElectoralActual.nombre;
-
-                // Limpiar el Canvas antes de agregar nuevas barras y la leyenda
-                chartCanvas.Children.Clear();
-
-                double barSpacing = 5; // Espaciado entre barras
-
-                double maxEscaños = procesoElectoralActual.coleccionPartidos.Max(partido => partido.Escaños);
-
-                int numPartidos = procesoElectoralActual.coleccionPartidos.Count;
-
-                // Calcular el ancho de cada barra de manera que ocupen todo el Canvas
-                double barWidth = (chartCanvas.ActualWidth - (numPartidos - 1) * barSpacing) / (numPartidos + 1);
-
-                double inicioProporcional = barWidth * (numPartidos / (barSpacing * 5));
-
-                for (int i = 0; i < numPartidos; i++)
-                {
-                    var partido = procesoElectoralActual.coleccionPartidos[i];
-
-                    double barHeight = (partido.Escaños / maxEscaños) * (chartCanvas.ActualHeight);
-
-                    Rectangle barra = new Rectangle();
-                    barra.Width = barWidth;
-                    barra.Height = barHeight;
-                    barra.ToolTip = partido.Nombre + ": " + partido.Escaños + " escaños";
-
-                    try
-                    {
-                        barra.Fill = (Brush)new BrushConverter().ConvertFromString(partido.Color);
-                    }
-                    catch (FormatException)
-                    {
-                        barra.Fill = Brushes.Gray;
-                    }
-
-                    // Ajusta la posición horizontal para comenzar de manera proporcional al número total de partidos
-                    double posicionInicio = i * (barWidth + barSpacing) + inicioProporcional;
-                    Canvas.SetLeft(barra, posicionInicio);
-                    Canvas.SetTop(barra, (chartCanvas.ActualHeight - barHeight));
-                    chartCanvas.Children.Add(barra);
-
-                    // Agregar el nombre del partido debajo de la barra centrado
-                    TextBlock nombrePartido = new TextBlock();
-                    nombrePartido.Text = partido.Nombre;
-                    nombrePartido.TextAlignment = TextAlignment.Center;
-                    nombrePartido.FontSize = 10; // Tamaño inicial de la letra
-                    nombrePartido.Width = barWidth; // Ancho igual al de la barra
-                    nombrePartido.TextTrimming = TextTrimming.CharacterEllipsis; // Truncar el texto si es demasiado largo
-
-                    // Calcular la posición vertical para que el nombre aparezca debajo de la barra
-                    double yPosition = chartCanvas.ActualHeight + 5;
-
-                    // Ajusta la posición horizontal para que esté centrado debajo de la barra
-                    Canvas.SetLeft(nombrePartido, posicionInicio);
-                    Canvas.SetTop(nombrePartido, yPosition);
-                    chartCanvas.Children.Add(nombrePartido);
-                }
-
-                // Agregar la leyenda indicando el número de escaños
-                for (int i = 7; i >= 0; i--)
-                {
-                    TextBlock leyenda = new TextBlock();
-
-                    if (i == 0)
-                    {
-                        leyenda.Text = "0";
-                        Canvas.SetLeft(leyenda, 0);
-                        Canvas.SetBottom(leyenda, 0);
-                    }
-                    else if (i == 7)
-                    {
-                        leyenda.Text = maxEscaños.ToString("0");
-                        Canvas.SetLeft(leyenda, 0);
-                        Canvas.SetTop(leyenda, 0);
-                    }
-                    else
-                    {
-                        // Calcular la posición proporcional al número total de escaños
-                        double escanosPorPaso = maxEscaños / 7.0;
-                        double posicionY = (7 - i) * (chartCanvas.ActualHeight / 7.3);
-
-                        leyenda.Text = (i * escanosPorPaso).ToString("0");
-                        Canvas.SetLeft(leyenda, 0);
-                        Canvas.SetTop(leyenda, posicionY);
-                    }
-
-                    chartCanvas.Children.Add(leyenda);
-                }
-
+                gridPrincipal.Children.Remove(checkBoxCanvas);
             }
-            else
+            // Llamar al método que crea el gráfico utilizando el proceso electoral actual
+            txtTitulo.Text = procesoElectoralActual.nombre;
+
+            // Limpiar el Canvas antes de agregar nuevas barras y la leyenda
+            chartCanvas.Children.Clear();
+
+            double barSpacing = 5; // Espaciado entre barras
+
+            double maxEscaños = procesoElectoralActual.coleccionPartidos.Max(partido => partido.Escaños);
+
+            int numPartidos = procesoElectoralActual.coleccionPartidos.Count;
+
+            // Calcular el ancho de cada barra de manera que ocupen todo el Canvas
+            double barWidth = (chartCanvas.ActualWidth - (numPartidos - 1) * barSpacing) / (numPartidos + 1);
+
+            double inicioProporcional = barWidth * (numPartidos / (barSpacing * 5));
+
+            for (int i = 0; i < numPartidos; i++)
             {
-                // Manejar el caso en el que no hay un proceso electoral actual seleccionado
-                // Puedes mostrar un mensaje de error, por ejemplo
-                MessageBox.Show("No se ha seleccionado un proceso electoral.");
+                var partido = procesoElectoralActual.coleccionPartidos[i];
+
+                double barHeight = (partido.Escaños / maxEscaños) * (chartCanvas.ActualHeight);
+
+                Rectangle barra = new Rectangle();
+                barra.Width = barWidth;
+                barra.Height = barHeight;
+                barra.ToolTip = partido.Nombre + ": " + partido.Escaños + " escaños";
+
+                try
+                {
+                    barra.Fill = (Brush)new BrushConverter().ConvertFromString(partido.Color);
+                }
+                catch (FormatException)
+                {
+                    barra.Fill = Brushes.Gray;
+                }
+
+                // Ajusta la posición horizontal para comenzar de manera proporcional al número total de partidos
+                double posicionInicio = i * (barWidth + barSpacing) + inicioProporcional;
+                Canvas.SetLeft(barra, posicionInicio);
+                Canvas.SetTop(barra, (chartCanvas.ActualHeight - barHeight));
+                chartCanvas.Children.Add(barra);
+
+                // Agregar el nombre del partido debajo de la barra centrado
+                TextBlock nombrePartido = new TextBlock();
+                nombrePartido.Text = partido.Nombre;
+                nombrePartido.TextAlignment = TextAlignment.Center;
+                nombrePartido.FontSize = 10; // Tamaño inicial de la letra
+                nombrePartido.Width = barWidth; // Ancho igual al de la barra
+                nombrePartido.TextTrimming = TextTrimming.CharacterEllipsis; // Truncar el texto si es demasiado largo
+
+                // Calcular la posición vertical para que el nombre aparezca debajo de la barra
+                double yPosition = chartCanvas.ActualHeight + 5;
+
+                // Ajusta la posición horizontal para que esté centrado debajo de la barra
+                Canvas.SetLeft(nombrePartido, posicionInicio);
+                Canvas.SetTop(nombrePartido, yPosition);
+                chartCanvas.Children.Add(nombrePartido);
             }
+
+            // Agregar la leyenda indicando el número de escaños
+            for (int i = 7; i >= 0; i--)
+            {
+                TextBlock leyenda = new TextBlock();
+
+                if (i == 0)
+                {
+                    leyenda.Text = "0";
+                    Canvas.SetLeft(leyenda, 0);
+                    Canvas.SetBottom(leyenda, 0);
+                }
+                else if (i == 7)
+                {
+                    leyenda.Text = maxEscaños.ToString("0");
+                    Canvas.SetLeft(leyenda, 0);
+                    Canvas.SetTop(leyenda, 0);
+                }
+                else
+                {
+                    // Calcular la posición proporcional al número total de escaños
+                    double escanosPorPaso = maxEscaños / 7.0;
+                    double posicionY = (7 - i) * (chartCanvas.ActualHeight / 7.3);
+
+                    leyenda.Text = (i * escanosPorPaso).ToString("0");
+                    Canvas.SetLeft(leyenda, 0);
+                    Canvas.SetTop(leyenda, posicionY);
+                }
+
+                chartCanvas.Children.Add(leyenda);
+            }     
+            //Poner visible el boton de exportar
+            exportar.Visibility = Visibility.Visible;
+        }
+
+        //Cre ael metodo para exportar el grafico
+        private void Exportar_Click(object sender, RoutedEventArgs e)
+        {
+            // Abrir la ventana de exportación
+            VentanaExportar ventanaExportar = new VentanaExportar();
+            ventanaExportar.Owner = this; // Establecer la ventana principal como propietaria de la ventana de exportación
+            ventanaExportar.ShowDialog(); // Mostrar la ventana de exportación como modal
         }
 
         private Canvas checkBoxCanvas = null;
@@ -381,6 +384,9 @@ namespace Pactometro
            
             // Limpiar el Canvas antes de agregar nuevos elementos
             chartCanvas.Children.Clear();
+
+            //Hacer visible el boton de exportar
+            exportar.Visibility = Visibility.Visible;
 
             var nombreProceso = procesosComparativos.FirstOrDefault()?.nombre;
 
@@ -762,6 +768,9 @@ namespace Pactometro
 
         private void Grafico3_Click(object sender, RoutedEventArgs e)
         {
+            grafico1 = false;
+            grafico2 = false;
+            grafico3 = true;
             // Suscribir al evento SizeChanged de la ventana o del contenedor que contiene el Canvas
             SizeChanged += Window_SizeChanged;
             if (procesoElectoralActual == null)
@@ -770,7 +779,7 @@ namespace Pactometro
             }
             else
             {
-                // Llamar al método que crea el gráfico utilizando el proceso electoral actual
+                
                 mostrarGrafico3();
             }
         }
@@ -780,6 +789,7 @@ namespace Pactometro
         private List<Partido> partidosEnPrimeraBarra = new List<Partido>();
         private List<Partido> partidosEnSegundaBarra = new List<Partido>();
         private List<Rectangle> clickedRectangles = new List<Rectangle>();
+        private List<Rectangle> rectangulosNoClicados = new List<Rectangle>();
         private double emptyBarYPos;
         private double yPos;
 
@@ -788,66 +798,62 @@ namespace Pactometro
             Rectangle clickedRect = sender as Rectangle;
             if (clickedRect != null)
             {
-                // Check which bar the rectangle is in by its Y position
                 bool isInFirstBar = Canvas.GetTop(clickedRect) == yPos;
-
-                // Move the rectangle to the other bar
                 double newYPos = isInFirstBar ? emptyBarYPos : yPos;
                 Canvas.SetTop(clickedRect, newYPos);
 
-                // Determine the new X position based on the bar it's moving to
                 double newXPos;
                 if (isInFirstBar)
                 {
-                    // If moving to the second bar, simply add to the end
                     newXPos = clickedRectangles.Sum(r => r.Width) + 15;
                     clickedRectangles.Add(clickedRect);
-                }
-                else
-                {
-                    // If moving back to the first bar, restore the original position
-                    newXPos = originalPositions[clickedRect];
-                    clickedRectangles.Remove(clickedRect);
-                }
-
-                // Set the new X position for the moved rectangle
-                Canvas.SetLeft(clickedRect, newXPos);
-
-                // Update the list of parties in the first and second bars
-                if (isInFirstBar)
-                {
+                    rectangulosNoClicados.Remove(clickedRect);
                     partidosEnPrimeraBarra.Remove(clickedRect.Tag as Partido);
                     partidosEnSegundaBarra.Add(clickedRect.Tag as Partido);
+                    ReposicionarRectangulosEnPrimeraBarra();
                 }
                 else
                 {
+                    // calcular la nueva posición X para el rectángulo teniendo en cuenta los rectangulos no clicados
+                    newXPos = rectangulosNoClicados.Sum(r => r.Width) + 15;
+                    //añadir el rectangulo a la lista de rectangulos no clicados
+                    rectangulosNoClicados.Add(clickedRect);
+                    clickedRectangles.Remove(clickedRect);
                     partidosEnSegundaBarra.Remove(clickedRect.Tag as Partido);
                     partidosEnPrimeraBarra.Add(clickedRect.Tag as Partido);
                 }
-                //Desactivar el boton de pacto si la suma de los escaños de los partidos de la primera barra es menor que la mayoria absoluta
-                if (partidosEnPrimeraBarra.Sum(partido => partido.Escaños) > procesoElectoralActual.mayoriaAbsoluta)
-                {
-                    pacto.IsEnabled = false;
-                }
-                else
-                {
-                    pacto.IsEnabled = true;
-                }
-
+                Canvas.SetLeft(clickedRect, newXPos);
+                VerificarPactoHabilitado();
             }
+        }
+
+        private void ReposicionarRectangulosEnPrimeraBarra()
+        {
+            double xPos = 15;
+            foreach (var partido in partidosEnPrimeraBarra)
+            {
+                Rectangle rect = chartCanvas.Children
+                    .OfType<Rectangle>()
+                    .FirstOrDefault(r => r.Tag == partido);
+                if (rect != null)
+                {
+                    Canvas.SetLeft(rect, xPos);
+                    xPos += rect.Width;
+                    originalPositions[rect] = xPos;
+                }
+            }
+        }
+
+        private void VerificarPactoHabilitado()
+        {
+            pacto.IsEnabled = partidosEnPrimeraBarra.Sum(partido => partido.Escaños) < procesoElectoralActual.mayoriaAbsoluta;
         }
 
         private Button pacto;
         private void mostrarGrafico3()
         {
-            grafico1 = false;
-            grafico2 = false;
-            grafico3 = true;
-
-            // Clear the canvas from previous drawings
             chartCanvas.Children.Clear();
 
-            // Remove the checkBoxCanvas from the gridPrincipal if it exists
             if (checkBoxCanvas != null)
             {
                 gridPrincipal.Children.Remove(checkBoxCanvas);
@@ -855,18 +861,17 @@ namespace Pactometro
 
             txtTitulo.Text = procesoElectoralActual.nombre;
 
-            // Set the height of each bar and the gap between the bars
-            double barHeight = 60; // height of each bar
-            double barGap = 40; // gap between the bars
+            double barHeight = chartCanvas.ActualHeight / 4; // height of each bar
+            double barGap = chartCanvas.ActualHeight / 10; // gap between bars
 
-            yPos = chartCanvas.ActualHeight / 4;
+            yPos = chartCanvas.ActualHeight / 6;
             emptyBarYPos = yPos + barHeight + barGap;
 
             // Create the first empty bar that represents the total number of seats
             Rectangle firstEmptyBar = new Rectangle
             {
                 Height = barHeight,
-                Width = chartCanvas.ActualWidth-30,
+                Width = chartCanvas.ActualWidth - 30,
                 Stroke = Brushes.Black,
                 StrokeThickness = 1
             };
@@ -880,50 +885,6 @@ namespace Pactometro
             double xPos = 15;
 
             double anchoTotalBarras = firstEmptyBar.Width;
-
-            // Draw a filled rectangle for each party, within the bounds of the first empty rectangle
-            foreach (var partido in procesoElectoralActual.coleccionPartidos)
-            {
-                // Calculate the width of each filled rectangle based on the number of seats
-                double rectWidth = (anchoTotalBarras / procesoElectoralActual.numEscaños) * partido.Escaños;
-
-
-                // Create the filled rectangle
-                Rectangle filledBar = new Rectangle
-                {
-                    Height = barHeight,
-                    Width = rectWidth,
-                    ToolTip = partido.Nombre + ": " + partido.Escaños + " escaños",
-                    Tag = partido
-                };
-
-                filledBar.MouseLeftButtonDown += Rectangle_Click;
-
-                // Try to set the actual color of the filled rectangle
-                try
-                {
-                    filledBar.Fill = (Brush)new BrushConverter().ConvertFromString(partido.Color);
-                }
-                catch (FormatException)
-                {
-                    filledBar.Fill = Brushes.Gray; // Use gray if there's an exception
-                }
-
-                // Position the filled rectangle within the first empty bar
-                Canvas.SetTop(filledBar, yPos);
-                Canvas.SetLeft(filledBar, xPos); // Align the left edge with the current x position
-
-                // Add the filled rectangle to the canvas
-                chartCanvas.Children.Add(filledBar);
-                originalPositions[filledBar] = xPos;
-
-                // Increment the X position for the next filled rectangle
-                xPos += rectWidth;
-
-                // Añade el partido a la lista de partidos de la primera barra
-                partidosEnPrimeraBarra.Add(partido);
-
-            }
 
             // Create a second empty bar below the first one
             Rectangle secondEmptyBar = new Rectangle
@@ -944,7 +905,7 @@ namespace Pactometro
             // Calcular la posición X de la barra de mayoría absoluta
             int mayoriaAbsoluta = procesoElectoralActual.mayoriaAbsoluta;
             double anchoTotalBarra = firstEmptyBar.Width;
-            double posicionBarraMayoria = ((anchoTotalBarra / procesoElectoralActual.numEscaños) * mayoriaAbsoluta)+15;
+            double posicionBarraMayoria = ((anchoTotalBarra / procesoElectoralActual.numEscaños) * mayoriaAbsoluta) + 15;
 
             // Crear la barra de mayoría absoluta
             Rectangle barraMayoriaAbsoluta = new Rectangle
@@ -963,33 +924,99 @@ namespace Pactometro
 
             emptyBarYPos = yPos + barHeight + barGap;
 
+            // Draw a filled rectangle for each party, within the bounds of the first empty rectangle
+            foreach (var partido in procesoElectoralActual.coleccionPartidos)
+            {
+                //Si el partido no esta en ninguna lista, se hace el codigo normal
+                if (!partidosEnPrimeraBarra.Contains(partido) && !partidosEnSegundaBarra.Contains(partido))
+                {
+                    // Calculate the width of each filled rectangle based on the number of seats
+                    double rectWidth = (anchoTotalBarras / procesoElectoralActual.numEscaños) * partido.Escaños;
+
+                    // Create the filled rectangle
+                    Rectangle filledBar = new Rectangle
+                    {
+                        Height = barHeight,
+                        Width = rectWidth,
+                        ToolTip = partido.Nombre + ": " + partido.Escaños + " escaños",
+                        Tag = partido
+                    };
+
+                    filledBar.MouseLeftButtonDown += Rectangle_Click;
+
+                    // Try to set the actual color of the filled rectangle
+                    try
+                    {
+                        filledBar.Fill = (Brush)new BrushConverter().ConvertFromString(partido.Color);
+                    }
+                    catch (FormatException)
+                    {
+                        filledBar.Fill = Brushes.Gray; // Use gray if there's an exception
+                    }
+
+                    // Position the filled rectangle within the first empty bar
+                    Canvas.SetTop(filledBar, yPos);
+                    Canvas.SetLeft(filledBar, xPos); // Align the left edge with the current x position
+
+                    // Add the filled rectangle to the canvas
+                    //chartCanvas.Children.Add(filledBar);
+                    originalPositions[filledBar] = xPos;
+
+                    // Increment the X position for the next filled rectangle
+                    xPos += rectWidth;
+
+                    // Añade el partido a la lista de partidos de la primera barra
+                    partidosEnPrimeraBarra.Add(partido);
+                    // Añade el rectangulo a la lista de rectangulos no clicados
+                    rectangulosNoClicados.Add(filledBar);
+                }
+            }
+
+            double xPosNoClicados = 15;
+            foreach (var rectangulo in rectangulosNoClicados)
+            {
+                rectangulo.Height = barHeight;
+                rectangulo.Width = (anchoTotalBarras / procesoElectoralActual.numEscaños) * (rectangulo.Tag as Partido).Escaños;
+                Canvas.SetTop(rectangulo, yPos);
+                Canvas.SetLeft(rectangulo, xPosNoClicados);
+                xPosNoClicados += rectangulo.Width;
+                chartCanvas.Children.Add(rectangulo);
+            }
+
+            // Añade los rectangulos clicados a la segunda barra
+            double xPosClicados = 15;
+            foreach (var rectangulo in clickedRectangles)
+            {
+                rectangulo.Height = barHeight;
+                rectangulo.Width = (anchoTotalBarras / procesoElectoralActual.numEscaños) * (rectangulo.Tag as Partido).Escaños;
+                Canvas.SetTop(rectangulo, emptyBarYPos);
+                Canvas.SetLeft(rectangulo, xPosClicados);
+                xPosClicados += rectangulo.Width;
+                chartCanvas.Children.Add(rectangulo);
+            }
+
+
             //Añade un boton para reiniciar el grafico
             Button reiniciar = new Button();
             reiniciar.Content = "Reiniciar";
             reiniciar.Width = 100;
             reiniciar.Height = 30;
             reiniciar.Click += Reiniciar_Click;
-            reiniciar.HorizontalAlignment = HorizontalAlignment.Center;
-            reiniciar.VerticalAlignment = VerticalAlignment.Top;
 
-            //Añadirlo al grid
-            Grid.SetColumn(reiniciar, 0);
-            Grid.SetRow(reiniciar, 5);
-            gridPrincipal.Children.Add(reiniciar);
-            //Ajustar la posicion del boton
-
+            Canvas.SetBottom(reiniciar, 10);
+            Canvas.SetLeft(reiniciar, 50);
+            chartCanvas.Children.Add(reiniciar);
+ 
             //Añade un boton para completar un pacto
             pacto = new Button();
             pacto.Content = "Pacto";
             pacto.Width = 100;
             pacto.Height = 30;
             pacto.Click += Pacto_Click;
-            pacto.HorizontalAlignment = HorizontalAlignment.Center;
-            pacto.VerticalAlignment = VerticalAlignment.Top;
             pacto.IsEnabled = false;
-            Grid.SetColumn(pacto, 1);
-            Grid.SetRow(pacto, 5);
-            gridPrincipal.Children.Add(pacto);
+            Canvas.SetBottom(pacto, 10);
+            Canvas.SetRight(pacto, 50);
+            chartCanvas.Children.Add(pacto);
             //Desactivar el boton de pacto si la suma de los escaños de los partidos de la segunda barra es menor que la mayoria absoluta
             
         }
@@ -997,34 +1024,26 @@ namespace Pactometro
         //Crea un evento para reiniciar el grafico
         private void Reiniciar_Click(object sender, RoutedEventArgs e)
         {
+            partidosEnPrimeraBarra.Clear();
+            partidosEnSegundaBarra.Clear();
+            clickedRectangles.Clear();
+            rectangulosNoClicados.Clear();
             mostrarGrafico3();
         }
 
         //Crea un evento para completar un pacto
         private void Pacto_Click(object sender, RoutedEventArgs e)
         {
-            // Verificar si hay partidos en la segunda barra, y si los hay imprime un mensaje con los partidos
             if (partidosEnSegundaBarra.Any())
             {
-                //Calcula el numero de escaños de los partidos de la segunda barra
                 int numeroDeEscaños = partidosEnSegundaBarra.Sum(partido => partido.Escaños);
-                string mensaje = "SE HA PRODUCIDO UN PACTO CON UN TOTAL DE " + numeroDeEscaños + " ESCAÑOS\n";
+                string mensaje = "     ¡SE HA PRODUCIDO UN PACTO!\n           TOTAL DE ESCAÑOS: " + numeroDeEscaños + "\n\n     Partidos:\n";
                 foreach (var partido in partidosEnSegundaBarra)
                 {
-                    if(partido != null)
+                    if (partido != null)
                     {
-                        if (partido != partidosEnSegundaBarra.Last())
-                        {
-                            mensaje += partido.Nombre + ", ";
-                        }
-                        else
-                        {
-                            //Borra la ultima coma
-                            mensaje = mensaje.Remove(mensaje.Length - 2);
-                            mensaje += " y " + partido.Nombre;
-                        }
-                    }                   
-                    
+                        mensaje += "     - " + partido.Nombre + "\n";
+                    }
                 }
                 MessageBox.Show(mensaje);
             }
@@ -1032,8 +1051,8 @@ namespace Pactometro
             {
                 MessageBox.Show("No hay partidos en la segunda barra.");
             }
-
         }
+
 
     }
 }

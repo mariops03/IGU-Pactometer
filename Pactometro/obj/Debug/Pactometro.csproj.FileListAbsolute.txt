@@ -64,3 +64,5 @@ C:\Users\Mario\Desktop\USAL\TERCERO\INTERFACES GRAFICAS\TRABAJO\IGU-Pactometer\P
 C:\Users\Mario\Desktop\USAL\TERCERO\INTERFACES GRAFICAS\TRABAJO\IGU-Pactometer\Pactometro\obj\Debug\VentanaAgregar.g.cs
 C:\Users\Mario\Desktop\USAL\TERCERO\INTERFACES GRAFICAS\TRABAJO\IGU-Pactometer\Pactometro\obj\Debug\VentanaAgregar.baml
 C:\Users\Mario\Desktop\USAL\TERCERO\INTERFACES GRAFICAS\TRABAJO\IGU-Pactometer\Pactometro\obj\Debug\Pactometro.csproj.CopyComplete
+C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\obj\Debug\VentanaExportar.baml
+C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\obj\Debug\VentanaExportar.g.cs
