@@ -1,20 +1,3 @@
-C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\bin\Debug\Pactometro.exe.config
-C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\bin\Debug\Pactometro.exe
-C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\bin\Debug\Pactometro.pdb
-C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\obj\Debug\Pactometro.csproj.AssemblyReference.cache
-C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\obj\Debug\MainWindow.g.cs
-C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\obj\Debug\VentanaSecundaria.g.cs
-C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\obj\Debug\App.g.cs
-C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\obj\Debug\Pactometro_MarkupCompile.cache
-C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\obj\Debug\Pactometro_MarkupCompile.lref
-C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\obj\Debug\MainWindow.baml
-C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\obj\Debug\VentanaSecundaria.baml
-C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\obj\Debug\Pactometro.g.resources
-C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\obj\Debug\Pactometro.Properties.Resources.resources
-C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\obj\Debug\Pactometro.csproj.GenerateResource.cache
-C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\obj\Debug\Pactometro.csproj.CoreCompileInputs.cache
-C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\obj\Debug\Pactometro.exe
-C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\obj\Debug\Pactometro.pdb
 C:\Users\Mario\Desktop\USAL\TERCERO\INTERFACES GRAFICAS\TRABAJO\IGU-Pactometer\Pactometro\obj\Debug\Pactometro.csproj.AssemblyReference.cache
 C:\Users\Mario\Desktop\USAL\TERCERO\INTERFACES GRAFICAS\TRABAJO\IGU-Pactometer\Pactometro\obj\Debug\MainWindow.g.cs
 C:\Users\Mario\Desktop\USAL\TERCERO\INTERFACES GRAFICAS\TRABAJO\IGU-Pactometer\Pactometro\obj\Debug\VentanaSecundaria.g.cs
@@ -32,22 +15,6 @@ C:\Users\Mario\Desktop\USAL\TERCERO\INTERFACES GRAFICAS\TRABAJO\IGU-Pactometer\P
 C:\Users\Mario\Desktop\USAL\TERCERO\INTERFACES GRAFICAS\TRABAJO\IGU-Pactometer\Pactometro\obj\Debug\Pactometro.Properties.Resources.resources
 C:\Users\Mario\Desktop\USAL\TERCERO\INTERFACES GRAFICAS\TRABAJO\IGU-Pactometer\Pactometro\obj\Debug\Pactometro.csproj.GenerateResource.cache
 C:\Users\Mario\Desktop\USAL\TERCERO\INTERFACES GRAFICAS\TRABAJO\IGU-Pactometer\Pactometro\obj\Debug\Pactometro.csproj.CoreCompileInputs.cache
-C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\obj\Debug\VentanaAgregar.g.cs
-C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\obj\Debug\VentanaAgregar.baml
-C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\bin\Debug\MaterialDesignColors.dll
-C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\bin\Debug\MaterialDesignThemes.Wpf.dll
-C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\bin\Debug\Microsoft.Xaml.Behaviors.dll
-C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\bin\Debug\WPFCustomMessageBox.dll
-C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\bin\Debug\MaterialDesignColors.pdb
-C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\bin\Debug\MaterialDesignThemes.Wpf.pdb
-C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\bin\Debug\MaterialDesignThemes.Wpf.xml
-C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\bin\Debug\Microsoft.Xaml.Behaviors.pdb
-C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\bin\Debug\Microsoft.Xaml.Behaviors.xml
-C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\bin\Debug\WPFCustomMessageBox.xml
-C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\obj\Debug\Pactometro.csproj.CopyComplete
-C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\bin\Debug\WriteableBitmapEx.Wpf.dll
-C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\bin\Debug\WriteableBitmapEx.Wpf.pdb
-C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\bin\Debug\WriteableBitmapEx.Wpf.xml
 C:\Users\Mario\Desktop\USAL\TERCERO\INTERFACES GRAFICAS\TRABAJO\IGU-Pactometer\Pactometro\bin\Debug\MaterialDesignColors.dll
 C:\Users\Mario\Desktop\USAL\TERCERO\INTERFACES GRAFICAS\TRABAJO\IGU-Pactometer\Pactometro\bin\Debug\MaterialDesignThemes.Wpf.dll
 C:\Users\Mario\Desktop\USAL\TERCERO\INTERFACES GRAFICAS\TRABAJO\IGU-Pactometer\Pactometro\bin\Debug\Microsoft.Xaml.Behaviors.dll
@@ -64,5 +31,42 @@ C:\Users\Mario\Desktop\USAL\TERCERO\INTERFACES GRAFICAS\TRABAJO\IGU-Pactometer\P
 C:\Users\Mario\Desktop\USAL\TERCERO\INTERFACES GRAFICAS\TRABAJO\IGU-Pactometer\Pactometro\obj\Debug\VentanaAgregar.g.cs
 C:\Users\Mario\Desktop\USAL\TERCERO\INTERFACES GRAFICAS\TRABAJO\IGU-Pactometer\Pactometro\obj\Debug\VentanaAgregar.baml
 C:\Users\Mario\Desktop\USAL\TERCERO\INTERFACES GRAFICAS\TRABAJO\IGU-Pactometer\Pactometro\obj\Debug\Pactometro.csproj.CopyComplete
+C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\bin\Debug\Pactometro.exe.config
+C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\bin\Debug\Pactometro.exe
+C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\bin\Debug\Pactometro.pdb
+C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\bin\Debug\MaterialDesignColors.dll
+C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\bin\Debug\MaterialDesignThemes.Wpf.dll
+C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\bin\Debug\Microsoft.Xaml.Behaviors.dll
+C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\bin\Debug\Newtonsoft.Json.dll
+C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\bin\Debug\WPFCustomMessageBox.dll
+C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\bin\Debug\WriteableBitmapEx.Wpf.dll
+C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\bin\Debug\MaterialDesignColors.pdb
+C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\bin\Debug\MaterialDesignThemes.Wpf.pdb
+C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\bin\Debug\MaterialDesignThemes.Wpf.xml
+C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\bin\Debug\Microsoft.Xaml.Behaviors.pdb
+C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\bin\Debug\Microsoft.Xaml.Behaviors.xml
+C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\bin\Debug\Newtonsoft.Json.xml
+C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\bin\Debug\WPFCustomMessageBox.xml
+C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\bin\Debug\WriteableBitmapEx.Wpf.pdb
+C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\bin\Debug\WriteableBitmapEx.Wpf.xml
+C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\obj\Debug\Pactometro.csproj.AssemblyReference.cache
 C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\obj\Debug\VentanaExportar.baml
+C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\obj\Debug\MainWindow.g.cs
+C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\obj\Debug\VentanaAgregar.g.cs
 C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\obj\Debug\VentanaExportar.g.cs
+C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\obj\Debug\VentanaSecundaria.g.cs
+C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\obj\Debug\App.g.cs
+C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\obj\Debug\Pactometro_MarkupCompile.cache
+C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\obj\Debug\Pactometro_MarkupCompile.lref
+C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\obj\Debug\MainWindow.baml
+C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\obj\Debug\VentanaAgregar.baml
+C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\obj\Debug\VentanaSecundaria.baml
+C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\obj\Debug\Pactometro.g.resources
+C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\obj\Debug\Pactometro.Properties.Resources.resources
+C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\obj\Debug\Pactometro.csproj.GenerateResource.cache
+C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\obj\Debug\Pactometro.csproj.CoreCompileInputs.cache
+C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\obj\Debug\Pactometro.csproj.CopyComplete
+C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\obj\Debug\Pactometro.exe
+C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\obj\Debug\Pactometro.pdb
+C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\obj\Debug\ColorPicker.baml
+C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\obj\Debug\ColorPicker.g.cs

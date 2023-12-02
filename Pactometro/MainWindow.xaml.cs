@@ -51,6 +51,8 @@ namespace Pactometro
             {
                 // Crear una nueva instancia de VentanaSecundaria con la colección de elecciones
                 ventanaSecundaria = new VentanaSecundaria(coleccionElecciones);
+                // Hacer que la ventana secundaria sea propiedad de la ventana principal
+                ventanaSecundaria.Owner = this;
 
                 double distanciaEntreVentanas = 10; // Puedes ajustar esto a tu preferencia
                 double nuevaPosX = Left + Width + distanciaEntreVentanas;
@@ -199,12 +201,7 @@ namespace Pactometro
 
         private void comprobarGrafico()
         {
-            if (procesoElectoralActual == null)
-            {
-                noHayProcesoElectoralSeleccionado();
-            }
-            else
-            {
+           
                 if (grafico2)
                 {
                     coleccionEleccionesCheckBox.Clear();
@@ -218,7 +215,6 @@ namespace Pactometro
                 {
                     procesoSeleccionado();
                 }
-            }
         }
             
 
@@ -385,8 +381,9 @@ namespace Pactometro
             // Limpiar el Canvas antes de agregar nuevos elementos
             chartCanvas.Children.Clear();
 
+
             //Hacer visible el boton de exportar
-            exportar.Visibility = Visibility.Visible;
+            
 
             var nombreProceso = procesosComparativos.FirstOrDefault()?.nombre;
 
@@ -416,6 +413,8 @@ namespace Pactometro
             Grid.SetColumn(checkBoxCanvas, 3);
             Grid.SetRow(checkBoxCanvas, 2);
             gridPrincipal.Children.Add(checkBoxCanvas);
+
+            exportar.Visibility = Visibility.Visible;
 
 
             double fechaY = 0;
@@ -453,6 +452,7 @@ namespace Pactometro
                     }
                 };
             }
+
         }
 
         // Definir una lista para los partidos seleccionados

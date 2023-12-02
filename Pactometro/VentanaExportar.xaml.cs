@@ -166,6 +166,14 @@ namespace Pactometro
 
         private void CopyToClipboard_Click(object sender, RoutedEventArgs e)
         {
+            //Ocultar el botón de exportar de la ventana principal
+            var exportarButton = (Button)mainWindow.FindName("exportar");
+            if (exportarButton != null) exportarButton.Visibility = Visibility.Hidden;
+
+            //Ocultar el menú de la ventana principal
+            var menu = (Menu)mainWindow.FindName("menu");
+            if (menu != null) menu.Visibility = Visibility.Hidden;
+
             RenderTargetBitmap capturedImage = CaptureContent();
             using (System.Drawing.Bitmap bmp = new System.Drawing.Bitmap(capturedImage.PixelWidth, capturedImage.PixelHeight, System.Drawing.Imaging.PixelFormat.Format32bppArgb))
             {
@@ -187,6 +195,12 @@ namespace Pactometro
                     Clipboard.SetImage(ConvertBitmapToBitmapSource(clipboardBmp));
                 }
             }
+
+            //Mostrar el botón de exportar de la ventana principal
+            if (exportarButton != null) exportarButton.Visibility = Visibility.Visible;
+            
+            //Mostrar el menú de la ventana principal
+            if (menu != null) menu.Visibility = Visibility.Visible;
         }
         private BitmapSource ConvertBitmapToBitmapSource(System.Drawing.Bitmap bitmap)
         {

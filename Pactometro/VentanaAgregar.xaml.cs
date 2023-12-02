@@ -34,18 +34,19 @@ namespace Pactometro
             PartidosTemporales = new ObservableCollection<Partido>();
             lvPartidos.SelectionChanged += lvPartidos_SelectionChanged;
             btnEliminar.IsEnabled = false;
+            seleccionadorColor.ItemsSource = typeof(Colors).GetProperties();
+            // Establecer el color predeterminado
+            seleccionadorColor.SelectedIndex = 0;
         }
-
 
         private void BtnAñadirPartido_Click(object sender, RoutedEventArgs e)
         {
             // Obtener datos desde la interfaz de usuario
             string nombrePartido = txtPartido.Text.Trim();
             string escañosText = txtEscaños.Text.Trim();
-            string colorPartido = txtColor.Text.Trim();
 
             // Validar que no haya campos vacíos
-            if (string.IsNullOrEmpty(nombrePartido) || string.IsNullOrEmpty(escañosText) || string.IsNullOrEmpty(colorPartido))
+            if (string.IsNullOrEmpty(nombrePartido) || string.IsNullOrEmpty(escañosText))
             {
                 MessageBox.Show("Por favor, completa todos los campos para añadir un partido.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
@@ -66,14 +67,14 @@ namespace Pactometro
             }
 
             // Verificar si ya hay un partido con el mismo color
-            if (PartidosTemporales.Any(partido => partido.Color.ToLower() == colorPartido))
+            if (PartidosTemporales.Any(partido => partido.Color.ToLower() == colorSeleccionado))
             {
                 MessageBox.Show("Ya hay un partido con el mismo color.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
             // Crear una instancia de la clase Partido y agregarla a la colección temporal
-            Partido nuevoPartido = new Partido(nombrePartido, escañosPartido, colorPartido);
+            Partido nuevoPartido = new Partido(nombrePartido, escañosPartido, colorSeleccionado);
             PartidosTemporales.Add(nuevoPartido);
 
             // Ordenar la lista de partidos de mayor a menor por el número de escaños
@@ -195,7 +196,7 @@ namespace Pactometro
         {
             txtPartido.Text = string.Empty;
             txtEscaños.Text = string.Empty;
-            txtColor.Text = string.Empty;
+            colorSeleccionado = string.Empty;
         }
 
         private void dpFecha_PreviewTextInput(object sender, TextCompositionEventArgs e)
@@ -231,6 +232,14 @@ namespace Pactometro
         private void lvPartidos_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             btnEliminar.IsEnabled = lvPartidos.SelectedItem != null;
+        }
+
+        Color colorSeleccionado;
+        private void seleccionadorColor_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            // Obtener el color seleccionado
+            
+            colorSeleccionado = (seleccionadorColor.SelectedItem as ComboBoxItem)?.Content?.ToString();
         }
     }
 }

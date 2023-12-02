@@ -31,7 +31,7 @@
         <Label Grid.Column="0" Grid.Row="1" Content="Tipo de Proceso Electoral:" HorizontalAlignment="Left"/>
         <ComboBox Grid.Column="1" Grid.Row="1" Width="200" Margin="10" Name="cmbTipoProceso">
             <ComboBoxItem Content="Elecciones Generales"/>
-            <ComboBoxItem Content="Elecciones Autonómicas"/>
+            <ComboBoxItem Content="Elecciones Autonómicas CyL"/>
         </ComboBox>
 
         <Label Grid.Column="0" Grid.Row="2" Content="Fecha:"/>
@@ -52,7 +52,16 @@
 
             <Label Content="Color:" VerticalAlignment="Center"/>
 
-            <TextBox Width="50" Name="txtColor" Margin="10,0,10,0"/>
+            <ComboBox Name="seleccionadorColor" SelectionChanged="seleccionadorColor_SelectionChanged">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <Rectangle Fill="{Binding Name}" Width="16" Height="16" Margin="0,2,5,2" />
+                            <TextBlock Text="{Binding Name}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
 
             <Button Width="120" Content="Añadir Partido" Margin="10,0" Click="BtnAñadirPartido_Click"/>
         </StackPanel>

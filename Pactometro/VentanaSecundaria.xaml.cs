@@ -6,12 +6,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using Newtonsoft.Json;
+using Microsoft.Win32;
+using System.IO;
+
 
 namespace Pactometro
 {
@@ -24,6 +22,7 @@ namespace Pactometro
 
         // Definir el evento para notificar la selección
         public event EventHandler<ProcesoElectoral> ProcesoEleccionSeleccionado;
+        ProcesoElectoral procesoElectoralSeleccionado;
 
         public VentanaSecundaria(ObservableCollection<ProcesoElectoral> coleccionElecciones)
         {
@@ -35,25 +34,29 @@ namespace Pactometro
         private void mainTable_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             // Obtiene el elemento seleccionado, que puede ser null si no hay selección
-            var selectedData = mainTable.SelectedItem as ProcesoElectoral;
+            ProcesoElectoral procesoElectoralSeleccionado = mainTable.SelectedItem as ProcesoElectoral;
 
-            if (selectedData != null)
+            if (procesoElectoralSeleccionado != null)
             {
                 // Actualiza secondaryTable si hay una selección
-                secondaryTable.ItemsSource = selectedData.coleccionPartidos;
+                secondaryTable.ItemsSource = procesoElectoralSeleccionado.coleccionPartidos;
                 if (secondaryTable.Items.Count > 0)
                 {
                     secondaryTable.ScrollIntoView(secondaryTable.Items[0]);
                 }
+                btnModificar.Visibility = Visibility.Visible;
+                btnEliminar.Visibility = Visibility.Visible;
             }
             else
             {
                 // Limpia secondaryTable si no hay selección
                 secondaryTable.ItemsSource = null;
+                btnModificar.Visibility = Visibility.Collapsed;
+                btnEliminar.Visibility = Visibility.Collapsed;
             }
 
             // Dispara el evento con el elemento seleccionado o null
-            ProcesoEleccionSeleccionado?.Invoke(this, selectedData);
+            ProcesoEleccionSeleccionado?.Invoke(this, procesoElectoralSeleccionado);
         }
 
         private void añadirDatos(ObservableCollection<ProcesoElectoral> coleccionElecciones)
@@ -340,5 +343,70 @@ namespace Pactometro
             // Manejar el evento de cierre, por ejemplo, establecer la referencia a null
             ventanaAñadirProceso = null;
         }
+
+        private void ExportarDatos()
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "Archivo JSON (*.json)|*.json";
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                string json = JsonConvert.SerializeObject(ColeccionElecciones);
+                File.WriteAllText(saveFileDialog.FileName, json);
+            }
+        }
+
+        private void ImportarDatos()
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Archivo JSON (*.json)|*.json";
+            if (openFileDialog.ShowDialog() == true)
+            {
+                string json = File.ReadAllText(openFileDialog.FileName);
+                ObservableCollection<ProcesoElectoral> datosImportados = JsonConvert.DeserializeObject<ObservableCollection<ProcesoElectoral>>(json);
+
+                // Aquí debes decidir si reemplazar los datos existentes o agregarlos a la colección existente
+                ColeccionElecciones.Clear();
+                foreach (var item in datosImportados)
+                {
+                    ColeccionElecciones.Add(item);
+                }
+            }
+        }
+
+        private void btnImportar_Click(object sender, RoutedEventArgs e)
+        {
+            // Lógica para importar los datos
+            // Podría ser abrir un cuadro de diálogo para seleccionar un archivo, etc.
+        }
+
+        private void btnExportar_Click(object sender, RoutedEventArgs e)
+        {
+            // Lógica para exportar los datos
+            // Podría ser abrir un cuadro de diálogo para guardar un archivo, etc.
+        }
+
+        private void btnModificar_Click(object sender, RoutedEventArgs e)
+        {
+            if (mainTable.SelectedItem != null)
+            {
+                // Crea una instancia de 
+            }
+        }
+
+        private void btnEliminar_Click(object sender, RoutedEventArgs e)
+        {
+            // Lógica para eliminar un proceso electoral existente
+            // Asegúrate de que hay un proceso electoral seleccionado antes de continuar.
+            if (mainTable.SelectedItem != null)
+            {
+                // Elimina de la colección el elemento seleccionado
+                ColeccionElecciones.Remove(mainTable.SelectedItem as ProcesoElectoral);
+            }
+            else 
+            { 
+                MessageBox.Show("No hay ningún proceso electoral seleccionado");
+            }
+        }
+
     }
 }
