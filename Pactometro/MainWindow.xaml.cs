@@ -300,12 +300,13 @@ namespace Pactometro
 
                 try
                 {
-                    barra.Fill = (Brush)new BrushConverter().ConvertFromString(partido.Color);
+                    barra.Fill = new SolidColorBrush(partido.Color);
                 }
                 catch (FormatException)
                 {
                     barra.Fill = Brushes.Gray;
                 }
+
 
                 // Ajusta la posición horizontal para comenzar de manera proporcional al número total de partidos
                 double posicionInicio = i * (barWidth + barSpacing) + inicioProporcional;
@@ -590,23 +591,24 @@ namespace Pactometro
 
                         try
                         {
-                            Color originalColor = (Color)ColorConverter.ConvertFromString(partido.Color);
+                            // Asumiendo que partido.Color es un System.Windows.Media.Color
+                            Color originalColor = partido.Color;
 
                             // Ajusta la opacidad basada en el índice del partido
-
                             double adjustedOpacity = baseOpacity / flag;
 
+                            // Ajustar el alfa (opacidad) del color
                             Color adjustedColor = Color.FromArgb((byte)(originalColor.A * adjustedOpacity), originalColor.R, originalColor.G, originalColor.B);
 
                             // Crear una brocha con el color ajustado
                             SolidColorBrush brocha = new SolidColorBrush(adjustedColor);
                             barra.Fill = brocha;
-
                         }
                         catch (FormatException)
                         {
                             barra.Fill = Brushes.Gray;
                         }
+
 
                         double posicionInicio = yPosition - barHeight;
                         Canvas.SetLeft(barra, inicioProporcional);
@@ -751,6 +753,12 @@ namespace Pactometro
         // Función auxiliar para obtener la parte alfabética del nombre
         private string ObtenerParteAlfabética(string nombre)
         {
+            // Verificar si el nombre es null
+            if (nombre == null)
+            {
+                throw new ArgumentNullException(nameof(nombre));
+            }
+
             // Buscar la posición del último espacio en blanco
             int indiceUltimoEspacio = nombre.LastIndexOf(' ');
 
@@ -944,15 +952,15 @@ namespace Pactometro
 
                     filledBar.MouseLeftButtonDown += Rectangle_Click;
 
-                    // Try to set the actual color of the filled rectangle
                     try
                     {
-                        filledBar.Fill = (Brush)new BrushConverter().ConvertFromString(partido.Color);
+                        filledBar.Fill = new SolidColorBrush(partido.Color);
                     }
                     catch (FormatException)
                     {
-                        filledBar.Fill = Brushes.Gray; // Use gray if there's an exception
+                        filledBar.Fill = Brushes.Gray; // Usa gris si hay una excepción
                     }
+
 
                     // Position the filled rectangle within the first empty bar
                     Canvas.SetTop(filledBar, yPos);

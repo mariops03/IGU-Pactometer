@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -67,7 +68,7 @@ namespace Pactometro
             }
 
             // Verificar si ya hay un partido con el mismo color
-            if (PartidosTemporales.Any(partido => partido.Color.ToLower() == colorSeleccionado))
+            if (PartidosTemporales.Any(partido => partido.Color == colorSeleccionado))
             {
                 MessageBox.Show("Ya hay un partido con el mismo color.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
@@ -161,16 +162,6 @@ namespace Pactometro
             ProcesoElectoral nuevoProceso = new ProcesoElectoral(nombreProceso, fechaProceso, numEscañosProceso, mayoriaAbsoluta: (numEscañosProceso / 2) + 1);
 
             // Verificar que los colores de los partidos no se repitan
-            HashSet<string> coloresUnicos = new HashSet<string>();
-            foreach (Partido partido in PartidosTemporales)
-            {
-                if (!coloresUnicos.Add(partido.Color.ToLower())) // Convertir a minúsculas para la comparación
-                {
-                    MessageBox.Show("Dos partidos no pueden tener el mismo color.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
-                } 
-                nuevoProceso.coleccionPartidos.Add(partido);
-            }
 
             // Limpiar la colección temporal de partidos
             PartidosTemporales.Clear();
@@ -196,7 +187,8 @@ namespace Pactometro
         {
             txtPartido.Text = string.Empty;
             txtEscaños.Text = string.Empty;
-            colorSeleccionado = string.Empty;
+            // Establecer el color predeterminado
+            seleccionadorColor.SelectedIndex = 0;
         }
 
         private void dpFecha_PreviewTextInput(object sender, TextCompositionEventArgs e)
@@ -237,9 +229,9 @@ namespace Pactometro
         Color colorSeleccionado;
         private void seleccionadorColor_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            // Obtener el color seleccionado
-            
-            colorSeleccionado = (seleccionadorColor.SelectedItem as ComboBoxItem)?.Content?.ToString();
+            // Obtener el color seleccionado en el ComboBox
+            colorSeleccionado= (Color)(seleccionadorColor.SelectedItem as PropertyInfo).GetValue(null, null);
+
         }
     }
 }
