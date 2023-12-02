@@ -1,135 +1,201 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using System.Windows.Media;
+using System.Drawing.Imaging;
+using Microsoft.Win32;
 
 namespace Pactometro
 {
-    /// <summary>
-    /// Lógica de interacción para VentanaExportar.xaml
-    /// </summary>
     public partial class VentanaExportar : Window
     {
         Window mainWindow;
-        public string SelectedFormat { get; private set; }
-        public int Quality { get; private set; }
+
         public VentanaExportar()
         {
             InitializeComponent();
             mainWindow = Application.Current.MainWindow as MainWindow;
             if (mainWindow == null)
             {
-                // Manejar el caso de que mainWindow sea nula
+                MessageBox.Show("Error: Ventana principal no disponible.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                this.Close();
             }
+
+            // Establecer PNG como opción predeterminada
+            formatComboBox.SelectedIndex = 0; // Suponiendo que PNG es el primer ítem en tu ComboBox
+
+            // Ocultar opciones de calidad inicialmente
+            ToggleQualityOptionsVisibility(false);
+
+            // Ajustar el tamaño de la ventana para PNG
+            this.Height = 205; // Ajusta este valor según tus necesidades
         }
+
         private void ExportButton_Click(object sender, RoutedEventArgs e)
         {
-            // Obtener el formato seleccionado
-           /* if(SelectedFormat == null) { 
-                // Mostrar un mensaje de error si no se ha seleccionado un formato
-                MessageBox.Show("No se ha seleccionado un formato de imagen", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }*/
-            SelectedFormat = ((ComboBoxItem)formatComboBox.SelectedItem).Content.ToString();
-            // Obtener la calidad para JPEG
-            Quality = (int)qualitySlider.Value;
-
-
-            // Seleccionar el codificador basado en el formato elegido
-            BitmapEncoder encoder;
-            switch (SelectedFormat)
+            try
             {
-                case "JPEG":
+                string selectedFormat = ((ComboBoxItem)formatComboBox.SelectedItem).Content.ToString();
+                if (string.IsNullOrEmpty(selectedFormat))
+                {
+                    MessageBox.Show("Por favor, selecciona un formato de imagen.", "Información", MessageBoxButton.OK, MessageBoxImage.Information);
+                    return;
+                }
+
+                // Oculta el botón de exportar de la ventana principal
+                var exportarButton = (Button)mainWindow.FindName("exportar");
+                if (exportarButton != null) exportarButton.Visibility = Visibility.Hidden;
+
+                // Oculta el menú de la ventana principal
+                var menu = (Menu)mainWindow.FindName("menu");
+                if (menu != null) menu.Visibility = Visibility.Hidden;
+
+                int quality = GetQualityFromRadioButtons();
+                BitmapEncoder encoder = GetEncoder(selectedFormat, quality);
+                RenderTargetBitmap capturedImage = CaptureContent();
+
+                // Muestra el botón de exportar de la ventana principal
+                if (exportarButton != null) exportarButton.Visibility = Visibility.Visible;
+
+                // Muestra el menú de la ventana principal
+                if (menu != null) menu.Visibility = Visibility.Visible;
+
+                if (capturedImage == null)
+                {
+                    MessageBox.Show("Error al capturar la imagen.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                encoder.Frames.Add(BitmapFrame.Create(capturedImage));
+                SaveImage(encoder, selectedFormat);
+
+                this.DialogResult = true;
+                this.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Se produjo un error: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+
+        private BitmapEncoder GetEncoder(string format, int quality)
+        {
+            switch (format)
+            {
+                case "JPG":
                     JpegBitmapEncoder jpegEncoder = new JpegBitmapEncoder();
-                    jpegEncoder.QualityLevel = Quality;
-                    encoder = jpegEncoder;
-                    break;
+                    jpegEncoder.QualityLevel = quality;
+                    return jpegEncoder;
                 case "PNG":
-                    encoder = new PngBitmapEncoder();
-                    break;
-                case "BMP":
-                    encoder = new BmpBitmapEncoder();
-                    break;
-                case "GIF":
-                    encoder = new GifBitmapEncoder();
-                    break;
-                case "TIFF":
-                    encoder = new TiffBitmapEncoder();
-                    break;
+                    return new PngBitmapEncoder();
                 default:
                     throw new InvalidOperationException("Formato no soportado");
             }
+        }
 
-            RenderTargetBitmap capturedImage = CaptureContent();
 
-            // Añadir la imagen capturada al codificador
-            encoder.Frames.Add(BitmapFrame.Create(capturedImage));
-
-            // Guardar la imagen
-            SaveImage(encoder);
-
-            // Cierra la ventana y retorna a la ventana principal
-            this.DialogResult = true;
-            this.Close();
+        private int GetQualityFromRadioButtons()
+        {
+            if (radioButtonLow.IsChecked == true) return 30;
+            if (radioButtonMedium.IsChecked == true) return 60;
+            return 100; // High quality or default
         }
 
         private RenderTargetBitmap CaptureContent()
         {
-            // Verificar que mainWindow no es null
-            if (mainWindow != null)
+            if (mainWindow == null)
             {
-                // Ocultar elementos en mainWindow si es necesario
-                // Por ejemplo, si quieres ocultar un botón de exportación en mainWindow
-                // var exportarButton = (Button)mainWindow.FindName("exportar");
-                // if (exportarButton != null) exportarButton.Visibility = Visibility.Hidden;
-
-                var exportarButton = (Button)mainWindow.FindName("exportar");
-                if (exportarButton != null) exportarButton.Visibility = Visibility.Hidden;
-
-                // Ocultar el menu de la ventana principal
-                var menu = (Menu)mainWindow.FindName("menu");
-                if (menu != null) menu.Visibility = Visibility.Hidden;
-
-
-                // Captura de la ventana completa
-                RenderTargetBitmap rtb = new RenderTargetBitmap(
-                    (int)mainWindow.ActualWidth, (int)mainWindow.ActualHeight,
-                    96d, 96d, System.Windows.Media.PixelFormats.Default);
-                rtb.Render(mainWindow);
-
-                //Volver a mostrar los elementos ocultos
-                if (exportarButton != null) exportarButton.Visibility = Visibility.Visible;
-                if (menu != null) menu.Visibility = Visibility.Visible;
-
-                return rtb;
+                MessageBox.Show("La ventana principal no está disponible para la captura.");
+                return null;
             }
-            else
-            {
-                throw new InvalidOperationException("La ventana principal no está disponible.");
-            }
+
+            int width = (int)mainWindow.ActualWidth - 15;
+            int height = (int)mainWindow.ActualHeight - 37;
+
+            RenderTargetBitmap rtb = new RenderTargetBitmap(
+                width,
+                height,
+                96, // dpiX
+                96, // dpiY
+                PixelFormats.Pbgra32);
+
+            rtb.Render(mainWindow);
+
+            return rtb;
         }
 
-        private void SaveImage(BitmapEncoder encoder)
+
+
+        private void SaveImage(BitmapEncoder encoder, string format)
         {
-            Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog();
-            dlg.Filter = "Image files|*.png;*.jpeg;*.bmp;*.gif;*.tiff";
-            if (dlg.ShowDialog() == true)
+            SaveFileDialog saveFileDialog = new SaveFileDialog
             {
-                using (FileStream fileStream = new FileStream(dlg.FileName, FileMode.Create))
+                Filter = $"Image files (*.{format.ToLower()})|*.{format.ToLower()}"
+            };
+
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                using (FileStream fileStream = new FileStream(saveFileDialog.FileName, FileMode.Create))
                 {
+                    // Guarda la imagen en el archivo
                     encoder.Save(fileStream);
                 }
             }
         }
+
+
+        private void FormatComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            string selectedFormat = ((ComboBoxItem)formatComboBox.SelectedItem)?.Content.ToString();
+            bool isJpgSelected = selectedFormat == "JPG";
+
+            ToggleQualityOptionsVisibility(isJpgSelected);
+
+            // Ajusta el tamaño de la ventana
+            this.Height = isJpgSelected ? 355 : 205; // Ejemplo de tamaños, ajusta según tus necesidades
+        }
+
+
+        private void ToggleQualityOptionsVisibility(bool isVisible)
+        {
+            qualityOptionsPanel.Visibility = isVisible ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        private void CopyToClipboard_Click(object sender, RoutedEventArgs e)
+        {
+            RenderTargetBitmap capturedImage = CaptureContent();
+            using (System.Drawing.Bitmap bmp = new System.Drawing.Bitmap(capturedImage.PixelWidth, capturedImage.PixelHeight, System.Drawing.Imaging.PixelFormat.Format32bppArgb))
+            {
+                BitmapData data = bmp.LockBits(
+                    new System.Drawing.Rectangle(0, 0, bmp.Width, bmp.Height),
+                    ImageLockMode.WriteOnly,
+                    System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+
+                capturedImage.CopyPixels(
+                    Int32Rect.Empty,
+                    data.Scan0,
+                    data.Height * data.Stride,
+                    data.Stride);
+
+                bmp.UnlockBits(data);
+
+                using (System.Drawing.Bitmap clipboardBmp = new System.Drawing.Bitmap(bmp))
+                {
+                    Clipboard.SetImage(ConvertBitmapToBitmapSource(clipboardBmp));
+                }
+            }
+        }
+        private BitmapSource ConvertBitmapToBitmapSource(System.Drawing.Bitmap bitmap)
+        {
+            var rect = new System.Drawing.Rectangle(0, 0, bitmap.Width, bitmap.Height);
+            var bitmapData = bitmap.LockBits(rect, ImageLockMode.ReadWrite, bitmap.PixelFormat);
+            var bitmapSource = BitmapSource.Create(bitmapData.Width, bitmapData.Height, bitmap.HorizontalResolution, bitmap.VerticalResolution, PixelFormats.Bgra32, null, bitmapData.Scan0, bitmapData.Stride * bitmapData.Height, bitmapData.Stride);
+            bitmap.UnlockBits(bitmapData);
+            return bitmapSource;
+        }
+
     }
 }
