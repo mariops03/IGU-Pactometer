@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Pactometro"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Pactometro" Height="450" Width="800">
     <Grid Name="gridPrincipal">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -27,9 +27,9 @@
                 <Separator/>
                 <MenuItem Header="Salir" Click="menuSalir"/>
             </MenuItem>
+            <MenuItem Name="btnExportar" Header="Exportar como imagen" Click="Exportar_Click" />
         </Menu>
         <TextBlock Name="txtTitulo" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Center" FontSize="20"/>
         <Canvas Name="chartCanvas" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Margin="10" Background="LavenderBlush"/>
-        <Button Name="exportar" Grid.Row="2" Grid.Column="2" Content="Exportar" Margin="20" Padding="5" VerticalAlignment="Top" HorizontalAlignment="Right" Click="Exportar_Click" Visibility="Hidden"/>
     </Grid>
 </Window>

@@ -330,18 +330,11 @@ namespace Pactometro
 
         private void btnAñadir_Click(object sender, RoutedEventArgs e)
         {
-            // Verifica si ya hay una instancia abierta
-            if (ventanaAñadirProceso == null || !ventanaAñadirProceso.IsVisible)
-            {
-                ventanaAñadirProceso = new VentanaAgregar(ColeccionElecciones);
-                ventanaAñadirProceso.Closed += VentanaAñadirProceso_Closed;
-                ventanaAñadirProceso.ShowDialog();
-            }
-            else
-            {
-                // La ventana ya está abierta, puedes llevarla al frente si es necesario
-                ventanaAñadirProceso.Activate();
-            }
+            // Crea una instancia de la clase VentanaAñadirProceso, que es una ventana modal y hazte su propietario
+            ventanaAñadirProceso = new VentanaAgregar(ColeccionElecciones);
+            ventanaAñadirProceso.Owner = this;
+            ventanaAñadirProceso.ShowDialog();
+
         }
 
         private void VentanaAñadirProceso_Closed(object sender, EventArgs e)
@@ -539,7 +532,12 @@ namespace Pactometro
         {
             if (mainTable.SelectedItem != null)
             {
-                // Crea una instancia de 
+                // Crea una instancia de la clase VentanaModificar con el proceso electoral seleccionado
+                VentanaModificar ventanaModificar = new VentanaModificar(ColeccionElecciones, mainTable.SelectedItem as ProcesoElectoral);
+                ventanaModificar.Owner = this;
+                ventanaModificar.ShowDialog();
+
+
             }
         }
 

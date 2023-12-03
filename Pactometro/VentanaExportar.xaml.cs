@@ -195,9 +195,6 @@ namespace Pactometro
                     Clipboard.SetImage(ConvertBitmapToBitmapSource(clipboardBmp));
                 }
             }
-
-            //Mostrar el botón de exportar de la ventana principal
-            if (exportarButton != null) exportarButton.Visibility = Visibility.Visible;
             
             //Mostrar el menú de la ventana principal
             if (menu != null) menu.Visibility = Visibility.Visible;

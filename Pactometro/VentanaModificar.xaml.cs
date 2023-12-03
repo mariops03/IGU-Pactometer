@@ -1,36 +1,81 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
 
 namespace Pactometro
 {
     /// <summary>
-    /// Lógica de interacción para VentanaAgregar.xaml
+    /// Lógica de interacción para VentanaModificar.xaml
     /// </summary>
-    /// 
-    
-    public partial class VentanaAgregar : Window
+    public partial class VentanaModificar : Window
     {
-        private ObservableCollection<ProcesoElectoral> ColeccionElecciones;
         private ObservableCollection<Partido> PartidosTemporales;
-        private bool procesoAñadido;
-
-        public VentanaAgregar(ObservableCollection<ProcesoElectoral> coleccionElecciones)
+        private ObservableCollection<ProcesoElectoral> ColeccionElecciones;
+        Color colorSeleccionado;
+        public VentanaModificar(ObservableCollection<ProcesoElectoral> coleccionElecciones, ProcesoElectoral procesoSeleccionado)
         {
             InitializeComponent();
             ColeccionElecciones = coleccionElecciones;
             PartidosTemporales = new ObservableCollection<Partido>();
+            PartidosTemporales = procesoSeleccionado.coleccionPartidos;
             lvPartidos.SelectionChanged += lvPartidos_SelectionChanged;
             btnEliminar.IsEnabled = false;
+            btnModificar.IsEnabled = false;
             seleccionadorColor.ItemsSource = typeof(Colors).GetProperties();
             // Establecer el color predeterminado
             seleccionadorColor.SelectedIndex = 0;
+            txtNumEscaños.Text = procesoSeleccionado.numEscaños.ToString();
+            dpFecha.SelectedDate = procesoSeleccionado.fecha;
+            cmbTipoProceso.Text = ObtenerParteAlfabetica(procesoSeleccionado.nombre);
+            lvPartidos.ItemsSource = PartidosTemporales;
+        }
+
+        private string ObtenerParteAlfabetica(string nombre)
+        {
+            // Verificar si el nombre es null
+            if (nombre == null)
+            {
+                throw new ArgumentNullException(nameof(nombre));
+            }
+
+            // Buscar la posición del último espacio en blanco
+            int indiceUltimoEspacio = nombre.LastIndexOf(' ');
+
+            // Verificar si se encontró un espacio en blanco
+            if (indiceUltimoEspacio >= 0)
+            {
+                // Obtener la parte alfabética antes del último espacio en blanco
+                return nombre.Substring(0, indiceUltimoEspacio);
+            }
+
+            // En caso de que no haya espacio en blanco, devolver el nombre original
+            return nombre;
+        }
+
+        private void BtnModificarPartido_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        
+        private void seleccionadorColor_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            // Obtener el color seleccionado en el ComboBox
+            colorSeleccionado = (Color)(seleccionadorColor.SelectedItem as PropertyInfo).GetValue(null, null);
+
         }
 
         private void BtnAñadirPartido_Click(object sender, RoutedEventArgs e)
@@ -81,33 +126,21 @@ namespace Pactometro
             LimpiarCamposPartido();
         }
 
-
-        private void BtnEliminarPartido_Click(object sender, RoutedEventArgs e)
+        private void LimpiarCamposPartido()
         {
-            // Verificar si hay un partido seleccionado
-            if (lvPartidos.SelectedItem != null)
-            {
-                // Eliminar el partido seleccionado de la colección temporal
-                Partido partidoSeleccionado = (Partido)lvPartidos.SelectedItem;
-                PartidosTemporales.Remove(partidoSeleccionado);
-
-                // Actualizar la lista de partidos en el ListView
-                lvPartidos.ItemsSource = null;
-                lvPartidos.ItemsSource = PartidosTemporales;
-            }
+            txtPartido.Text = string.Empty;
+            txtEscaños.Text = string.Empty;
+            seleccionadorColor.SelectedIndex = 0;
         }
 
-
-        private void BtnAñadirProceso_Click(object sender, RoutedEventArgs e)
+        private void BtnActualizarProceso_Click(object sender, RoutedEventArgs e)
         {
-            // Restablecer la variable procesoAñadido
-            procesoAñadido = false;
 
             // Obtener datos desde la interfaz de usuario para el nuevo proceso electoral
             string tipoProceso = (cmbTipoProceso.SelectedItem as ComboBoxItem)?.Content?.ToString()?.Trim();
 
             // Validar que no haya campos vacíos
-            if (string.IsNullOrEmpty(tipoProceso) || dpFecha.SelectedDate == null || string.IsNullOrEmpty(txtNumEscaños.Text))
+            if (string.IsNullOrEmpty(tipoProceso) || dpFecha.SelectedDate == null || string.IsNullOrEmpty(txtNumEscaños.Text) )
             {
                 MessageBox.Show("Por favor, completa todos los campos para añadir un proceso.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
@@ -127,15 +160,7 @@ namespace Pactometro
             {
                 MessageBox.Show("Por favor, introduce un número válido para el número de escaños.", "Error de entrada", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
-            }
-
-            // Verificar que no haya un proceso con el mismo nombre
-            string nombreProceso = $"{tipoProceso} {fechaProceso.ToString("dd-MM-yyyy")}";
-            if (ColeccionElecciones.Any(proceso => proceso.nombre == nombreProceso))
-            {
-                MessageBox.Show("Ya hay un proceso con el mismo nombre.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
+            }            
 
             // Verificar que hay al menos un partido
             if (PartidosTemporales.Count == 0)
@@ -151,14 +176,24 @@ namespace Pactometro
                 return;
             }
 
+            string nombreProceso = $"{tipoProceso} {fechaProceso.ToString("dd-MM-yyyy")}";
+
+            ColeccionElecciones.Remove(ColeccionElecciones.Where(proceso => proceso.nombre == nombreProceso).FirstOrDefault());
+
+            if (ColeccionElecciones.Any(proceso => proceso.nombre == nombreProceso))
+            {
+                MessageBox.Show("Ya hay un proceso con el mismo nombre.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
             // Crear una instancia de la clase ProcesoElectoral
             ProcesoElectoral nuevoProceso = new ProcesoElectoral(nombreProceso, fechaProceso, numEscañosProceso, mayoriaAbsoluta: (numEscañosProceso / 2) + 1);
 
-            // Añadir los partidos a la colección de partidos del nuevo proceso
             foreach (Partido partido in PartidosTemporales)
             {
                 nuevoProceso.coleccionPartidos.Add(partido);
             }
+            
 
             // Limpiar la colección temporal de partidos
             PartidosTemporales.Clear();
@@ -166,25 +201,26 @@ namespace Pactometro
             // Agregar el nuevo proceso a la colección principal de forma ordenada por fecha de mayor a menor
             ColeccionElecciones.Add(nuevoProceso);
 
-            // Puedes realizar otras acciones aquí, como limpiar otros campos de entrada
-            LimpiarCamposProceso();
+            // Salir de la ventana
+            this.DialogResult = true;
+            this.Close();
 
-            // Marcar el proceso como añadido
-            procesoAñadido = true;
         }
 
-        private void LimpiarCamposProceso()
-        {
-            cmbTipoProceso.SelectedIndex = -1;
-            dpFecha.SelectedDate = null;
-            txtNumEscaños.Text = string.Empty;
-        }
 
-        private void LimpiarCamposPartido()
+        private void BtnEliminarPartido_Click(object sender, RoutedEventArgs e)
         {
-            txtPartido.Text = string.Empty;
-            txtEscaños.Text = string.Empty;
-            seleccionadorColor.SelectedIndex = 0;
+            // Verificar si hay un partido seleccionado
+            if (lvPartidos.SelectedItem != null)
+            {
+                // Eliminar el partido seleccionado de la colección temporal
+                Partido partidoSeleccionado = (Partido)lvPartidos.SelectedItem;
+                PartidosTemporales.Remove(partidoSeleccionado);
+
+                // Actualizar la lista de partidos en el ListView
+                lvPartidos.ItemsSource = null;
+                lvPartidos.ItemsSource = PartidosTemporales;
+            }
         }
 
         private void dpFecha_PreviewTextInput(object sender, TextCompositionEventArgs e)
@@ -220,14 +256,8 @@ namespace Pactometro
         private void lvPartidos_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             btnEliminar.IsEnabled = lvPartidos.SelectedItem != null;
+            btnModificar.IsEnabled = lvPartidos.SelectedItem != null;
         }
 
-        Color colorSeleccionado;
-        private void seleccionadorColor_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            // Obtener el color seleccionado en el ComboBox
-            colorSeleccionado= (Color)(seleccionadorColor.SelectedItem as PropertyInfo).GetValue(null, null);
-
-        }
     }
 }

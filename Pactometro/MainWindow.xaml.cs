@@ -25,13 +25,13 @@ namespace Pactometro
         private bool grafico1 = false;
         private bool grafico2 = false;
         private bool grafico3 = false;
-        double flag = 1.0;
         public MainWindow()
         {
             InitializeComponent();
             Loaded += MainWindowLoaded;
             coleccionElecciones = new ObservableCollection<ProcesoElectoral>();
             Closed += MainWindow_Closed; // Suscribe un controlador para el evento Closed de la ventana principal
+            btnExportar.IsEnabled = false;
         }
 
         private void MainWindowLoaded(object sender, RoutedEventArgs e)
@@ -92,6 +92,7 @@ namespace Pactometro
         //Funcion que cree un textblock en el canvas indicando que no hay ningun proceso electoral seleccionado, que por favor seleccione uno
         private void noHayProcesoElectoralSeleccionado()
         {
+            btnExportar.IsEnabled = false;
             //Borra el canvas
             chartCanvas.Children.Clear();
             //Borra el titulo
@@ -116,6 +117,7 @@ namespace Pactometro
 
         private void noHayGraficoSeleccionado()
         {
+            btnExportar.IsEnabled = false;
             chartCanvas.Children.Clear();
             txtTitulo.Text = "";
             if (checkBoxCanvas != null)
@@ -265,6 +267,7 @@ namespace Pactometro
         }
         private void mostrarGrafico1()
         {
+            btnExportar.IsEnabled = true;
             // Eliminar el canvas de los CheckBox si existe
             if (checkBoxCanvas != null)
             {
@@ -367,8 +370,6 @@ namespace Pactometro
 
                 chartCanvas.Children.Add(leyenda);
             }     
-            //Poner visible el boton de exportar
-            exportar.Visibility = Visibility.Visible;
         }
 
         //Cre ael metodo para exportar el grafico
@@ -384,6 +385,7 @@ namespace Pactometro
 
         private void mostrarGrafico2(Collection<ProcesoElectoral> procesosComparativos)
         {
+            btnExportar.IsEnabled = true;
            
             // Limpiar el Canvas antes de agregar nuevos elementos
             chartCanvas.Children.Clear();
@@ -420,9 +422,6 @@ namespace Pactometro
             Grid.SetColumn(checkBoxCanvas, 3);
             Grid.SetRow(checkBoxCanvas, 2);
             gridPrincipal.Children.Add(checkBoxCanvas);
-
-            exportar.Visibility = Visibility.Visible;
-
 
             double fechaY = 0;
 
@@ -632,7 +631,6 @@ namespace Pactometro
 
                         // Incrementar la posición proporcional para la siguiente iteración
                         inicioProporcional += barWidth + barSpacing;
-                        flag++;
                     }
                     if (listaDePartidos != null && listaDePartidos.Any())
                     {
@@ -871,6 +869,7 @@ namespace Pactometro
         private Button pacto;
         private void mostrarGrafico3()
         {
+            btnExportar.IsEnabled = true;
             chartCanvas.Children.Clear();
 
             if (checkBoxCanvas != null)
