@@ -14,26 +14,42 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <ToolBar Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Top">
-            <Button Content="Importar Datos" ToolTip="Importar datos de un archivo">
-                <Button.ContentTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Horizontal">
-                            <Image Source="src/import.png" Width="14" Height="12"/>
-                            <TextBlock Text=" Importar Datos" Margin="5,0"/>
-                        </StackPanel>
-                    </DataTemplate>
-                </Button.ContentTemplate>
-            </Button>
-            <Button Content="Exportar Datos" ToolTip="Exportar datos a un archivo">
-                <Button.ContentTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Horizontal">
-                            <Image Source="src/export.png" Width="12" Height="12"/>
-                            <TextBlock Text=" Exportar Datos" Margin="5,0"/>
-                        </StackPanel>
-                    </DataTemplate>
-                </Button.ContentTemplate>
-            </Button>
+            <Menu>
+                <MenuItem Header="Importar Datos">
+                    <MenuItem.Icon>
+                        <Image Source="src/import.png" Width="12" Height="12"/>
+                    </MenuItem.Icon>
+                    <MenuItem Header="Como CSV" Click="btnImportarCSV_Click">
+                        <MenuItem.Icon>
+                            <Image Source="src/csv.png" Width="14" Height="12"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="Como JSON" Click="btnImportarJSON_Click">
+                        <MenuItem.Icon>
+                            <Image Source="src/json.png" Width="14" Height="12"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </MenuItem>
+            </Menu>
+
+            <!-- Menú Exportar con submenús para CSV y JSON -->
+            <Menu>
+                <MenuItem Header="Exportar Datos">
+                    <MenuItem.Icon>
+                        <Image Source="src/export.png" Width="14" Height="12"/>
+                    </MenuItem.Icon>
+                    <MenuItem Header="Como CSV" Click="btnExportarCSV_Click">
+                        <MenuItem.Icon>
+                            <Image Source="src/csv.png" Width="14" Height="12"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="Como JSON" Click="btnExportarJSON_Click">
+                        <MenuItem.Icon>
+                            <Image Source="src/json.png" Width="14" Height="12"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </MenuItem>
+            </Menu>
             <Separator/>
             <Button Content="Añadir Proceso Electoral" ToolTip="Añadir un nuevo proceso electoral" Click="btnAñadir_Click">
                 <Button.ContentTemplate>

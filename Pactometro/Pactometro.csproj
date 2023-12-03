@@ -146,7 +146,10 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="src\csv.png" />
+    <Resource Include="src\json.png" />
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="src\add.png" />
     <Resource Include="src\delete.png" />

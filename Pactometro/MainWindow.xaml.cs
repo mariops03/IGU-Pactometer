@@ -270,6 +270,12 @@ namespace Pactometro
             {
                 gridPrincipal.Children.Remove(checkBoxCanvas);
             }
+            //Si la opacidad de los partidos es menor que 1, se vuelve a poner a 1
+            foreach (Partido partido in procesoElectoralActual.coleccionPartidos)
+            {
+                partido.Color = Color.FromArgb(255, partido.Color.R, partido.Color.G, partido.Color.B);
+            }
+
             // Llamar al método que crea el gráfico utilizando el proceso electoral actual
             txtTitulo.Text = procesoElectoralActual.nombre;
 
@@ -468,25 +474,44 @@ namespace Pactometro
             {
                 // Eliminar el proceso de la colección de elecciones en orden de fecha
                 coleccionEleccionesCheckBox.Remove(proceso);
-                coleccionEleccionesCheckBox = new Collection<ProcesoElectoral>(coleccionEleccionesCheckBox.OrderByDescending(p => p.fecha).ToList());
+                ActualizarElecciones();
                 LimpiarPartidos(proceso, partidosSeleccionados);
-                //QuitarCuadradoCheckBox(proceso.fecha.ToString("dd/MM/yyyy"));
+                
             }
             else
             {
-                //Eliminar partidos seleccionados
-                partidosSeleccionados.Clear();
+                
                 //Agregar el proceso a la coleccion de elecciones en orden de fecha
                 coleccionEleccionesCheckBox.Add(proceso);
                 // Ordenar la colección de elecciones por fecha de forma inversa
-                coleccionEleccionesCheckBox = new Collection<ProcesoElectoral>(coleccionEleccionesCheckBox.OrderByDescending(p => p.fecha).ToList());
                 
-                // Recorrer la coleccion de procesos electorales de los checkBox
+                ActualizarElecciones();
+                ImprimirPartidosSeleccionados(partidosSeleccionados);
 
+            }
+            ActualizarCuadrados();
+        }
+
+        private void ActualizarElecciones()
+        {
+            
+            coleccionEleccionesCheckBox = new Collection<ProcesoElectoral>(coleccionEleccionesCheckBox.OrderByDescending(p => p.fecha).ToList());
+
+            // Recorrer la coleccion de procesos electorales de los checkBox
+            double opacidad = 1.0;
+            double i = 1.0;
+
+            //Comprueba si hay algun proceso electoral en la coleccion de elecciones
+            if (coleccionEleccionesCheckBox.Any())
+            {
+                partidosSeleccionados.Clear();
                 foreach (ProcesoElectoral procesoCheckBox in coleccionEleccionesCheckBox)
                 {
                     foreach (Partido partido in procesoCheckBox.coleccionPartidos)
                     {
+                        //Ajusar la opacidad de los partidos, usando Windows.Media.Color
+                        partido.Color = Color.FromArgb((byte)(255 * opacidad), partido.Color.R, partido.Color.G, partido.Color.B);
+
                         // Buscar en la lista si ya hay partidos con el mismo nombre
                         List<Partido> partidosConMismoNombre = partidosSeleccionados.FirstOrDefault(p => p.Any() && p.First().Nombre == partido.Nombre);
 
@@ -503,14 +528,14 @@ namespace Pactometro
 
                         }
                     }
+                    i++;
+                    opacidad = 1.0 / i;
                 }
                 // Ordenar las sublistas en partidosSeleccionados según el número de escaños de cada partido
                 partidosSeleccionados = partidosSeleccionados.OrderByDescending(lista => lista.Any() ? lista.Max(partido => partido.Escaños) : 0).ToList();
-                
-                ImprimirPartidosSeleccionados(partidosSeleccionados);
-
             }
-            ActualizarCuadrados();
+
+            
         }
 
         private void ActualizarCuadrados()
@@ -573,14 +598,12 @@ namespace Pactometro
                 double inicioProporcional = barWidth * (numPartidos / (barSpacing * 5));
                 double acumuladorInicio = inicioProporcional;
                 double yPosition = chartCanvas.ActualHeight; // Comenzar desde la parte inferior
-
-                double baseOpacity = 1; // Ajusta la opacidad base según tus preferencias
                 //Ordenar las sublistas en partidosSeleccionados según el número de escaños de cada partido
                 partidosSeleccionados = partidosSeleccionados.OrderByDescending(lista => lista.Any() ? lista.Max(partido => partido.Escaños) : 0).ToList();
 
+
                 foreach (var listaDePartidos in partidosSeleccionados)
                 {
-                    flag = 1.0;
                     foreach (var partido in listaDePartidos)
                     {
                         double barHeight = (partido.Escaños / maxEscaños) * (chartCanvas.ActualHeight);
@@ -591,17 +614,7 @@ namespace Pactometro
 
                         try
                         {
-                            // Asumiendo que partido.Color es un System.Windows.Media.Color
-                            Color originalColor = partido.Color;
-
-                            // Ajusta la opacidad basada en el índice del partido
-                            double adjustedOpacity = baseOpacity / flag;
-
-                            // Ajustar el alfa (opacidad) del color
-                            Color adjustedColor = Color.FromArgb((byte)(originalColor.A * adjustedOpacity), originalColor.R, originalColor.G, originalColor.B);
-
-                            // Crear una brocha con el color ajustado
-                            SolidColorBrush brocha = new SolidColorBrush(adjustedColor);
+                            SolidColorBrush brocha = new SolidColorBrush(partido.Color);
                             barra.Fill = brocha;
                         }
                         catch (FormatException)
@@ -644,8 +657,6 @@ namespace Pactometro
                         // Actualizar acumuladorInicio para el siguiente grupo de barras
                         acumuladorInicio = posicionFinalGrupo + barSpacing;
                     }
-
-                    // Agregar el nombre del partido debajo de la barra centrado
 
 
                 }
@@ -867,6 +878,12 @@ namespace Pactometro
                 gridPrincipal.Children.Remove(checkBoxCanvas);
             }
 
+            //Si la opacidad de los partidos es menor que 1, se vuelve a poner a 1
+            foreach (Partido partido in procesoElectoralActual.coleccionPartidos)
+            {
+                partido.Color = Color.FromArgb(255, partido.Color.R, partido.Color.G, partido.Color.B);
+            }
+
             txtTitulo.Text = procesoElectoralActual.nombre;
 
             double barHeight = chartCanvas.ActualHeight / 4; // height of each bar
@@ -1060,7 +1077,5 @@ namespace Pactometro
                 MessageBox.Show("No hay partidos en la segunda barra.");
             }
         }
-
-
     }
 }

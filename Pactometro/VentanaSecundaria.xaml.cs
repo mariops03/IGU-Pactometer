@@ -6,6 +6,10 @@ using System.Windows.Controls;
 using Newtonsoft.Json;
 using Microsoft.Win32;
 using System.IO;
+using System.Linq;
+using System.Text;
+using System.Globalization;
+using System.Windows.Shapes;
 
 
 namespace Pactometro
@@ -25,7 +29,7 @@ namespace Pactometro
         {
             InitializeComponent();
             ColeccionElecciones = coleccionElecciones;
-            añadirDatos(coleccionElecciones);
+            añadirDatos(ColeccionElecciones);
         }
 
         private void mainTable_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -58,7 +62,6 @@ namespace Pactometro
 
         private void añadirDatos(ObservableCollection<ProcesoElectoral> coleccionElecciones)
         {
-
 
             //si el numero de colecciones es menor que 4, añade 4 colecciones
             if (coleccionElecciones.Count == 0)
@@ -107,7 +110,7 @@ namespace Pactometro
             coleccionElecciones[0].coleccionPartidos[5].Escaños = 7;
             coleccionElecciones[0].coleccionPartidos[5].Color = Colors.LightGreen;
 
-            coleccionElecciones[0].coleccionPartidos[6].Nombre = "EH Bildu";
+            coleccionElecciones[0].coleccionPartidos[6].Nombre = "EH_BILDU";
             coleccionElecciones[0].coleccionPartidos[6].Escaños = 6;
             coleccionElecciones[0].coleccionPartidos[6].Color = Colors.LightBlue;
 
@@ -313,7 +316,7 @@ namespace Pactometro
             coleccionElecciones[4].coleccionPartidos[5].Escaños = 10;
             coleccionElecciones[4].coleccionPartidos[5].Color = Color.FromRgb(144, 238, 144); // lightGreen
 
-            coleccionElecciones[4].coleccionPartidos[6].Nombre = "EH Bildu";
+            coleccionElecciones[4].coleccionPartidos[6].Nombre = "EH_BILDU";
             coleccionElecciones[4].coleccionPartidos[6].Escaños = 10;
             coleccionElecciones[4].coleccionPartidos[6].Color = Colors.LightBlue;
 
@@ -347,45 +350,189 @@ namespace Pactometro
             ventanaAñadirProceso = null;
         }
 
-        private void ExportarDatos()
+        private void ExportarDatosCSV()
         {
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.Filter = "Archivo JSON (*.json)|*.json";
+            SaveFileDialog saveFileDialog = new SaveFileDialog
+            {
+                Filter = "Archivo CSV (*.csv)|*.csv",
+                FileName = "DatosExportados.csv" // Nombre de archivo predeterminado para CSV
+            };
+
             if (saveFileDialog.ShowDialog() == true)
             {
-                string json = JsonConvert.SerializeObject(ColeccionElecciones);
-                File.WriteAllText(saveFileDialog.FileName, json);
-            }
-        }
-
-        private void ImportarDatos()
-        {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "Archivo JSON (*.json)|*.json";
-            if (openFileDialog.ShowDialog() == true)
-            {
-                string json = File.ReadAllText(openFileDialog.FileName);
-                ObservableCollection<ProcesoElectoral> datosImportados = JsonConvert.DeserializeObject<ObservableCollection<ProcesoElectoral>>(json);
-
-                // Aquí debes decidir si reemplazar los datos existentes o agregarlos a la colección existente
-                ColeccionElecciones.Clear();
-                foreach (var item in datosImportados)
+                try
                 {
-                    ColeccionElecciones.Add(item);
+                    StringBuilder csvContent = new StringBuilder();
+                    // Encabezados del CSV
+                    csvContent.AppendLine("Nombre,Fecha,NumEscaños,MayoriaAbsoluta,Partidos");
+
+                    foreach (var proceso in ColeccionElecciones)
+                    {
+                        // Convertir la colección de partidos a una cadena de texto incluyendo el color
+                        var partidosString = string.Join("; ", proceso.coleccionPartidos.Select(p =>
+                            $"{p.Nombre} ({p.Escaños} escaños) - {p.Color.ToString()}"));
+
+                        // Añadir una línea al CSV para cada ProcesoElectoral
+                        string fechaFormateada = proceso.fecha.ToString("yyyy-MM-dd"); // Formato de fecha ISO 8601
+                        csvContent.AppendLine($"\"{proceso.nombre}\",\"{fechaFormateada}\",{proceso.numEscaños},{proceso.mayoriaAbsoluta},\"{partidosString}\"");
+                    }
+
+                    // Escribir el contenido CSV en el archivo
+                    File.WriteAllText(saveFileDialog.FileName, csvContent.ToString());
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error al guardar el archivo CSV: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
         }
 
-        private void btnImportar_Click(object sender, RoutedEventArgs e)
+
+
+        private void ImportarDatosCSV()
         {
-            // Lógica para importar los datos
-            // Podría ser abrir un cuadro de diálogo para seleccionar un archivo, etc.
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                Filter = "Archivo CSV (*.csv)|*.csv"
+            };
+
+            if (openFileDialog.ShowDialog() == true)
+            {
+                try
+                {
+                    var datosImportados = new ObservableCollection<ProcesoElectoral>();
+                    var lines = File.ReadAllLines(openFileDialog.FileName);
+
+                    foreach (var line in lines.Skip(1)) // Se omite el encabezado
+                    {
+                        var columns = line.Split(new[] { ',' }, 5); // Divide solo en las primeras 5 columnas, la última contiene los partidos
+
+                        var proceso = new ProcesoElectoral
+                        {
+                            nombre = columns[0].Trim('"'),
+                            fecha = DateTime.ParseExact(columns[1].Trim('"'), "yyyy-MM-dd", CultureInfo.InvariantCulture),
+                            numEscaños = int.Parse(columns[2]),
+                            mayoriaAbsoluta = int.Parse(columns[3]),
+                            coleccionPartidos = new ObservableCollection<Partido>()
+                        };
+
+                        var partidosInfo = columns[4].Trim('"').Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+                        foreach (var partidoInfo in partidosInfo)
+                        {
+                            // Dividimos la información del partido en los componentes nombre, escaños y color
+                            var partidoDetails = partidoInfo.Trim().Split(new[] { " - " }, StringSplitOptions.RemoveEmptyEntries);
+                            var nombreYEscaños = partidoDetails[0].Split(new[] { " (" }, StringSplitOptions.RemoveEmptyEntries);
+                            var nombrePartido = nombreYEscaños[0].Trim();
+                            var escañosPartido = int.Parse(nombreYEscaños[1].Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries)[0]);
+
+                            // Parseamos el color en formato hexadecimal
+                            var colorPartido = (Color)ColorConverter.ConvertFromString(partidoDetails[1].Trim());
+
+                            proceso.coleccionPartidos.Add(new Partido
+                            {
+                                Nombre = nombrePartido,
+                                Escaños = escañosPartido,
+                                Color = colorPartido
+                            });
+                        }
+
+                        datosImportados.Add(proceso);
+                    }
+
+                    ColeccionElecciones.Clear();
+                    foreach (var item in datosImportados)
+                    {
+                        ColeccionElecciones.Add(item);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error al importar el archivo CSV: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
         }
 
-        private void btnExportar_Click(object sender, RoutedEventArgs e)
+
+
+
+        private void ExportarDatosJson()
         {
-            // Lógica para exportar los datos
-            // Podría ser abrir un cuadro de diálogo para guardar un archivo, etc.
+            SaveFileDialog saveFileDialog = new SaveFileDialog
+            {
+                Filter = "Archivo JSON (*.json)|*.json",
+                FileName = "DatosExportados.json" // Nombre de archivo predeterminado para JSON
+            };
+
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                try
+                {
+                    string json = JsonConvert.SerializeObject(ColeccionElecciones, Formatting.Indented);
+                    File.WriteAllText(saveFileDialog.FileName, json);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error al guardar el archivo JSON: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
+
+        private void ImportarDatosJSON()
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                Filter = "Archivo JSON (*.json)|*.json"
+            };
+
+            if (openFileDialog.ShowDialog() == true)
+            {
+                try
+                {
+                    // Leer el contenido del archivo
+                    string json = File.ReadAllText(openFileDialog.FileName);
+
+                    // Deserializar el JSON a la colección
+                    var datosImportados = JsonConvert.DeserializeObject<ObservableCollection<ProcesoElectoral>>(json);
+
+                    if (datosImportados != null)
+                    {
+                        ColeccionElecciones.Clear();
+                        foreach (var proceso in datosImportados)
+                        {
+                            ColeccionElecciones.Add(proceso);
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("El archivo JSON no contiene datos válidos.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error al importar de JSON: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
+
+
+        private void btnImportarCSV_Click(object sender, RoutedEventArgs e)
+        {
+            ImportarDatosCSV();
+        }
+
+        private void btnExportarCSV_Click(object sender, RoutedEventArgs e)
+        {
+            ExportarDatosCSV();
+        }
+
+        private void btnImportarJSON_Click(object sender, RoutedEventArgs e)
+        {
+            ImportarDatosJSON();
+        }
+
+        private void btnExportarJSON_Click(object sender, RoutedEventArgs e)
+        {
+            ExportarDatosJson();
         }
 
         private void btnModificar_Click(object sender, RoutedEventArgs e)
