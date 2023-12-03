@@ -63,7 +63,7 @@
                 </ComboBox.ItemTemplate>
             </ComboBox>
 
-            <Button Width="120" Content="Añadir Partido" Margin="10,0" Click="BtnAñadirPartido_Click"/>
+            <Button Width="120" Content="Añadir Partido" Margin="10,0" Click="BtnAñadirPartido_Click" IsDefault="True"/>
         </StackPanel>
 
         <!-- Botones -->

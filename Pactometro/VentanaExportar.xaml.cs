@@ -167,12 +167,15 @@ namespace Pactometro
         private void CopyToClipboard_Click(object sender, RoutedEventArgs e)
         {
             //Ocultar el botón de exportar de la ventana principal
-            var exportarButton = (Button)mainWindow.FindName("exportar");
-            if (exportarButton != null) exportarButton.Visibility = Visibility.Hidden;
+            var btnPacto = (Button)mainWindow.FindName("btnPacto");
+            if (btnPacto != null) btnPacto.Visibility = Visibility.Collapsed;
+            
+            var btnReiniciar = (Button)mainWindow.FindName("btnReiniciar");
+            if (btnReiniciar != null) btnReiniciar.Visibility = Visibility.Collapsed;
 
-            //Ocultar el menú de la ventana principal
             var menu = (Menu)mainWindow.FindName("menu");
-            if (menu != null) menu.Visibility = Visibility.Hidden;
+            if (menu != null) menu.Visibility = Visibility.Collapsed;
+
 
             RenderTargetBitmap capturedImage = CaptureContent();
             using (System.Drawing.Bitmap bmp = new System.Drawing.Bitmap(capturedImage.PixelWidth, capturedImage.PixelHeight, System.Drawing.Imaging.PixelFormat.Format32bppArgb))
@@ -195,9 +198,10 @@ namespace Pactometro
                     Clipboard.SetImage(ConvertBitmapToBitmapSource(clipboardBmp));
                 }
             }
-            
-            //Mostrar el menú de la ventana principal
+
             if (menu != null) menu.Visibility = Visibility.Visible;
+            if (btnPacto != null) btnPacto.Visibility = Visibility.Visible;
+            if (btnReiniciar != null) btnReiniciar.Visibility = Visibility.Visible;
         }
         private BitmapSource ConvertBitmapToBitmapSource(System.Drawing.Bitmap bitmap)
         {

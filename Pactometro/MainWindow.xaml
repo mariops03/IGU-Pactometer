@@ -31,5 +31,9 @@
         </Menu>
         <TextBlock Name="txtTitulo" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Center" FontSize="20"/>
         <Canvas Name="chartCanvas" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Margin="10" Background="LavenderBlush"/>
+        
+        <Button Name="btnReiniciar" Grid.Row="3" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Top" Content="Reiniciar" Height="25" Width="125" Click="Reiniciar_Click" Visibility="Collapsed"/>
+        <Button Name="btnPacto" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Top" Content="Pacto" Height="25" Width="125" Click="Pacto_Click" Visibility="Collapsed"/>
+            
     </Grid>
 </Window>

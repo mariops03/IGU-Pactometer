@@ -9,7 +9,6 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using System.Windows.Media.Imaging;
 
 namespace Pactometro
 {
@@ -92,6 +91,9 @@ namespace Pactometro
         //Funcion que cree un textblock en el canvas indicando que no hay ningun proceso electoral seleccionado, que por favor seleccione uno
         private void noHayProcesoElectoralSeleccionado()
         {
+            btnReiniciar.Visibility = Visibility.Collapsed;
+            btnPacto.Visibility = Visibility.Collapsed;
+
             btnExportar.IsEnabled = false;
             //Borra el canvas
             chartCanvas.Children.Clear();
@@ -117,6 +119,9 @@ namespace Pactometro
 
         private void noHayGraficoSeleccionado()
         {
+            btnPacto.Visibility = Visibility.Collapsed;
+            btnReiniciar.Visibility = Visibility.Collapsed;
+
             btnExportar.IsEnabled = false;
             chartCanvas.Children.Clear();
             txtTitulo.Text = "";
@@ -267,6 +272,9 @@ namespace Pactometro
         }
         private void mostrarGrafico1()
         {
+            
+            btnPacto.Visibility = Visibility.Collapsed;
+            btnReiniciar.Visibility = Visibility.Collapsed;
             btnExportar.IsEnabled = true;
             // Eliminar el canvas de los CheckBox si existe
             if (checkBoxCanvas != null)
@@ -385,6 +393,8 @@ namespace Pactometro
 
         private void mostrarGrafico2(Collection<ProcesoElectoral> procesosComparativos)
         {
+            btnPacto.Visibility = Visibility.Collapsed;
+            btnReiniciar.Visibility = Visibility.Collapsed;
             btnExportar.IsEnabled = true;
            
             // Limpiar el Canvas antes de agregar nuevos elementos
@@ -863,12 +873,15 @@ namespace Pactometro
 
         private void VerificarPactoHabilitado()
         {
-            pacto.IsEnabled = partidosEnPrimeraBarra.Sum(partido => partido.Escaños) < procesoElectoralActual.mayoriaAbsoluta;
+            btnPacto.IsEnabled = partidosEnPrimeraBarra.Sum(partido => partido.Escaños) < procesoElectoralActual.mayoriaAbsoluta;
         }
 
-        private Button pacto;
         private void mostrarGrafico3()
         {
+            btnPacto.Visibility = Visibility.Visible;
+            btnPacto.IsEnabled = false;
+            btnReiniciar.Visibility = Visibility.Visible;
+
             btnExportar.IsEnabled = true;
             chartCanvas.Children.Clear();
 
@@ -888,7 +901,7 @@ namespace Pactometro
             double barHeight = chartCanvas.ActualHeight / 4; // height of each bar
             double barGap = chartCanvas.ActualHeight / 10; // gap between bars
 
-            yPos = chartCanvas.ActualHeight / 6;
+            yPos = chartCanvas.ActualHeight / 5;
             emptyBarYPos = yPos + barHeight + barGap;
 
             // Create the first empty bar that represents the total number of seats
@@ -1018,30 +1031,6 @@ namespace Pactometro
                 xPosClicados += rectangulo.Width;
                 chartCanvas.Children.Add(rectangulo);
             }
-
-
-            //Añade un boton para reiniciar el grafico
-            Button reiniciar = new Button();
-            reiniciar.Content = "Reiniciar";
-            reiniciar.Width = 100;
-            reiniciar.Height = 30;
-            reiniciar.Click += Reiniciar_Click;
-
-            Canvas.SetBottom(reiniciar, 10);
-            Canvas.SetLeft(reiniciar, 50);
-            chartCanvas.Children.Add(reiniciar);
- 
-            //Añade un boton para completar un pacto
-            pacto = new Button();
-            pacto.Content = "Pacto";
-            pacto.Width = 100;
-            pacto.Height = 30;
-            pacto.Click += Pacto_Click;
-            pacto.IsEnabled = false;
-            Canvas.SetBottom(pacto, 10);
-            Canvas.SetRight(pacto, 50);
-            chartCanvas.Children.Add(pacto);
-            //Desactivar el boton de pacto si la suma de los escaños de los partidos de la segunda barra es menor que la mayoria absoluta
             
         }
 

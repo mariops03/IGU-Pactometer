@@ -1,19 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace Pactometro
 {
@@ -41,6 +34,7 @@ namespace Pactometro
             dpFecha.SelectedDate = procesoSeleccionado.fecha;
             cmbTipoProceso.Text = ObtenerParteAlfabetica(procesoSeleccionado.nombre);
             lvPartidos.ItemsSource = PartidosTemporales;
+            lvPartidos.KeyDown += LvPartidos_KeyDown;
         }
 
         private string ObtenerParteAlfabetica(string nombre)
@@ -225,6 +219,7 @@ namespace Pactometro
 
         private void dpFecha_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
+
             // Permitir números y el carácter '/'
             if (!char.IsDigit(e.Text, 0) && e.Text != "/")
             {
@@ -255,8 +250,33 @@ namespace Pactometro
 
         private void lvPartidos_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            btnEliminar.IsEnabled = lvPartidos.SelectedItem != null;
-            btnModificar.IsEnabled = lvPartidos.SelectedItem != null;
+            if (lvPartidos != null)
+            {
+                btnEliminar.IsEnabled = lvPartidos.SelectedItem != null;
+                btnModificar.IsEnabled = lvPartidos.SelectedItem != null;
+                btnAñadir.IsDefault = false;
+            }
+            else
+            {
+                btnEliminar.IsEnabled = false;
+                btnModificar.IsEnabled = false;
+                btnAñadir.IsDefault = true;
+            }
+        }
+
+        private void LvPartidos_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Delete && lvPartidos.SelectedItem != null)
+            {
+                BtnEliminarPartido_Click(sender, e);
+
+            }
+        }
+
+        private void StackPanel_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            btnAñadir.IsDefault = true;
+            btnModificar.IsDefault = false;
         }
 
     }

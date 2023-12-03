@@ -17,7 +17,7 @@
             <RadioButton x:Name="radioButtonHigh" Content="Alta" Margin="10" IsChecked="True" />
         </StackPanel>
 
-        <Button Content="Exportar" Click="ExportButton_Click" Margin="10"/>
+        <Button Content="Exportar" Click="ExportButton_Click" Margin="10" IsDefault="True"/>
         <Button Content="Copiar al Portapapeles (PNG)" Click="CopyToClipboard_Click" Margin="10"/>
     </StackPanel>
 </Window>
