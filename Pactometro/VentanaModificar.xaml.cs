@@ -202,6 +202,10 @@ namespace Pactometro
             PartidosTemporales.Clear();
 
             // Agregar el nuevo proceso a la colección principal de forma ordenada por fecha de mayor a menor
+
+            // Borrar el proceso que ha llegado como parámetro
+            ColeccionElecciones.Remove(ProcesoSeleccionado);
+
             ColeccionElecciones.Add(nuevoProceso);
 
             // Salir de la ventana
