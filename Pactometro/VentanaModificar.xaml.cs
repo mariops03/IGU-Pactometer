@@ -17,11 +17,13 @@ namespace Pactometro
     {
         private ObservableCollection<Partido> PartidosTemporales;
         private ObservableCollection<ProcesoElectoral> ColeccionElecciones;
+        private ProcesoElectoral ProcesoSeleccionado;
         Color colorSeleccionado;
         public VentanaModificar(ObservableCollection<ProcesoElectoral> coleccionElecciones, ProcesoElectoral procesoSeleccionado)
         {
             InitializeComponent();
             ColeccionElecciones = coleccionElecciones;
+            ProcesoSeleccionado = procesoSeleccionado;
             PartidosTemporales = new ObservableCollection<Partido>();
             PartidosTemporales = procesoSeleccionado.coleccionPartidos;
             lvPartidos.SelectionChanged += lvPartidos_SelectionChanged;
@@ -61,6 +63,13 @@ namespace Pactometro
 
         private void BtnModificarPartido_Click(object sender, RoutedEventArgs e)
         {
+            // Crea una instancia de la ventana VentanaModificarPartido pasandole el partido seleccionado y el proceso electoral almacenado en PartidosTemporales
+            VentanaModificarPartido ventanaModificarPartido = new VentanaModificarPartido((Partido)lvPartidos.SelectedItem, ProcesoSeleccionado);
+            // Haz que sea propiedad de esta ventana
+            ventanaModificarPartido.Owner = this;
+            // Muestra la ventana
+            ventanaModificarPartido.ShowDialog();
+
 
         }
 

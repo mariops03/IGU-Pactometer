@@ -20,11 +20,11 @@
         </Grid.RowDefinitions>
         <TextBlock Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Text="MODIFICAR PARTIDO" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" FontWeight="Bold"/>
         <Label Grid.Column="0" Grid.Row="1" Content="Nombre del partido" VerticalAlignment="Center"/>
-        <TextBox Name="txtNombre" Grid.Column="1" Grid.Row="1" Height="20" VerticalAlignment="Center"/>
+        <TextBox Name="txtNombre" Grid.Column="1" Grid.Row="1" Height="20" VerticalAlignment="Center" Margin="5"/>
         <Label Grid.Column="0" Grid.Row="2" Content="Numero de escaños" VerticalAlignment="Center" />
-        <TextBox Name="txtEscaños" Grid.Column="1" Grid.Row="2" Height="20" VerticalAlignment="Center"/>
+        <TextBox Name="txtEscaños" Grid.Column="1" Grid.Row="2" Height="20" VerticalAlignment="Center" PreviewTextInput="txtEscaños_PreviewTextInput" Margin="5"/>
         <Label Grid.Column="0" Grid.Row="3" Content="Color del partido" VerticalAlignment="Center"/>
-        <ComboBox Name="seleccionadorColor" Grid.Row="3"  Grid.Column="1"  SelectionChanged="seleccionadorColor_SelectionChanged" MouseLeftButtonDown="StackPanel_MouseLeftButtonDown" VerticalAlignment="Center">
+        <ComboBox Name="seleccionadorColor" Grid.Row="3"  Grid.Column="1"  SelectionChanged="seleccionadorColor_SelectionChanged" VerticalAlignment="Center" Margin="5">
             <ComboBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
