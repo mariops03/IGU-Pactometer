@@ -320,6 +320,8 @@ namespace Pactometro
             coleccionElecciones[4].coleccionPartidos[6].Color = Colors.LightBlue;
 
             // Continúa añadiendo más partidos y elecciones si es necesario
+            OrdenarColeccionPorFecha();
+
 
             mainTable.ItemsSource = coleccionElecciones;
         
@@ -333,7 +335,7 @@ namespace Pactometro
             ventanaAñadirProceso = new VentanaAgregar(ColeccionElecciones);
             ventanaAñadirProceso.Owner = this;
             ventanaAñadirProceso.ShowDialog();
-
+            OrdenarColeccionPorFecha();
         }
 
         private void VentanaAñadirProceso_Closed(object sender, EventArgs e)
@@ -442,6 +444,7 @@ namespace Pactometro
                     MessageBox.Show($"Error al importar el archivo CSV: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
+            OrdenarColeccionPorFecha();
         }
 
 
@@ -504,6 +507,7 @@ namespace Pactometro
                     MessageBox.Show($"Error al importar de JSON: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
+            OrdenarColeccionPorFecha();
         }
 
 
@@ -535,8 +539,7 @@ namespace Pactometro
                 VentanaModificar ventanaModificar = new VentanaModificar(ColeccionElecciones, mainTable.SelectedItem as ProcesoElectoral);
                 ventanaModificar.Owner = this;
                 ventanaModificar.ShowDialog();
-
-
+                OrdenarColeccionPorFecha();
             }
         }
 
@@ -548,12 +551,26 @@ namespace Pactometro
             {
                 // Elimina de la colección el elemento seleccionado
                 ColeccionElecciones.Remove(mainTable.SelectedItem as ProcesoElectoral);
+                OrdenarColeccionPorFecha();
             }
             else 
             { 
                 MessageBox.Show("No hay ningún proceso electoral seleccionado");
             }
         }
+
+        public void OrdenarColeccionPorFecha()
+        {
+            var itemsOrdenados = ColeccionElecciones.OrderByDescending(proceso => proceso.fecha).ToList();
+
+            ColeccionElecciones.Clear();
+
+            foreach (var item in itemsOrdenados)
+            {
+                ColeccionElecciones.Add(item);
+            }
+        }
+
 
     }
 }

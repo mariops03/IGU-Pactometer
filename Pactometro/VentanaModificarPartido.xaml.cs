@@ -127,6 +127,8 @@ namespace Pactometro
 
             // Ordenar la lista de partidos de mayor a menor por el número de escaños y actualizar la lista de partidos en el ListView
             ProcesoElectoral.coleccionPartidos = new ObservableCollection<Partido>(ProcesoElectoral.coleccionPartidos.OrderByDescending(partido => partido.Escaños));
+            //Actualiza la lista de partidos en el ListView
+            
 
             // Cerrar la ventana
             this.Close();
