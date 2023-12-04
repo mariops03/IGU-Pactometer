@@ -84,11 +84,7 @@ namespace Pactometro
             }
 
             // Verificar si ya hay un partido con el mismo color
-            if (PartidosTemporales.Any(partido => partido.Color == colorSeleccionado))
-            {
-                MessageBox.Show("Ya hay un partido con el mismo color.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
+            
 
             PartidosTemporales.Clear();
 
@@ -97,32 +93,37 @@ namespace Pactometro
                 PartidosTemporales.Add(partidoProceso);
 
             }
+
+            PartidosTemporales.Remove(Partido);
+
+            if (PartidosTemporales.Any(partido => partido.Color == colorSeleccionado))
+            {
+                MessageBox.Show("Ya hay un partido con el mismo color.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            Partido partidoModificado = new Partido(nombrePartido, escañosPartido, colorSeleccionado);
+            PartidosTemporales.Add(partidoModificado);
+
             //Comprobar si el numero de escaños que suman todos los partidos es distinto del numero de escaños del proceso electoral
             int escañosTotales = 0;
             foreach (Partido partido in PartidosTemporales)
             {
                 escañosTotales += partido.Escaños;
             }
+
             if (escañosTotales != ProcesoElectoral.numEscaños)
             {
                 MessageBox.Show("El número de escaños de los partidos no coincide con el número de escaños del proceso electoral."+escañosTotales, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
-            
 
-            PartidosTemporales.Remove(Partido);
+            ProcesoElectoral.coleccionPartidos.Remove(Partido);
             // Crea una instancia de la clase Partido y agregarla a la colección temporal
-            Partido nuevoPartido = new Partido(nombrePartido, escañosPartido, colorSeleccionado);
-            PartidosTemporales.Add(nuevoPartido);
+            
+            ProcesoElectoral.coleccionPartidos.Add(partidoModificado);
             // Eliminar la colección de partidos recibida y reemplazarla con la nueva
-            ProcesoElectoral.coleccionPartidos.Clear();
-            foreach (Partido partido in PartidosTemporales)
-            {
-                ProcesoElectoral.coleccionPartidos.Add(partido);
-            }
-            //Ordenar la lista de partidos de mayor a menor por el número de escaños
-            ProcesoElectoral.coleccionPartidos = new ObservableCollection<Partido>(ProcesoElectoral.coleccionPartidos.OrderByDescending(partido => partido.Escaños));
 
             // Cerrar la ventana
             this.Close();

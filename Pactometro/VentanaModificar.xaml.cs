@@ -69,8 +69,8 @@ namespace Pactometro
             ventanaModificarPartido.Owner = this;
             // Muestra la ventana
             ventanaModificarPartido.ShowDialog();
-
-
+            // Ordenar la lista de partidos de mayor a menor por el número de escaños
+            PartidosTemporales = new ObservableCollection<Pactometro.Partido>(PartidosTemporales.OrderByDescending(partido => partido.Escaños));
         }
 
         
