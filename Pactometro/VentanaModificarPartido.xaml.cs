@@ -21,8 +21,6 @@ namespace Pactometro
         public VentanaModificarPartido(Partido partido, ProcesoElectoral procesoElectoral)
         {
             InitializeComponent();
-            // Establecer el color seleccionado por defecto
-            colorSeleccionado = Colors.Black;
             Partido = partido;
             ProcesoElectoral = procesoElectoral;
             PartidosTemporales = new ObservableCollection<Partido>();
@@ -120,17 +118,11 @@ namespace Pactometro
 
 
             ProcesoElectoral.coleccionPartidos.Remove(Partido);
-            // Crea una instancia de la clase Partido y agregarla a la colección temporal
             
             ProcesoElectoral.coleccionPartidos.Add(partidoModificado);
-            // Eliminar la colección de partidos recibida y reemplazarla con la nueva
 
-            // Ordenar la lista de partidos de mayor a menor por el número de escaños y actualizar la lista de partidos en el ListView
             ProcesoElectoral.coleccionPartidos = new ObservableCollection<Partido>(ProcesoElectoral.coleccionPartidos.OrderByDescending(partido => partido.Escaños));
-            //Actualiza la lista de partidos en el ListView
-            
 
-            // Cerrar la ventana
             this.Close();
         }
     }
