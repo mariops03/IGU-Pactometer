@@ -227,7 +227,15 @@ namespace Pactometro
 
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            comprobarGrafico();
+            if(grafico3 == true)
+            {
+                mostrarGrafico3();
+            }
+            else
+            {
+                comprobarGrafico();
+            }
+            
         }
 
         private void GuardarEstadosMarcado()
@@ -297,12 +305,15 @@ namespace Pactometro
 
             double maxEscaños = procesoElectoralActual.coleccionPartidos.Max(partido => partido.Escaños);
 
+            int digitos = maxEscaños.ToString().Length;
+            double inicioProporcional = 15 + digitos * 5;
+
             int numPartidos = procesoElectoralActual.coleccionPartidos.Count;
 
-            // Calcular el ancho de cada barra de manera que ocupen todo el Canvas
-            double barWidth = (chartCanvas.ActualWidth - (numPartidos - 1) * barSpacing) / (numPartidos + 1);
+            double espacioBarras = chartCanvas.ActualWidth - inicioProporcional;
 
-            double inicioProporcional = barWidth * (numPartidos / (barSpacing * 5));
+            // Calcular el ancho de cada barra de manera que ocupen todo el Canvas
+            double barWidth = (espacioBarras  - (numPartidos) * barSpacing) / (numPartidos);
 
             for (int i = 0; i < numPartidos; i++)
             {
@@ -601,10 +612,16 @@ namespace Pactometro
                 double barSpacing = 5;
                 double maxEscaños = partidosSeleccionados.SelectMany(lista => lista).Max(partido => partido.Escaños);
 
-                // Calcular el ancho de cada barra
+                int digitos = maxEscaños.ToString().Length;
+                double inicioProporcional = 15 + digitos * 5;
+
                 int numPartidos = partidosSeleccionados.SelectMany(lista => lista).Count();
-                double barWidth = (chartCanvas.ActualWidth - (numPartidos - 1) * barSpacing) / (numPartidos + 1);
-                double inicioProporcional = barWidth * (numPartidos / (barSpacing * 5));
+
+
+                double espacioBarras = chartCanvas.ActualWidth - inicioProporcional;
+
+                // Calcular el ancho de cada barra de manera que ocupen todo el Canvas
+                double barWidth = (espacioBarras - (numPartidos) * barSpacing) / (numPartidos);
                 double acumuladorInicio = inicioProporcional;
                 double yPosition = chartCanvas.ActualHeight; // Comenzar desde la parte inferior
                 //Ordenar las sublistas en partidosSeleccionados según el número de escaños de cada partido
@@ -939,25 +956,6 @@ namespace Pactometro
             // Add the second empty bar to the canvas
             chartCanvas.Children.Add(secondEmptyBar);
 
-            // Calcular la posición X de la barra de mayoría absoluta
-            int mayoriaAbsoluta = procesoElectoralActual.mayoriaAbsoluta;
-            double anchoTotalBarra = firstEmptyBar.Width;
-            double posicionBarraMayoria = ((anchoTotalBarra / procesoElectoralActual.numEscaños) * mayoriaAbsoluta) + 15;
-
-            // Crear la barra de mayoría absoluta
-            Rectangle barraMayoriaAbsoluta = new Rectangle
-            {
-                Height = barHeight,
-                Width = 2, // Un ancho pequeño para que sea una línea delgada
-                Fill = Brushes.Red // Color rojo para destacar
-            };
-
-            // Posicionar la barra de mayoría absoluta en la barra inferior
-            Canvas.SetTop(barraMayoriaAbsoluta, emptyBarYPos);
-            Canvas.SetLeft(barraMayoriaAbsoluta, posicionBarraMayoria);
-
-            // Añadir la barra de mayoría absoluta al canvas
-            chartCanvas.Children.Add(barraMayoriaAbsoluta);
 
             emptyBarYPos = yPos + barHeight + barGap;
 
@@ -1031,7 +1029,31 @@ namespace Pactometro
                 xPosClicados += rectangulo.Width;
                 chartCanvas.Children.Add(rectangulo);
             }
-            
+
+            // Calcular la posición X de la barra de mayoría absoluta
+            int mayoriaAbsoluta = procesoElectoralActual.mayoriaAbsoluta;
+            double anchoTotalBarra = firstEmptyBar.Width;
+            double posicionBarraMayoria = ((anchoTotalBarra / procesoElectoralActual.numEscaños) * mayoriaAbsoluta) + 15;
+
+            // Crear la barra de mayoría absoluta
+            Rectangle barraMayoriaAbsoluta = new Rectangle
+            {
+                Height = barHeight,
+                Width = 2, // Un ancho pequeño para que sea una línea 
+                Fill = Brushes.Red // Color rojo para destacar
+            };
+
+            //Ponle contorno a la barra de mayoria absoluta
+            barraMayoriaAbsoluta.Stroke = Brushes.Black;
+            barraMayoriaAbsoluta.StrokeThickness = 0.4;
+
+            // Posicionar la barra de mayoría absoluta en la barra inferior
+            Canvas.SetTop(barraMayoriaAbsoluta, emptyBarYPos);
+            Canvas.SetLeft(barraMayoriaAbsoluta, posicionBarraMayoria);
+
+            // Añadir la barra de mayoría absoluta al canvas
+            chartCanvas.Children.Add(barraMayoriaAbsoluta);
+
         }
 
         //Crea un evento para reiniciar el grafico

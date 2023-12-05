@@ -44,23 +44,37 @@ namespace Pactometro
                     return;
                 }
 
-                // Oculta el botón de exportar de la ventana principal
-                var exportarButton = (Button)mainWindow.FindName("exportar");
-                if (exportarButton != null) exportarButton.Visibility = Visibility.Hidden;
-
                 // Oculta el menú de la ventana principal
                 var menu = (Menu)mainWindow.FindName("menu");
                 if (menu != null) menu.Visibility = Visibility.Hidden;
+
+                int flag = 0;
+                //Ocultar el botón de exportar de la ventana principal
+                var btnPacto = (Button)mainWindow.FindName("btnPacto");
+                if (btnPacto != null)
+                {
+                    if (btnPacto.Visibility == Visibility.Visible) btnPacto.Visibility = Visibility.Collapsed;
+                    else flag = 1;
+
+                }
+
+                var btnReiniciar = (Button)mainWindow.FindName("btnReiniciar");
+                if (btnReiniciar != null) btnReiniciar.Visibility = Visibility.Collapsed;
+
 
                 int quality = GetQualityFromRadioButtons();
                 BitmapEncoder encoder = GetEncoder(selectedFormat, quality);
                 RenderTargetBitmap capturedImage = CaptureContent();
 
-                // Muestra el botón de exportar de la ventana principal
-                if (exportarButton != null) exportarButton.Visibility = Visibility.Visible;
 
                 // Muestra el menú de la ventana principal
                 if (menu != null) menu.Visibility = Visibility.Visible;
+
+                if (flag == 0)
+                {
+                    if (btnPacto != null) btnPacto.Visibility = Visibility.Visible;
+                    if (btnReiniciar != null) btnReiniciar.Visibility = Visibility.Visible;
+                }
 
                 if (capturedImage == null)
                 {
@@ -128,7 +142,6 @@ namespace Pactometro
         }
 
 
-
         private void SaveImage(BitmapEncoder encoder, string format)
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog
@@ -166,9 +179,15 @@ namespace Pactometro
 
         private void CopyToClipboard_Click(object sender, RoutedEventArgs e)
         {
+            int flag = 0;
             //Ocultar el botón de exportar de la ventana principal
             var btnPacto = (Button)mainWindow.FindName("btnPacto");
-            if (btnPacto != null) btnPacto.Visibility = Visibility.Collapsed;
+            if (btnPacto != null)
+            {
+                if(btnPacto.Visibility == Visibility.Visible) btnPacto.Visibility = Visibility.Collapsed;
+                else flag = 1;
+                    
+            }
             
             var btnReiniciar = (Button)mainWindow.FindName("btnReiniciar");
             if (btnReiniciar != null) btnReiniciar.Visibility = Visibility.Collapsed;
@@ -200,8 +219,12 @@ namespace Pactometro
             }
 
             if (menu != null) menu.Visibility = Visibility.Visible;
-            if (btnPacto != null) btnPacto.Visibility = Visibility.Visible;
-            if (btnReiniciar != null) btnReiniciar.Visibility = Visibility.Visible;
+            if(flag == 0)
+            {
+                if (btnPacto != null) btnPacto.Visibility = Visibility.Visible;
+                if (btnReiniciar != null) btnReiniciar.Visibility = Visibility.Visible;
+            }
+            
         }
         private BitmapSource ConvertBitmapToBitmapSource(System.Drawing.Bitmap bitmap)
         {

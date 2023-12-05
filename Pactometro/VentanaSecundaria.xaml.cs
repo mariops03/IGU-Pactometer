@@ -292,7 +292,7 @@ namespace Pactometro
             coleccionElecciones[4].mayoriaAbsoluta = 176;
 
             coleccionElecciones[4].coleccionPartidos[0].Nombre = "PP";
-            coleccionElecciones[4].coleccionPartidos[0].Escaños = 166;
+            coleccionElecciones[4].coleccionPartidos[0].Escaños = 160;
             coleccionElecciones[4].coleccionPartidos[0].Color = Colors.Blue;
 
             coleccionElecciones[4].coleccionPartidos[1].Nombre = "PSOE";
