@@ -79,6 +79,8 @@
     <Compile Include="ColorPicker.xaml.cs">
       <DependentUpon>ColorPicker.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Model\DatosElectorales.cs" />
+    <Compile Include="Model\IDatosElectorales.cs" />
     <Compile Include="VentanaAgregar.xaml.cs">
       <DependentUpon>VentanaAgregar.xaml</DependentUpon>
     </Compile>
@@ -94,6 +96,8 @@
     <Compile Include="VentanaSecundaria.xaml.cs">
       <DependentUpon>VentanaSecundaria.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewModels\MainWindowViewModel.cs" />
+    <Compile Include="ViewModels\VentanaSecundariaViewModel.cs" />
     <Page Include="ColorPicker.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

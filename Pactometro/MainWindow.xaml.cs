@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Pactometro.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
@@ -27,15 +28,22 @@ namespace Pactometro
         public MainWindow()
         {
             InitializeComponent();
+            DataContext = new MainWindowViewModel(new DatosElectorales());
             Loaded += MainWindowLoaded;
             coleccionElecciones = new ObservableCollection<ProcesoElectoral>();
             Closed += MainWindow_Closed; // Suscribe un controlador para el evento Closed de la ventana principal
             btnExportar.IsEnabled = false;
+            DataContext = new MainWindowViewModel(new DatosElectorales());
         }
 
         private void MainWindowLoaded(object sender, RoutedEventArgs e)
         {
-            // Abre la ventana secundaria automáticamente al cargar la aplicación
+            var viewModel = DataContext as MainWindowViewModel;
+            if (viewModel != null)
+            {
+                coleccionElecciones = viewModel.Elecciones;
+                // Aquí puedes usar coleccionElecciones como necesites
+            }
             AbrirVentanaSecundaria();
         }
 
@@ -48,43 +56,48 @@ namespace Pactometro
         {
             if (ventanaSecundaria == null)
             {
-                // Crear una nueva instancia de VentanaSecundaria con la colección de elecciones
-                ventanaSecundaria = new VentanaSecundaria(coleccionElecciones);
-                // Hacer que la ventana secundaria sea propiedad de la ventana principal
-                ventanaSecundaria.Owner = this;
+                MainWindowViewModel vm = this.DataContext as MainWindowViewModel;
 
-                double distanciaEntreVentanas = 10; // Puedes ajustar esto a tu preferencia
-                double nuevaPosX = Left + Width + distanciaEntreVentanas;
-                double nuevaPosY = Top;
+                // Asegúrate de que vm no es null y de que vm.Elecciones está inicializado
+                if (vm != null && vm.Elecciones != null)
+                {
+                    ventanaSecundaria = new VentanaSecundaria(vm.Elecciones);
+                    ventanaSecundaria.Owner = this;
 
-                ventanaSecundaria.Left = nuevaPosX;
-                ventanaSecundaria.Top = nuevaPosY;
+                    double distanciaEntreVentanas = 10; // Puedes ajustar esto a tu preferencia
+                    double nuevaPosX = Left + Width + distanciaEntreVentanas;
+                    double nuevaPosY = Top;
 
-                // Suscribirse al evento de la VentanaSecundaria para recibir notificaciones de selección
-                ventanaSecundaria.ProcesoEleccionSeleccionado += VentanaSecundaria_ProcesoEleccionSeleccionado;
+                    ventanaSecundaria.Left = nuevaPosX;
+                    ventanaSecundaria.Top = nuevaPosY;
 
-                ventanaSecundaria.Closed += VentanaSecundaria_Closed; // Suscribe un controlador para el evento Closed
-                ventanaSecundaria.Show(); // Muestra la ventana secundaria
+                    ventanaSecundaria.ProcesoEleccionSeleccionado += VentanaSecundaria_ProcesoEleccionSeleccionado;
+                    ventanaSecundaria.Closed += VentanaSecundaria_Closed;
+                    ventanaSecundaria.Show();
+                }
             }
             else
             {
-                ventanaSecundaria.Activate(); // Si la ventana ya existe, ábrela y enfócala
+                ventanaSecundaria.Activate();
             }
         }
 
-        //Hacer que la ventana principal maneje el evento de selección de la ventana secundaria, recibiendo una colección de partidos
         private void VentanaSecundaria_ProcesoEleccionSeleccionado(object sender, ProcesoElectoral procesoElectoral)
         {
-            if(procesoElectoral == null)
+            if (DataContext is MainWindowViewModel viewModel)
             {
-                noHayProcesoElectoralSeleccionado();
-                procesoElectoralActual = null;
-            }
-            else
-            {
-                procesoElectoralActual = procesoElectoral;
+                viewModel.EleccionSeleccionada = procesoElectoral;
+                if (procesoElectoral == null)
+                {
+                    noHayProcesoElectoralSeleccionado();
+                    procesoElectoralActual = null;
+                }
+                else
+                {
+                    procesoElectoralActual = procesoElectoral;
 
-                comprobarGrafico();
+                    comprobarGrafico();
+                }
             }
         }
 
