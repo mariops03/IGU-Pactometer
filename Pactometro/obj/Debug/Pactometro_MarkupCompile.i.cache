@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 C:\Users\mario\Desktop\USAL\TERCERO\IGU\IGU-Pactometer\Pactometro\App.xaml
-7-1502390009
+6-106823494
 
-20228702052
+19216336360
 20-299626121
-ColorPicker.xaml;MainWindow.xaml;VentanaAgregar.xaml;VentanaExportar.xaml;VentanaModificar.xaml;VentanaModificarPartido.xaml;VentanaSecundaria.xaml;
+Views\MainWindow.xaml;Views\VentanaAgregar.xaml;Views\VentanaExportar.xaml;Views\VentanaModificar.xaml;Views\VentanaModificarPartido.xaml;Views\VentanaSecundaria.xaml;
 
 False
 

@@ -76,35 +76,28 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="ColorPicker.xaml.cs">
-      <DependentUpon>ColorPicker.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Model\DatosElectorales.cs" />
     <Compile Include="Model\IDatosElectorales.cs" />
-    <Compile Include="Validaciones.cs" />
-    <Compile Include="VentanaAgregar.xaml.cs">
+    <Compile Include="Helpers\Validaciones.cs" />
+    <Compile Include="Views\VentanaAgregar.xaml.cs">
       <DependentUpon>VentanaAgregar.xaml</DependentUpon>
     </Compile>
-    <Compile Include="VentanaExportar.xaml.cs">
+    <Compile Include="Views\VentanaExportar.xaml.cs">
       <DependentUpon>VentanaExportar.xaml</DependentUpon>
     </Compile>
-    <Compile Include="VentanaModificar.xaml.cs">
+    <Compile Include="Views\VentanaModificar.xaml.cs">
       <DependentUpon>VentanaModificar.xaml</DependentUpon>
     </Compile>
-    <Compile Include="VentanaModificarPartido.xaml.cs">
+    <Compile Include="Views\VentanaModificarPartido.xaml.cs">
       <DependentUpon>VentanaModificarPartido.xaml</DependentUpon>
     </Compile>
-    <Compile Include="VentanaSecundaria.xaml.cs">
+    <Compile Include="Views\VentanaSecundaria.xaml.cs">
       <DependentUpon>VentanaSecundaria.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="ViewModels\VentanaSecundariaViewModel.cs" />
-    <Page Include="ColorPicker.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="MainWindow.xaml">
+    <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -112,27 +105,27 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MainWindow.xaml.cs">
+    <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="VentanaAgregar.xaml">
+    <Page Include="Views\VentanaAgregar.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="VentanaExportar.xaml">
+    <Page Include="Views\VentanaExportar.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="VentanaModificar.xaml">
+    <Page Include="Views\VentanaModificar.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="VentanaModificarPartido.xaml">
+    <Page Include="Views\VentanaModificarPartido.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="VentanaSecundaria.xaml">
+    <Page Include="Views\VentanaSecundaria.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

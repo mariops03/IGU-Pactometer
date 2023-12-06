@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Media;
+using System.Windows.Shapes;
 
 namespace Pactometro.ViewModels
 {
@@ -11,6 +12,12 @@ namespace Pactometro.ViewModels
     {
         // Colección de elecciones seleccionadas por CheckBox
         private ObservableCollection<ProcesoElectoral> _coleccionEleccionesCheckBox = new ObservableCollection<ProcesoElectoral>();
+
+        private Dictionary<Rectangle, double> originalPositions = new Dictionary<Rectangle, double>();
+        private List<Partido> partidosEnPrimeraBarra = new List<Partido>();
+        private List<Partido> partidosEnSegundaBarra = new List<Partido>();
+        private List<Rectangle> rectangulosClicados = new List<Rectangle>();
+        private List<Rectangle> rectangulosNoClicados = new List<Rectangle>();
         public ObservableCollection<ProcesoElectoral> ColeccionEleccionesCheckBox
         {
             get => _coleccionEleccionesCheckBox;
@@ -20,6 +27,80 @@ namespace Pactometro.ViewModels
                 {
                     _coleccionEleccionesCheckBox = value;
                     OnPropertyChanged(nameof(ColeccionEleccionesCheckBox));
+                }
+            }
+        }
+
+        // Lista de partidos en la primera barra
+        public List<Partido> PartidosEnPrimeraBarra
+        {
+            get => partidosEnPrimeraBarra;
+            set
+            {
+                if (partidosEnPrimeraBarra != value)
+                {
+                    partidosEnPrimeraBarra = value;
+                    OnPropertyChanged(nameof(PartidosEnPrimeraBarra));
+                }
+            }
+        }
+
+        // Lista de partidos en la segunda barra
+
+        public List<Partido> PartidosEnSegundaBarra
+        {
+            get => partidosEnSegundaBarra;
+            set
+            {
+                if (partidosEnSegundaBarra != value)
+                {
+                    partidosEnSegundaBarra = value;
+                    OnPropertyChanged(nameof(PartidosEnSegundaBarra));
+                }
+            }
+        }
+
+        // Lista de rectángulos clicados
+
+        public List<Rectangle> RectangulosClicados
+        {
+            get => rectangulosClicados;
+            set
+            {
+                if (rectangulosClicados != value)
+                {
+                    rectangulosClicados = value;
+                    OnPropertyChanged(nameof(rectangulosClicados));
+                }
+            }
+        }
+
+        // Lista de rectángulos no clicados
+
+        public List<Rectangle> RectangulosNoClicados
+        {
+            get => rectangulosNoClicados;
+            set
+            {
+                if (rectangulosNoClicados != value)
+                {
+                    rectangulosNoClicados = value;
+                    OnPropertyChanged(nameof(RectangulosNoClicados));
+                }
+            }
+        }
+
+        // Lista de posiciones originales de los rectángulos
+
+        public Dictionary<Rectangle, double> OriginalPositions
+        {
+            get => originalPositions;
+            set
+            {
+                if (originalPositions != value)
+                {
+                    originalPositions = value;
+                    OnPropertyChanged(nameof(OriginalPositions));
                 }
             }
         }
@@ -115,8 +196,6 @@ namespace Pactometro.ViewModels
             return procesosEquivalentes;
         }
 
-
-
         // Método auxiliar para obtener la parte alfabética del nombre
         private string ObtenerParteAlfabética(string nombre)
         {
@@ -127,6 +206,19 @@ namespace Pactometro.ViewModels
 
             int indiceUltimoEspacio = nombre.LastIndexOf(' ');
             return indiceUltimoEspacio >= 0 ? nombre.Substring(0, indiceUltimoEspacio) : nombre;
+        }
+
+        public void reiniciarPactometro()
+        {
+            PartidosEnPrimeraBarra.Clear();
+            PartidosEnSegundaBarra.Clear();
+            RectangulosClicados.Clear();
+            RectangulosNoClicados.Clear();
+        }
+
+        public bool comprobarPacto()
+        {
+            return PartidosEnPrimeraBarra.Sum(partido => partido.Escaños) < EleccionSeleccionada.mayoriaAbsoluta;
         }
     }
 }
