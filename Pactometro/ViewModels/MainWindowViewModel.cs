@@ -2,10 +2,11 @@
 using Pactometro.Model;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using Pactometro.ViewModels;
 
 namespace Pactometro.ViewModels
 {
-    public class MainWindowViewModel : INotifyPropertyChanged
+    public class MainWindowViewModel : BaseViewModel
     {
         private ObservableCollection<ProcesoElectoral> _elecciones;
 
@@ -34,12 +35,9 @@ namespace Pactometro.ViewModels
         public MainWindowViewModel(IDatosElectorales datosElectorales)
         {
             Elecciones = datosElectorales.GenerarDatosElectorales();
+            // Ordenar por fecha
+            OrdenarPorFecha(Elecciones);
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected virtual void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+        
     }
 }

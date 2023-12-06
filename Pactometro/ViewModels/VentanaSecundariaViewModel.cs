@@ -1,10 +1,9 @@
 ﻿using System.Collections.ObjectModel;
-using System.ComponentModel;
-using Pactometro;
+using Pactometro; // Asegúrate de que este espacio de nombres contenga tus clases de modelo
 
 namespace Pactometro.ViewModels
 {
-    public class VentanaSecundariaViewModel : INotifyPropertyChanged
+    public class VentanaSecundariaViewModel : BaseViewModel
     {
         private ObservableCollection<ProcesoElectoral> _elecciones;
         private ProcesoElectoral _eleccionSeleccionada;
@@ -36,16 +35,9 @@ namespace Pactometro.ViewModels
 
         public ObservableCollection<Partido> Partidos => EleccionSeleccionada?.coleccionPartidos;
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
         public VentanaSecundariaViewModel(ObservableCollection<ProcesoElectoral> elecciones)
         {
             _elecciones = elecciones;
-        }
-
-        protected virtual void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

@@ -35,10 +35,10 @@
         </ComboBox>
 
         <Label Grid.Column="0" Grid.Row="2" Content="Fecha:" VerticalAlignment="Center"/>
-        <DatePicker Grid.Column="1" Grid.Row="2" Width="200" Margin="10" Name="dpFecha" PreviewTextInput="dpFecha_PreviewTextInput"/>
+        <DatePicker Grid.Column="1" Grid.Row="2" Width="200" Margin="10" Name="dpFecha" />
 
         <Label Grid.Column="0" Grid.Row="3" Content="Número total de escaños:" VerticalAlignment="Center"/>
-        <TextBox Grid.Column="1" Grid.Row="3" Width="200" Margin="10" Name="txtNumEscaños" PreviewTextInput="txtNumEscaños_PreviewTextInput"/>
+        <TextBox Grid.Column="1" Grid.Row="3" Width="200" Margin="10" Name="txtNumEscaños"/>
 
         <!-- Información de los Partidos -->
         <TextBlock Text="INFORMACIÓN DE LOS PARTIDOS" FontSize="16" FontWeight="Bold" Grid.ColumnSpan="3" Grid.Row="5" HorizontalAlignment="Center" Margin="8"/>
@@ -48,7 +48,7 @@
             <TextBox Width="200" Name="txtPartido" Margin="10,0,10,0"/>
 
             <Label Content="Escaños:" VerticalAlignment="Center"/>
-            <TextBox Width="50" Name="txtEscaños" Margin="10,0,10,0" PreviewTextInput="txtEscaños_PreviewTextInput"/>
+            <TextBox Width="50" Name="txtEscaños" Margin="10,0,10,0"/>
 
             <Label Content="Color:" VerticalAlignment="Center"/>
 

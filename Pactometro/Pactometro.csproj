@@ -81,6 +81,7 @@
     </Compile>
     <Compile Include="Model\DatosElectorales.cs" />
     <Compile Include="Model\IDatosElectorales.cs" />
+    <Compile Include="Validaciones.cs" />
     <Compile Include="VentanaAgregar.xaml.cs">
       <DependentUpon>VentanaAgregar.xaml</DependentUpon>
     </Compile>
@@ -96,6 +97,7 @@
     <Compile Include="VentanaSecundaria.xaml.cs">
       <DependentUpon>VentanaSecundaria.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="ViewModels\VentanaSecundariaViewModel.cs" />
     <Page Include="ColorPicker.xaml">
@@ -136,8 +138,8 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Partido.cs" />
-    <Compile Include="ProcesoElectoral.cs" />
+    <Compile Include="Model\Partido.cs" />
+    <Compile Include="Model\ProcesoElectoral.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

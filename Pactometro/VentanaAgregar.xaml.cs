@@ -1,11 +1,11 @@
-﻿using System;
+﻿using Pactometro.ViewModels;
+using System;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 using System.Windows.Media;
 
 namespace Pactometro
@@ -20,17 +20,21 @@ namespace Pactometro
         private ObservableCollection<ProcesoElectoral> ColeccionElecciones;
         private ObservableCollection<Partido> PartidosTemporales;
         private bool procesoAñadido;
-
+        private BaseViewModel viewModel;
         public VentanaAgregar(ObservableCollection<ProcesoElectoral> coleccionElecciones)
         {
             InitializeComponent();
             ColeccionElecciones = coleccionElecciones;
             PartidosTemporales = new ObservableCollection<Partido>();
             lvPartidos.SelectionChanged += lvPartidos_SelectionChanged;
+            dpFecha.PreviewTextInput += Validaciones.AllowOnlyNumbersAndSlash;
+            txtNumEscaños.PreviewTextInput += Validaciones.AllowOnlyNumbers;
+            txtEscaños.PreviewTextInput += Validaciones.AllowOnlyNumbers;
             btnEliminar.IsEnabled = false;
             seleccionadorColor.ItemsSource = typeof(Colors).GetProperties();
             // Establecer el color predeterminado
             seleccionadorColor.SelectedIndex = 0;
+            viewModel = new BaseViewModel();
         }
 
         private void BtnAñadirPartido_Click(object sender, RoutedEventArgs e)
@@ -169,6 +173,7 @@ namespace Pactometro
             // Puedes realizar otras acciones aquí, como limpiar otros campos de entrada
             LimpiarCamposProceso();
 
+            viewModel.OrdenarPorFecha(ColeccionElecciones);
             // Marcar el proceso como añadido
             procesoAñadido = true;
         }
@@ -185,36 +190,6 @@ namespace Pactometro
             txtPartido.Text = string.Empty;
             txtEscaños.Text = string.Empty;
             seleccionadorColor.SelectedIndex = 0;
-        }
-
-        private void dpFecha_PreviewTextInput(object sender, TextCompositionEventArgs e)
-        {
-            // Permitir números y el carácter '/'
-            if (!char.IsDigit(e.Text, 0) && e.Text != "/")
-            {
-                // Si no es un número ni '/', marcar el evento como manejado para evitar que se escriba
-                e.Handled = true;
-            }
-        }
-
-        private void txtNumEscaños_PreviewTextInput(object sender, TextCompositionEventArgs e)
-        {
-            // Permitir solo números
-            if (!char.IsDigit(e.Text, 0))
-            {
-                // Si no es un número, marcar el evento como manejado para evitar que se escriba
-                e.Handled = true;
-            }
-        }
-
-        private void txtEscaños_PreviewTextInput(object sender, TextCompositionEventArgs e)
-        {
-            // Permitir solo números
-            if (!char.IsDigit(e.Text, 0))
-            {
-                // Si no es un número, marcar el evento como manejado para evitar que se escriba
-                e.Handled = true;
-            }
         }
 
         private void lvPartidos_SelectionChanged(object sender, SelectionChangedEventArgs e)
