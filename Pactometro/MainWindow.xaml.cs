@@ -21,6 +21,7 @@ namespace Pactometro
         private VentanaSecundaria ventanaSecundaria;
         private ObservableCollection<ProcesoElectoral> coleccionElecciones;
         private ProcesoElectoral procesoElectoralActual;
+        private MainWindowViewModel _mainWindowViewModel;
 
         private bool grafico1 = false;
         private bool grafico2 = false;
@@ -28,22 +29,17 @@ namespace Pactometro
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = new MainWindowViewModel(new DatosElectorales());
+            _mainWindowViewModel = new MainWindowViewModel(new DatosElectorales());
+            DataContext = _mainWindowViewModel;
             Loaded += MainWindowLoaded;
             coleccionElecciones = new ObservableCollection<ProcesoElectoral>();
             Closed += MainWindow_Closed; // Suscribe un controlador para el evento Closed de la ventana principal
             btnExportar.IsEnabled = false;
-            DataContext = new MainWindowViewModel(new DatosElectorales());
         }
 
         private void MainWindowLoaded(object sender, RoutedEventArgs e)
         {
-            var viewModel = DataContext as MainWindowViewModel;
-            if (viewModel != null)
-            {
-                coleccionElecciones = viewModel.Elecciones;
-                // Aquí puedes usar coleccionElecciones como necesites
-            }
+            coleccionElecciones = _mainWindowViewModel.Elecciones;
             AbrirVentanaSecundaria();
         }
 
@@ -164,7 +160,7 @@ namespace Pactometro
             else if (grafico2 == true)
             {
                 // Obtener otros procesos electorales equivalentes para la comparación
-                Collection<ProcesoElectoral> procesosEquivalentes = ObtenerProcesosEquivalentesPorNombre(procesoElectoralActual);
+                Collection<ProcesoElectoral> procesosEquivalentes = _mainWindowViewModel.ObtenerProcesosEquivalentesPorNombre(procesoElectoralActual);
 
                 // Llamar al método que crea el gráfico comparativo
                 mostrarGrafico2(procesosEquivalentes);
@@ -224,7 +220,7 @@ namespace Pactometro
            
                 if (grafico2)
                 {
-                    coleccionEleccionesCheckBox.Clear();
+                    _mainWindowViewModel.ColeccionEleccionesCheckBox.Clear();
                     GuardarEstadosMarcado();
 
                     procesoSeleccionado();
@@ -444,7 +440,7 @@ namespace Pactometro
             }
 
             // Vaciar la colección de partidos seleccionados
-            partidosSeleccionados.Clear();
+            _mainWindowViewModel.PartidosSeleccionados.Clear();
 
             // Crear un nuevo Canvas para los CheckBox
             checkBoxCanvas = new Canvas();
@@ -478,11 +474,9 @@ namespace Pactometro
 
                 fechaY += 30;
 
-                // Manejar el evento Checked para agregar el proceso a la colección
-                fechaCheckBox.Checked += (sender, e) => ManejarSeleccion(proceso, true);
+                fechaCheckBox.Checked += (sender, e) => ManejarSeleccion(proceso);
+                fechaCheckBox.Unchecked += (sender, e) => ManejarSeleccion(proceso);
 
-                // Manejar el evento Unchecked para quitar el proceso de la colección
-                fechaCheckBox.Unchecked += (sender, e) => ManejarSeleccion(proceso, false);
 
                 fechaCheckBox.KeyDown += (sender, e) =>
                 {
@@ -495,81 +489,33 @@ namespace Pactometro
 
         }
 
-        // Definir una lista para los partidos seleccionados
-        private List<List<Partido>> partidosSeleccionados = new List<List<Partido>>();
-        //Crea una coleccion de elecciones para guardar los procesos electorales de los checkBox
-        private Collection<ProcesoElectoral> coleccionEleccionesCheckBox = new Collection<ProcesoElectoral>();
-
-        private void ManejarSeleccion(ProcesoElectoral proceso, bool seleccionado)
+        private void ManejarSeleccion(ProcesoElectoral proceso)
         {
-            // Eliminar los partidos relacionados con este proceso en caso de desmarcar el CheckBox
+            // Comprobar si el proceso ya está en la colección
+            bool seleccionado = _mainWindowViewModel.ColeccionEleccionesCheckBox.Contains(proceso);
+
             if (!seleccionado)
             {
-                // Eliminar el proceso de la colección de elecciones en orden de fecha
-                coleccionEleccionesCheckBox.Remove(proceso);
-                ActualizarElecciones();
-                LimpiarPartidos(proceso, partidosSeleccionados);
+                // Si el proceso no está seleccionado, añadirlo a la colección
+                _mainWindowViewModel.ColeccionEleccionesCheckBox.Add(proceso);
+                // Llamadas a otros métodos como ActualizarElecciones, etc.
+                _mainWindowViewModel.ActualizarElecciones();
                 
             }
             else
             {
-                
-                //Agregar el proceso a la coleccion de elecciones en orden de fecha
-                coleccionEleccionesCheckBox.Add(proceso);
-                // Ordenar la colección de elecciones por fecha de forma inversa
-                
-                ActualizarElecciones();
-                ImprimirPartidosSeleccionados(partidosSeleccionados);
-
+                // Si el proceso está seleccionado, eliminarlo de la colección
+                _mainWindowViewModel.ColeccionEleccionesCheckBox.Remove(proceso);
+                // Llamadas a otros métodos como LimpiarPartidos, etc.
+                _mainWindowViewModel.LimpiarPartidos(proceso);
+                _mainWindowViewModel.ActualizarElecciones();
             }
+            ImprimirPartidosSeleccionados(_mainWindowViewModel.PartidosSeleccionados);
+            // Llamada a ActualizarCuadrados si es necesario
             ActualizarCuadrados();
         }
 
-        private void ActualizarElecciones()
-        {
-            
-            coleccionEleccionesCheckBox = new Collection<ProcesoElectoral>(coleccionEleccionesCheckBox.OrderByDescending(p => p.fecha).ToList());
 
-            // Recorrer la coleccion de procesos electorales de los checkBox
-            double opacidad = 1.0;
-            double i = 1.0;
-
-            //Comprueba si hay algun proceso electoral en la coleccion de elecciones
-            if (coleccionEleccionesCheckBox.Any())
-            {
-                partidosSeleccionados.Clear();
-                foreach (ProcesoElectoral procesoCheckBox in coleccionEleccionesCheckBox)
-                {
-                    foreach (Partido partido in procesoCheckBox.coleccionPartidos)
-                    {
-                        //Ajusar la opacidad de los partidos, usando Windows.Media.Color
-                        partido.Color = Color.FromArgb((byte)(255 * opacidad), partido.Color.R, partido.Color.G, partido.Color.B);
-
-                        // Buscar en la lista si ya hay partidos con el mismo nombre
-                        List<Partido> partidosConMismoNombre = partidosSeleccionados.FirstOrDefault(p => p.Any() && p.First().Nombre == partido.Nombre);
-
-                        if (partidosConMismoNombre != null)
-                        {
-                            // Si ya hay partidos con el mismo nombre, agregar el partido a esa colección
-                            partidosConMismoNombre.Add(partido);
-                        }
-                        else
-                        {
-                            // Si no hay partidos con el mismo nombre, crear una nueva colección con este partido
-                            partidosSeleccionados.Add(new List<Partido> { partido });
-
-
-                        }
-                    }
-                    i++;
-                    opacidad = 1.0 / i;
-                }
-                // Ordenar las sublistas en partidosSeleccionados según el número de escaños de cada partido
-                partidosSeleccionados = partidosSeleccionados.OrderByDescending(lista => lista.Any() ? lista.Max(partido => partido.Escaños) : 0).ToList();
-            }
-
-            
-        }
 
         private void ActualizarCuadrados()
         {
@@ -695,8 +641,6 @@ namespace Pactometro
                         // Actualizar acumuladorInicio para el siguiente grupo de barras
                         acumuladorInicio = posicionFinalGrupo + barSpacing;
                     }
-
-
                 }
                 // Agregar la leyenda indicando el número de escaños
                 for (int i = 7; i >= 0; i--)
@@ -730,30 +674,6 @@ namespace Pactometro
             }
         }
 
-        private void LimpiarPartidos(ProcesoElectoral proceso, List<List<Partido>> partidosSeleccionados)
-        {
-            foreach (List<Partido> listaDePartidos in partidosSeleccionados)
-            {
-                // Encuentra el primer partido que coincida con la colección de partidos del proceso
-                Partido partidoAEliminar = listaDePartidos.FirstOrDefault(partido =>
-                    proceso.coleccionPartidos.Any(p =>
-                        p.Nombre == partido.Nombre &&
-                        p.Escaños == partido.Escaños &&
-                        p.Color == partido.Color
-                    )
-                );
-
-                // Elimina solo el primer partido que coincida (si existe)
-                if (partidoAEliminar != null)
-                {
-                    listaDePartidos.Remove(partidoAEliminar);
-                }
-
-                // Imprimir los partidos eliminados actualizados
-                ImprimirPartidosSeleccionados(partidosSeleccionados);
-            }
-        }
-
         private void Grafico2_Click(object sender, RoutedEventArgs e)
         {
             grafico1 = false;
@@ -769,57 +689,13 @@ namespace Pactometro
             else
             {
                 // Obtener otros procesos electorales equivalentes para la comparación
-                Collection<ProcesoElectoral> procesosEquivalentes = ObtenerProcesosEquivalentesPorNombre(procesoElectoralActual);
+                Collection<ProcesoElectoral> procesosEquivalentes = _mainWindowViewModel.ObtenerProcesosEquivalentesPorNombre(procesoElectoralActual);
 
                 // Llamar al método que crea el gráfico comparativo
                 mostrarGrafico2(procesosEquivalentes);
             }
 
             
-        }
-
-        private Collection<ProcesoElectoral> ObtenerProcesosEquivalentesPorNombre(ProcesoElectoral procesoElectoralBase)
-        {
-            // Implementa la lógica para obtener otros procesos electorales equivalentes por la parte de caracteres del nombre
-            // Aquí puedes retornar una colección ficticia para propósitos de ejemplo
-            Collection<ProcesoElectoral> procesosEquivalentes = new Collection<ProcesoElectoral>();
-
-            foreach (ProcesoElectoral proceso in coleccionElecciones)
-            {
-                // Verificar si el proceso actual es nulo
-                if (proceso != null)
-                {
-                    // Filtrar los procesos equivalentes por la parte de caracteres del nombre (sin números)
-                    if (ObtenerParteAlfabética(proceso.nombre) == ObtenerParteAlfabética(procesoElectoralBase.nombre))
-                    {
-                        procesosEquivalentes.Add(proceso);
-                    }
-                }
-            }
-            return procesosEquivalentes;
-        }
-
-        // Función auxiliar para obtener la parte alfabética del nombre
-        private string ObtenerParteAlfabética(string nombre)
-        {
-            // Verificar si el nombre es null
-            if (nombre == null)
-            {
-                throw new ArgumentNullException(nameof(nombre));
-            }
-
-            // Buscar la posición del último espacio en blanco
-            int indiceUltimoEspacio = nombre.LastIndexOf(' ');
-
-            // Verificar si se encontró un espacio en blanco
-            if (indiceUltimoEspacio >= 0)
-            {
-                // Obtener la parte alfabética antes del último espacio en blanco
-                return nombre.Substring(0, indiceUltimoEspacio);
-            }
-
-            // En caso de que no haya espacio en blanco, devolver el nombre original
-            return nombre;
         }
 
 

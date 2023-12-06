@@ -7,13 +7,37 @@ namespace Pactometro.ViewModels
 {
     public class BaseViewModel : INotifyPropertyChanged
     {
-        // Evento requerido por la interfaz INotifyPropertyChanged
+        private ObservableCollection<ProcesoElectoral> _elecciones;
+        private ProcesoElectoral _eleccionSeleccionada;
+
         public event PropertyChangedEventHandler PropertyChanged;
 
-        // Método para invocar el evento PropertyChanged
         protected void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public ObservableCollection<ProcesoElectoral> Elecciones
+        {
+            get => _elecciones;
+            set
+            {
+                _elecciones = value;
+                OnPropertyChanged(nameof(Elecciones));
+            }
+        }
+
+        public ProcesoElectoral EleccionSeleccionada
+        {
+            get => _eleccionSeleccionada;
+            set
+            {
+                if (_eleccionSeleccionada != value)
+                {
+                    _eleccionSeleccionada = value;
+                    OnPropertyChanged(nameof(EleccionSeleccionada));
+                }
+            }
         }
 
         // Método para ordenar por fecha
@@ -26,6 +50,7 @@ namespace Pactometro.ViewModels
                 coleccion.Add(item);
             }
         }
+
 
         // Método para ordenar por nombre
         public void OrdenarPorNombre(ObservableCollection<ProcesoElectoral> coleccion)
