@@ -18,19 +18,18 @@ namespace Pactometro
     public partial class VentanaAgregar : Window
     {
         private ObservableCollection<ProcesoElectoral> ColeccionElecciones;
-        private ObservableCollection<Partido> PartidosTemporales;
-        private bool procesoAñadido;
         private BaseViewModel viewModel;
+        ProcesoElectoral nuevoProceso;
         public VentanaAgregar(ObservableCollection<ProcesoElectoral> coleccionElecciones)
         {
             InitializeComponent();
             ColeccionElecciones = coleccionElecciones;
-            PartidosTemporales = new ObservableCollection<Partido>();
+            nuevoProceso = new ProcesoElectoral();
             lvPartidos.SelectionChanged += lvPartidos_SelectionChanged;
             dpFecha.PreviewTextInput += Validaciones.AllowOnlyNumbers;
-            txtNumEscaños.PreviewTextInput += Validaciones.AllowOnlyNumbers;
             txtEscaños.PreviewTextInput += Validaciones.AllowOnlyNumbers;
             btnEliminar.IsEnabled = false;
+            btnModificar.IsEnabled = false;
             seleccionadorColor.ItemsSource = typeof(Colors).GetProperties();
             // Establecer el color predeterminado
             seleccionadorColor.SelectedIndex = 0;
@@ -58,14 +57,14 @@ namespace Pactometro
             }
 
             // Verificar si ya hay un partido con el mismo nombre
-            if (PartidosTemporales.Any(partido => partido.Nombre.ToLower() == nombrePartido))
+            if (nuevoProceso.coleccionPartidos.Any(partido => partido.Nombre.ToLower() == nombrePartido))
             {
                 MessageBox.Show("Ya hay un partido con el mismo nombre.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
             // Verificar si ya hay un partido con el mismo color
-            if (PartidosTemporales.Any(partido => partido.Color == colorSeleccionado))
+            if (nuevoProceso.coleccionPartidos.Any(partido => partido.Color == colorSeleccionado))
             {
                 MessageBox.Show("Ya hay un partido con el mismo color.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
@@ -73,13 +72,13 @@ namespace Pactometro
 
             // Crear una instancia de la clase Partido y agregarla a la colección temporal
             Partido nuevoPartido = new Partido(nombrePartido, escañosPartido, colorSeleccionado);
-            PartidosTemporales.Add(nuevoPartido);
 
-            // Ordenar la lista de partidos de mayor a menor por el número de escaños
-            PartidosTemporales = new ObservableCollection<Pactometro.Partido>(PartidosTemporales.OrderByDescending(partido => partido.Escaños));
+            nuevoProceso.coleccionPartidos.Add(nuevoPartido);
+
+            nuevoProceso.coleccionPartidos = new ObservableCollection<Partido>(nuevoProceso.coleccionPartidos.OrderByDescending(partido => partido.Escaños));
 
             // Actualizar la lista de partidos en el ListView
-            lvPartidos.ItemsSource = PartidosTemporales;
+            lvPartidos.ItemsSource = nuevoProceso.coleccionPartidos;
 
             // Puedes realizar otras acciones aquí, como limpiar los campos de entrada
             LimpiarCamposPartido();
@@ -93,25 +92,23 @@ namespace Pactometro
             {
                 // Eliminar el partido seleccionado de la colección temporal
                 Partido partidoSeleccionado = (Partido)lvPartidos.SelectedItem;
-                PartidosTemporales.Remove(partidoSeleccionado);
+                nuevoProceso.coleccionPartidos.Remove(partidoSeleccionado);
 
-                // Actualizar la lista de partidos en el ListView
-                lvPartidos.ItemsSource = null;
-                lvPartidos.ItemsSource = PartidosTemporales;
+                nuevoProceso.coleccionPartidos = new ObservableCollection<Partido>(nuevoProceso.coleccionPartidos.OrderByDescending(partido => partido.Escaños));
+
+                lvPartidos.ItemsSource = nuevoProceso.coleccionPartidos;
             }
         }
 
 
         private void BtnAñadirProceso_Click(object sender, RoutedEventArgs e)
         {
-            // Restablecer la variable procesoAñadido
-            procesoAñadido = false;
 
             // Obtener datos desde la interfaz de usuario para el nuevo proceso electoral
             string tipoProceso = (cmbTipoProceso.SelectedItem as ComboBoxItem)?.Content?.ToString()?.Trim();
 
             // Validar que no haya campos vacíos
-            if (string.IsNullOrEmpty(tipoProceso) || dpFecha.SelectedDate == null || string.IsNullOrEmpty(txtNumEscaños.Text))
+            if (string.IsNullOrEmpty(tipoProceso) || dpFecha.SelectedDate == null)
             {
                 MessageBox.Show("Por favor, completa todos los campos para añadir un proceso.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
@@ -124,14 +121,9 @@ namespace Pactometro
                 return;
             }
 
-            int numEscañosProceso;
+            // Si es un proceso de elecciones generales, tiene 350 escaños
+            int numEscañosProceso = tipoProceso == "Elecciones Generales" ? 350 : 81;
 
-            // Validar la entrada de escaños
-            if (!int.TryParse(txtNumEscaños.Text, out numEscañosProceso))
-            {
-                MessageBox.Show("Por favor, introduce un número válido para el número de escaños.", "Error de entrada", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
 
             // Verificar que no haya un proceso con el mismo nombre
             string nombreProceso = $"{tipoProceso} {fechaProceso.ToString("dd-MM-yyyy")}";
@@ -142,30 +134,21 @@ namespace Pactometro
             }
 
             // Verificar que hay al menos un partido
-            if (PartidosTemporales.Count == 0)
+            if (nuevoProceso.coleccionPartidos.Count == 0)
             {
                 MessageBox.Show("Debes añadir al menos un partido antes de crear un nuevo proceso.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
             // Verificar que la suma de escaños de los partidos sea igual al número de escaños del proceso
-            if (PartidosTemporales.Sum(partido => partido.Escaños) != numEscañosProceso)
+            if (nuevoProceso.coleccionPartidos.Sum(partido => partido.Escaños) != numEscañosProceso)
             {
-                MessageBox.Show("La suma de los escaños de los partidos no es igual al número de escaños del proceso.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("La suma de los escaños de todos los partidos debe de ser de "+numEscañosProceso+ " escaños", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
             // Crear una instancia de la clase ProcesoElectoral
-            ProcesoElectoral nuevoProceso = new ProcesoElectoral(nombreProceso, fechaProceso, numEscañosProceso, mayoriaAbsoluta: (numEscañosProceso / 2) + 1);
-
-            // Añadir los partidos a la colección de partidos del nuevo proceso
-            foreach (Partido partido in PartidosTemporales)
-            {
-                nuevoProceso.coleccionPartidos.Add(partido);
-            }
-
-            // Limpiar la colección temporal de partidos
-            PartidosTemporales.Clear();
+            nuevoProceso = new ProcesoElectoral(nombreProceso, fechaProceso, numEscañosProceso, mayoriaAbsoluta: (numEscañosProceso / 2) + 1);
 
             // Agregar el nuevo proceso a la colección principal de forma ordenada por fecha de mayor a menor
             ColeccionElecciones.Add(nuevoProceso);
@@ -174,15 +157,24 @@ namespace Pactometro
             LimpiarCamposProceso();
 
             viewModel.OrdenarPorFecha(ColeccionElecciones);
-            // Marcar el proceso como añadido
-            procesoAñadido = true;
+        }
+
+        private void BtnModificarPartido_Click(object sender, RoutedEventArgs e)
+        {
+            // Crea una instancia de la ventana VentanaModificarPartido pasandole el partido seleccionado y el proceso electoral almacenado en PartidosTemporales
+            VentanaModificarPartido ventanaModificarPartido = new VentanaModificarPartido((Partido)lvPartidos.SelectedItem, nuevoProceso);
+            // Haz que sea propiedad de esta ventana
+            ventanaModificarPartido.Owner = this;
+            // Muestra la ventana
+            ventanaModificarPartido.ShowDialog();
+            // Ordenar la lista de partidos de mayor a menor por el número de escaños
+            nuevoProceso.coleccionPartidos = new ObservableCollection<Pactometro.Partido>(nuevoProceso.coleccionPartidos.OrderByDescending(partido => partido.Escaños));
         }
 
         private void LimpiarCamposProceso()
         {
             cmbTipoProceso.SelectedIndex = -1;
             dpFecha.SelectedDate = null;
-            txtNumEscaños.Text = string.Empty;
         }
 
         private void LimpiarCamposPartido()
@@ -195,6 +187,7 @@ namespace Pactometro
         private void lvPartidos_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             btnEliminar.IsEnabled = lvPartidos.SelectedItem != null;
+            btnModificar.IsEnabled = lvPartidos.SelectedItem != null;
         }
 
         Color colorSeleccionado;

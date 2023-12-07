@@ -28,14 +28,12 @@ namespace Pactometro
             PartidosTemporales = procesoSeleccionado.coleccionPartidos;
             lvPartidos.SelectionChanged += lvPartidos_SelectionChanged;
             dpFecha.PreviewTextInput += Validaciones.AllowOnlyNumbers;
-            txtNumEscaños.PreviewTextInput += Validaciones.AllowOnlyNumbers;
             txtEscaños.PreviewTextInput += Validaciones.AllowOnlyNumbers;
             btnEliminar.IsEnabled = false;
             btnModificar.IsEnabled = false;
             seleccionadorColor.ItemsSource = typeof(Colors).GetProperties();
             // Establecer el color predeterminado
             seleccionadorColor.SelectedIndex = 0;
-            txtNumEscaños.Text = procesoSeleccionado.numEscaños.ToString();
             dpFecha.SelectedDate = procesoSeleccionado.fecha;
             cmbTipoProceso.Text = ObtenerParteAlfabetica(procesoSeleccionado.nombre);
             lvPartidos.ItemsSource = PartidosTemporales;
@@ -146,7 +144,7 @@ namespace Pactometro
             string tipoProceso = (cmbTipoProceso.SelectedItem as ComboBoxItem)?.Content?.ToString()?.Trim();
 
             // Validar que no haya campos vacíos
-            if (string.IsNullOrEmpty(tipoProceso) || dpFecha.SelectedDate == null || string.IsNullOrEmpty(txtNumEscaños.Text) )
+            if (string.IsNullOrEmpty(tipoProceso) || dpFecha.SelectedDate == null)
             {
                 MessageBox.Show("Por favor, completa todos los campos para añadir un proceso.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
@@ -159,14 +157,8 @@ namespace Pactometro
                 return;
             }
 
-            int numEscañosProceso;
-
-            // Validar la entrada de escaños
-            if (!int.TryParse(txtNumEscaños.Text, out numEscañosProceso))
-            {
-                MessageBox.Show("Por favor, introduce un número válido para el número de escaños.", "Error de entrada", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }            
+            //Si es un proceso de tipo Congreso, validar que el número de escaños sea mayor o igual que 350
+            int numEscañosProceso = tipoProceso == "Elecciones Generales" ? 350 : 81;
 
             // Verificar que hay al menos un partido
             if (PartidosTemporales.Count == 0)
@@ -178,7 +170,7 @@ namespace Pactometro
             // Verificar que la suma de escaños de los partidos sea igual al número de escaños del proceso
             if (PartidosTemporales.Sum(partido => partido.Escaños) != numEscañosProceso)
             {
-                MessageBox.Show("La suma de los escaños de los partidos no es igual al número de escaños del proceso.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("La suma de los escaños de todos los partidos debe de ser de " + numEscañosProceso + " escaños", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 

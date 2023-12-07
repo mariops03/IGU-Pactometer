@@ -169,13 +169,13 @@ namespace Pactometro
             ToggleQualityOptionsVisibility(isJpgSelected);
 
             // Ajusta el tamaño de la ventana
-            this.Height = isJpgSelected ? 355 : 205; // Ejemplo de tamaños, ajusta según tus necesidades
+            this.Height = isJpgSelected ? 300 : 205; // Ejemplo de tamaños, ajusta según tus necesidades
         }
 
 
         private void ToggleQualityOptionsVisibility(bool isVisible)
         {
-            qualityOptionsPanel.Visibility = isVisible ? Visibility.Visible : Visibility.Collapsed;
+            opcionesCalidad.Visibility = isVisible ? Visibility.Visible : Visibility.Collapsed;
         }
 
         private void CopyToClipboard_Click(object sender, RoutedEventArgs e)

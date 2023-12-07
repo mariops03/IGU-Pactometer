@@ -60,18 +60,7 @@ namespace Pactometro
 
             // Dispara el evento con el elemento seleccionado o null
             ProcesoEleccionSeleccionado?.Invoke(this, procesoElectoralSeleccionado);
-        }
-
-
-        private static VentanaAgregar ventanaAñadirProceso;
-
-        private void btnAñadir_Click(object sender, RoutedEventArgs e)
-        {
-            // Crea una instancia de la clase VentanaAñadirProceso, que es una ventana modal y hazte su propietario
-            ventanaAñadirProceso = new VentanaAgregar(ColeccionElecciones);
-            ventanaAñadirProceso.Owner = this;
-            ventanaAñadirProceso.ShowDialog();
-        }
+        }        
 
         private void btnImportarCSV_Click(object sender, RoutedEventArgs e)
         {
@@ -91,6 +80,15 @@ namespace Pactometro
         private void btnExportarJSON_Click(object sender, RoutedEventArgs e)
         {
             _viewModelVentanaSecundaria.ExportarDatosJson();
+        }
+
+
+        private void btnAñadir_Click(object sender, RoutedEventArgs e)
+        {
+            // Crea una instancia de la clase VentanaAñadirProceso, que es una ventana modal y hazte su propietario
+            VentanaAgregar ventanaAñadirProceso = new VentanaAgregar(ColeccionElecciones);
+            ventanaAñadirProceso.Owner = this;
+            ventanaAñadirProceso.ShowDialog();
         }
 
         private void btnModificar_Click(object sender, RoutedEventArgs e)

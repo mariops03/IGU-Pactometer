@@ -196,7 +196,14 @@ namespace Pactometro
 
         private void menuSalir(object sender, RoutedEventArgs e)
         {
-            Close(); // Cierra la ventana principal, lo que también activará el evento Closed
+            // Preguntar al usuario si desea salir
+            MessageBoxResult result = MessageBox.Show("¿Estás seguro de que quieres salir?", "Salir", MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                Close(); // Cierra la ventana principal, lo que también activará el evento Closed
+            }
+
         }
 
         private void Grafico1_Click(object sender, RoutedEventArgs e)

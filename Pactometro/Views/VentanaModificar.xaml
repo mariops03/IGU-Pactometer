@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Pactometro"
         mc:Ignorable="d"
-        Title="VentanaModificar" Height="520" Width="710">
+        Title="Modificar Proceso Electoral" Height="520" Width="710">
+    
     <Grid Margin="10">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
@@ -37,9 +38,6 @@
         <Label Grid.Column="0" Grid.Row="2" Content="Fecha:" VerticalAlignment="Center"/>
         <DatePicker Grid.Column="1" Grid.Row="2" Width="200" Margin="10" Name="dpFecha"/>
 
-        <Label Grid.Column="0" Grid.Row="3" Content="Número total de escaños:" VerticalAlignment="Center"/>
-        <TextBox Grid.Column="1" Grid.Row="3" Width="200" Margin="10" Name="txtNumEscaños"/>
-
         <!-- Información de los Partidos -->
         <TextBlock Text="INFORMACIÓN DE LOS PARTIDOS" FontSize="16" FontWeight="Bold" Grid.ColumnSpan="3" Grid.Row="5" HorizontalAlignment="Center" Margin="8"/>
 
@@ -67,7 +65,7 @@
         </StackPanel>
 
         <!-- Botones -->
-        <Button Name="btnActualizar" Grid.Column="1" Grid.Row="8" Width="160" Height="30" Margin="10" Content="Actualizar Proceso Electoral" Click="BtnActualizarProceso_Click"/>
+        <Button Name="btnActualizar" Grid.Column="1" Grid.Row="8" Width="160" Height="30" Margin="10" Content="Actualizar Proceso Electoral" Click="BtnActualizarProceso_Click" IsDefault="True"/>
 
         <!-- ListView para mostrar los partidos -->
         <ListView Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="7" Margin="10" Name="lvPartidos" Height="150" SelectionChanged="lvPartidos_SelectionChanged" SelectionMode="Single">

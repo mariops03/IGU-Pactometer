@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Pactometro"
         mc:Ignorable="d"
-        Title="VentanaSecundaria" Height="450" Width="800">
+        Title="Datos" Height="450" Width="800">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -96,8 +96,19 @@
         <ListView Name="secondaryTable" Grid.Row="2" Margin="10" SelectionMode="Single" ItemsSource="{Binding Partidos}" SelectedItem="Binding EleccionSleccionada, Mode=TwoWay" HorizontalContentAlignment="Center">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="PARTIDO" Width="Auto" DisplayMemberBinding="{Binding Nombre}"/>
-                    <GridViewColumn Header="ESCAÑOS" Width="Auto" DisplayMemberBinding="{Binding Escaños}"/>
+                    <GridViewColumn Header="Partido" DisplayMemberBinding="{Binding Nombre}"/>
+                    <GridViewColumn Header="Escaños" DisplayMemberBinding="{Binding Escaños}"/>
+                    <GridViewColumn Header="Color" Width="80">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Rectangle Width="20" Height="20">
+                                    <Rectangle.Fill>
+                                        <SolidColorBrush Color="{Binding Color}" />
+                                    </Rectangle.Fill>
+                                </Rectangle>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
                 </GridView>
             </ListView.View>
         </ListView>

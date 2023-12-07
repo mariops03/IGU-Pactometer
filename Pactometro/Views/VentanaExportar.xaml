@@ -1,7 +1,7 @@
 ﻿<Window x:Class="Pactometro.VentanaExportar"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Opciones de Exportación" Height="400" Width="300">
+        Title="Exportar imagen" Height="400" Width="300">
     <StackPanel>
         <Label Content="FORMATO:" Margin="10,10,0,0"/>
         <ComboBox x:Name="formatComboBox" Margin="10" SelectionChanged="FormatComboBox_SelectionChanged">
@@ -10,11 +10,11 @@
         </ComboBox>
 
         <!-- Panel para las opciones de calidad -->
-        <StackPanel x:Name="qualityOptionsPanel" Visibility="Collapsed">
-            <Label Content="CALIDAD:" Margin="10"/>
-            <RadioButton x:Name="radioButtonLow" Content="Baja" Margin="10" />
-            <RadioButton x:Name="radioButtonMedium" Content="Media" Margin="10" />
-            <RadioButton x:Name="radioButtonHigh" Content="Alta" Margin="10" IsChecked="True" />
+        <StackPanel Name="opcionesCalidad" Visibility="Collapsed">
+            <Label Content="CALIDAD:" Margin="10,0,0,0"/>
+            <RadioButton x:Name="radioButtonLow" Content="Baja" Margin="10,5,0,0" />
+            <RadioButton x:Name="radioButtonMedium" Content="Media" Margin="10,5,0,0" />
+            <RadioButton x:Name="radioButtonHigh" Content="Alta" Margin="10,5,0,10" IsChecked="True" />
         </StackPanel>
 
         <Button Content="Exportar" Click="ExportButton_Click" Margin="10" IsDefault="True"/>

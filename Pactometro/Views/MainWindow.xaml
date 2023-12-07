@@ -19,13 +19,15 @@
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <Menu Name="menu" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3">
-            <MenuItem Header="Configuración">
+            <MenuItem Header="Opciones">
+                <MenuItem Header="Abrir ventana de datos" Click="menuVentanaSecundaria"/>
+                <Separator/>
+                <MenuItem Header="Salir" Click="menuSalir" />
+            </MenuItem>
+            <MenuItem Header="Gráficos">
                 <MenuItem Header="Gráfico 1" Click="Grafico1_Click"/>
                 <MenuItem Header="Gráfico 2" Click="Grafico2_Click"/>
                 <MenuItem Header="Gráfico 3" Click="Grafico3_Click"/>
-                <MenuItem Header="Ventana Secundaria" Click="menuVentanaSecundaria"/>
-                <Separator/>
-                <MenuItem Header="Salir" Click="menuSalir" />
             </MenuItem>
             <MenuItem Name="btnExportar" Header="Exportar como imagen" Click="Exportar_Click"/>
         </Menu>

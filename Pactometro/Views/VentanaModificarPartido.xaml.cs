@@ -25,8 +25,6 @@ namespace Pactometro
             ProcesoElectoral = procesoElectoral;
             PartidosTemporales = new ObservableCollection<Partido>();
             txtEscaños.PreviewTextInput += Validaciones.AllowOnlyNumbers;
-
-
             seleccionadorColor.ItemsSource = typeof(Colors).GetProperties();
             // Establecer el color predeterminado
             seleccionadorColor.SelectedIndex = 0;
@@ -45,16 +43,6 @@ namespace Pactometro
 
         }
 
-        private void txtEscaños_PreviewTextInput(object sender, TextCompositionEventArgs e)
-        {
-            // Permitir solo números
-            if (!char.IsDigit(e.Text, 0))
-            {
-                // Si no es un número, marcar el evento como manejado para evitar que se escriba
-                e.Handled = true;
-            }
-        }
-
         private void btnModificar_Click(object sender, RoutedEventArgs e)
         {
             // Obtener datos desde la interfaz de usuario
@@ -64,7 +52,7 @@ namespace Pactometro
             // Validar que no haya campos vacíos
             if (string.IsNullOrEmpty(nombrePartido) || string.IsNullOrEmpty(escañosText))
             {
-                MessageBox.Show("Por favor, completa todos los campos para añadir un partido.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Por favor, completa todos los campos para modificar el partido.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -75,23 +63,18 @@ namespace Pactometro
                 return;
             }
 
-            // Verificar si ya hay un partido con el mismo nombre
-            if (PartidosTemporales.Any(partido => partido.Nombre.ToLower() == nombrePartido))
-            {
-                MessageBox.Show("Ya hay un partido con el mismo nombre.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
-
             // Verificar si ya hay un partido con el mismo color
             
 
             PartidosTemporales.Clear();
+
 
             foreach (Partido partidoProceso in ProcesoElectoral.coleccionPartidos)
             {
                 PartidosTemporales.Add(partidoProceso);
 
             }
+                
 
             PartidosTemporales.Remove(Partido);
 
@@ -101,21 +84,15 @@ namespace Pactometro
                 return;
             }
 
-            Partido partidoModificado = new Partido(nombrePartido, escañosPartido, colorSeleccionado);
-            PartidosTemporales.Add(partidoModificado);
-
-            //Comprobar si el numero de escaños que suman todos los partidos es distinto del numero de escaños del proceso electoral
-            int escañosTotales = 0;
-            foreach (Partido partido in PartidosTemporales)
+            // Verificar si ya hay un partido con el mismo nombre
+            if (PartidosTemporales.Any(partido => partido.Nombre.ToLower() == nombrePartido))
             {
-                escañosTotales += partido.Escaños;
-            }
-
-            if (escañosTotales != ProcesoElectoral.numEscaños)
-            {
-                MessageBox.Show("El número de escaños de los partidos no coincide con el número de escaños del proceso electoral."+escañosTotales, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Ya hay un partido con el mismo nombre.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
+
+            Partido partidoModificado = new Partido(nombrePartido, escañosPartido, colorSeleccionado);
+            PartidosTemporales.Add(partidoModificado);
 
 
             ProcesoElectoral.coleccionPartidos.Remove(Partido);
