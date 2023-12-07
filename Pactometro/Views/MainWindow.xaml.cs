@@ -59,9 +59,9 @@ namespace Pactometro
                 MainWindowViewModel vm = this.DataContext as MainWindowViewModel;
 
                 // Asegúrate de que vm no es null y de que vm.Elecciones está inicializado
-                if (vm != null && vm.Elecciones != null)
+                if (vm != null && coleccionElecciones != null)
                 {
-                    ventanaSecundaria = new VentanaSecundaria(vm.Elecciones);
+                    ventanaSecundaria = new VentanaSecundaria(coleccionElecciones);
                     ventanaSecundaria.Owner = this;
 
                     double distanciaEntreVentanas = 10; // Puedes ajustar esto a tu preferencia
@@ -429,11 +429,7 @@ namespace Pactometro
             btnExportar.IsEnabled = true;
            
             // Limpiar el Canvas antes de agregar nuevos elementos
-            chartCanvas.Children.Clear();
-
-
-            //Hacer visible el boton de exportar
-            
+            chartCanvas.Children.Clear();           
 
             var nombreProceso = procesosComparativos.FirstOrDefault()?.nombre;
 
@@ -455,7 +451,7 @@ namespace Pactometro
 
             // Crear un nuevo Canvas para los CheckBox
             checkBoxCanvas = new Canvas();
-            checkBoxCanvas.Background = Brushes.LightGray;
+            checkBoxCanvas.Background = Brushes.WhiteSmoke;
             checkBoxCanvas.Margin = new Thickness(15);
             checkBoxCanvas.Width = 112; // Ajusta el tamaño según tus necesidades
             checkBoxCanvas.Height = procesosComparativos.Count() * 29; // Ajusta el tamaño según tus necesidades
@@ -551,7 +547,7 @@ namespace Pactometro
                     Height = 20,
                     Margin = new Thickness(3),
                     Opacity = 1.0 / indice,
-                    Fill = Brushes.Blue
+                    Fill = Brushes.Indigo
                 };
 
                 string fechaTexto = fecha.ToString("dd/MM/yyyy");
@@ -815,8 +811,8 @@ namespace Pactometro
 
             txtTitulo.Text = procesoElectoralActual.nombre;
 
-            double barHeight = chartCanvas.ActualHeight / 4; // height of each bar
-            double barGap = chartCanvas.ActualHeight / 10; // gap between bars
+            double barHeight = chartCanvas.ActualHeight / 4;
+            double barGap = chartCanvas.ActualHeight / 10; 
 
             yPos = chartCanvas.ActualHeight / 5;
             emptyBarYPos = yPos + barHeight + barGap;

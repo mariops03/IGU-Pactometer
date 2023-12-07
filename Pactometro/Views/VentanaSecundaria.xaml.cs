@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Globalization;
 using Pactometro.ViewModels;
-
+using System.Windows.Input;
 
 namespace Pactometro
 {
@@ -58,9 +58,41 @@ namespace Pactometro
                 btnEliminar.Visibility = Visibility.Collapsed;
             }
 
+            //Actualiza el valor de la propiedad ProcesoEleccionSeleccionado en el ViewModel
+            _viewModelVentanaSecundaria.EleccionSeleccionada = procesoElectoralSeleccionado;
+
             // Dispara el evento con el elemento seleccionado o null
             ProcesoEleccionSeleccionado?.Invoke(this, procesoElectoralSeleccionado);
-        }        
+        }
+
+        private void Header_Click(object sender, MouseButtonEventArgs e)
+        {
+            var headerTextBlock = sender as TextBlock;
+            if (headerTextBlock != null)
+            {
+                var header = headerTextBlock.Text;
+                if(header == "ELECCIÓN")
+                {
+                    _viewModelVentanaSecundaria.OrdenarPorNombre();
+                }
+                else if(header == "FECHA")
+                {
+                    _viewModelVentanaSecundaria.OrdenarPorFecha();
+                }
+                else if(header == "NUMERO DE ESCAÑOS")
+                {
+                    _viewModelVentanaSecundaria.OrdenarPorEscaños();
+                }else if(header == "PARTIDO")
+                {
+                    _viewModelVentanaSecundaria.OrdenarPorNombrePartido();
+                }else if(header == "ESCAÑOS")
+                {
+                    _viewModelVentanaSecundaria.OrdenarPorEscañosPartido();
+                }
+
+            }
+        }
+
 
         private void btnImportarCSV_Click(object sender, RoutedEventArgs e)
         {
@@ -89,6 +121,9 @@ namespace Pactometro
             VentanaAgregar ventanaAñadirProceso = new VentanaAgregar(ColeccionElecciones);
             ventanaAñadirProceso.Owner = this;
             ventanaAñadirProceso.ShowDialog();
+            // Actualizar la colección de procesos electorales
+            _viewModelVentanaSecundaria.OrdenarPorFecha();
+            mainTable.InvalidateVisual();
         }
 
         private void btnModificar_Click(object sender, RoutedEventArgs e)
@@ -99,7 +134,7 @@ namespace Pactometro
                 VentanaModificar ventanaModificar = new VentanaModificar(ColeccionElecciones, mainTable.SelectedItem as ProcesoElectoral);
                 ventanaModificar.Owner = this;
                 ventanaModificar.ShowDialog();
-                _viewModelVentanaSecundaria.OrdenarPorFecha(ColeccionElecciones);
+                _viewModelVentanaSecundaria.OrdenarPorFecha();
             }
         }
 
@@ -111,7 +146,7 @@ namespace Pactometro
             {
                 // Elimina de la colección el elemento seleccionado
                 ColeccionElecciones.Remove(mainTable.SelectedItem as ProcesoElectoral);
-                _viewModelVentanaSecundaria.OrdenarPorFecha(ColeccionElecciones);
+                _viewModelVentanaSecundaria.OrdenarPorFecha();
             }
             else 
             { 

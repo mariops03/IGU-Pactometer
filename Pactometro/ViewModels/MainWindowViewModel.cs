@@ -123,7 +123,7 @@ namespace Pactometro.ViewModels
         public MainWindowViewModel(IDatosElectorales datosElectorales)
         {
             Elecciones = datosElectorales.GenerarDatosElectorales(); // Usar la propiedad heredada
-            OrdenarPorFecha(Elecciones); // Usar el método heredado para ordenar
+            OrdenarPorFecha(); // Usar el método heredado para ordenar
         }
 
         public void ActualizarElecciones()

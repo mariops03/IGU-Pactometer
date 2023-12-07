@@ -152,7 +152,7 @@ public class DatosElectorales : IDatosElectorales
                 coleccionElecciones[2].coleccionPartidos.Add(new Partido());
             }
 
-            coleccionElecciones[2].nombre = "Elecciones Autonómicas CyL 14-2-2022";
+            coleccionElecciones[2].nombre = "Elecciones Autonómicas CyL 14-02-2022";
             coleccionElecciones[2].fecha = new DateTime(2022, 2, 14);
             coleccionElecciones[2].numEscaños = 81;
             coleccionElecciones[2].mayoriaAbsoluta = 41;
@@ -196,7 +196,7 @@ public class DatosElectorales : IDatosElectorales
                 coleccionElecciones[3].coleccionPartidos.Add(new Partido());
             }
 
-            coleccionElecciones[3].nombre = "Elecciones Autonómicas CyL 26-5-2019";
+            coleccionElecciones[3].nombre = "Elecciones Autonómicas CyL 26-05-2019";
             coleccionElecciones[3].fecha = new DateTime(2019, 5, 26);
             coleccionElecciones[3].numEscaños = 81;
             coleccionElecciones[3].mayoriaAbsoluta = 41;

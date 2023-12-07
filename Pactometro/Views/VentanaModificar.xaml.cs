@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using Pactometro.ViewModels;
 
 namespace Pactometro
 {
@@ -18,6 +19,7 @@ namespace Pactometro
         private ObservableCollection<Partido> PartidosTemporales;
         private ObservableCollection<ProcesoElectoral> ColeccionElecciones;
         private ProcesoElectoral ProcesoSeleccionado;
+        private BaseViewModel viewModel;
         Color colorSeleccionado;
         public VentanaModificar(ObservableCollection<ProcesoElectoral> coleccionElecciones, ProcesoElectoral procesoSeleccionado)
         {
@@ -38,6 +40,8 @@ namespace Pactometro
             cmbTipoProceso.Text = ObtenerParteAlfabetica(procesoSeleccionado.nombre);
             lvPartidos.ItemsSource = PartidosTemporales;
             lvPartidos.KeyDown += LvPartidos_KeyDown;
+            viewModel = new BaseViewModel();
+            viewModel.EleccionSeleccionada = procesoSeleccionado;
         }
 
         private string ObtenerParteAlfabetica(string nombre)
@@ -252,6 +256,22 @@ namespace Pactometro
         {
             btnAñadir.IsDefault = true;
             btnModificar.IsDefault = false;
+        }
+
+        private void PartidoHeader_Click(object sender, MouseButtonEventArgs e)
+        {
+            if (viewModel != null)
+            {
+                viewModel.OrdenarPorNombrePartido();
+            }
+        }
+
+        private void EscañosHeader_Click(object sender, MouseButtonEventArgs e)
+        {
+            if (viewModel != null)
+            {
+                viewModel.OrdenarPorEscañosPartido();
+            }
         }
 
     }

@@ -122,7 +122,7 @@ namespace Pactometro.ViewModels
                     MessageBox.Show($"Error al importar el archivo CSV: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
-            OrdenarPorFecha(Elecciones);
+            OrdenarPorFecha();
         }
 
 
@@ -184,7 +184,7 @@ namespace Pactometro.ViewModels
                     MessageBox.Show($"Error al importar de JSON: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
-            OrdenarPorFecha(Elecciones);
+            OrdenarPorFecha();
         }
     }
 }

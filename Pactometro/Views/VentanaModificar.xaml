@@ -71,9 +71,21 @@
         <ListView Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="7" Margin="10" Name="lvPartidos" Height="150" SelectionChanged="lvPartidos_SelectionChanged" SelectionMode="Single">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Partido" DisplayMemberBinding="{Binding Nombre}" Width="200"/>
-                    <GridViewColumn Header="Escaños" DisplayMemberBinding="{Binding Escaños}" Width="80"/>
-                    <GridViewColumn Header="Color" Width="80">
+                    <GridViewColumn Header="PARTIDO" DisplayMemberBinding="{Binding Nombre}" Width="200">
+                        <GridViewColumn.HeaderTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="PARTIDO" MouseLeftButtonDown="PartidoHeader_Click"/>
+                            </DataTemplate>
+                        </GridViewColumn.HeaderTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="ESCAÑOS" DisplayMemberBinding="{Binding Escaños}" Width="80">
+                        <GridViewColumn.HeaderTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="ESCAÑOS" MouseLeftButtonDown="EscañosHeader_Click"/>
+                            </DataTemplate>
+                        </GridViewColumn.HeaderTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="COLOR" Width="80">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <Rectangle Width="20" Height="20">
@@ -87,8 +99,6 @@
                 </GridView>
             </ListView.View>
         </ListView>
-
-
 
         <!-- Botón para Eliminar Partido -->
         <StackPanel Orientation="Vertical" Grid.Row="7" Grid.Column="2" VerticalAlignment="Center">

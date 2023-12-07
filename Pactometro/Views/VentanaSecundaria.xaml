@@ -86,31 +86,92 @@
         <ListView Name="mainTable" Grid.Row="1" Margin="10" SelectionChanged="mainTable_SelectionChanged" SelectionMode="Single" ItemsSource="{Binding Elecciones}" HorizontalContentAlignment="Center">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="ELECCIÓN" DisplayMemberBinding="{Binding nombre}"/>
-                    <GridViewColumn Header="FECHA" DisplayMemberBinding="{Binding fecha, StringFormat={}{0: dd/MM/yyyy}}"/>
-                    <GridViewColumn Header="NUMERO DE ESCAÑOS" DisplayMemberBinding="{Binding numEscaños}"/>
-                    <GridViewColumn Header="MAYORÍA ABSOLUTA" DisplayMemberBinding="{Binding mayoriaAbsoluta}"/>
-                </GridView>
-            </ListView.View>
-        </ListView>
-        <ListView Name="secondaryTable" Grid.Row="2" Margin="10" SelectionMode="Single" ItemsSource="{Binding Partidos}" SelectedItem="Binding EleccionSleccionada, Mode=TwoWay" HorizontalContentAlignment="Center">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Header="Partido" DisplayMemberBinding="{Binding Nombre}"/>
-                    <GridViewColumn Header="Escaños" DisplayMemberBinding="{Binding Escaños}"/>
-                    <GridViewColumn Header="Color" Width="80">
-                        <GridViewColumn.CellTemplate>
+                    <GridViewColumn Header="ELECCIÓN">
+                        <GridViewColumn.HeaderTemplate>
                             <DataTemplate>
-                                <Rectangle Width="20" Height="20">
-                                    <Rectangle.Fill>
-                                        <SolidColorBrush Color="{Binding Color}" />
-                                    </Rectangle.Fill>
-                                </Rectangle>
+                                <TextBlock Text="ELECCIÓN" MouseLeftButtonDown="Header_Click"/>
                             </DataTemplate>
-                        </GridViewColumn.CellTemplate>
+                        </GridViewColumn.HeaderTemplate>
+                        <GridViewColumn.DisplayMemberBinding>
+                            <Binding Path="nombre"/>
+                        </GridViewColumn.DisplayMemberBinding>
+                    </GridViewColumn>
+                    <GridViewColumn Header="FECHA">
+                        <GridViewColumn.HeaderTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="FECHA" MouseLeftButtonDown="Header_Click"/>
+                            </DataTemplate>
+                        </GridViewColumn.HeaderTemplate>
+                        <GridViewColumn.DisplayMemberBinding>
+                            <Binding Path="fecha" StringFormat="{}{0:dd/MM/yyyy}"/>
+                        </GridViewColumn.DisplayMemberBinding>
+                    </GridViewColumn>
+                    <GridViewColumn Header="NUMERO DE ESCAÑOS">
+                        <GridViewColumn.HeaderTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="NUMERO DE ESCAÑOS" MouseLeftButtonDown="Header_Click"/>
+                            </DataTemplate>
+                        </GridViewColumn.HeaderTemplate>
+                        <GridViewColumn.DisplayMemberBinding>
+                            <Binding Path="numEscaños"/>
+                        </GridViewColumn.DisplayMemberBinding>
+                    </GridViewColumn>
+                    <GridViewColumn Header="MAYORÍA ABSOLUTA">
+                        <GridViewColumn.HeaderTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="MAYORÍA ABSOLUTA" MouseLeftButtonDown="Header_Click"/>
+                            </DataTemplate>
+                        </GridViewColumn.HeaderTemplate>
+                        <GridViewColumn.DisplayMemberBinding>
+                            <Binding Path="mayoriaAbsoluta"/>
+                        </GridViewColumn.DisplayMemberBinding>
                     </GridViewColumn>
                 </GridView>
             </ListView.View>
-        </ListView>
+            </ListView>
+
+            <!-- ListView secundario -->
+            <ListView Name="secondaryTable" Grid.Row="2" Margin="10" SelectionMode="Single" ItemsSource="{Binding Partidos}" SelectedItem="{Binding EleccionSeleccionada, Mode=TwoWay}" HorizontalContentAlignment="Center">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="PARTIDO">
+                            <GridViewColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="PARTIDO" MouseLeftButtonDown="Header_Click"/>
+                                </DataTemplate>
+                            </GridViewColumn.HeaderTemplate>
+                            <GridViewColumn.DisplayMemberBinding>
+                                <Binding Path="Nombre"/>
+                            </GridViewColumn.DisplayMemberBinding>
+                        </GridViewColumn>
+                        <GridViewColumn Header="ESCAÑOS">
+                            <GridViewColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="ESCAÑOS" MouseLeftButtonDown="Header_Click"/>
+                                </DataTemplate>
+                            </GridViewColumn.HeaderTemplate>
+                            <GridViewColumn.DisplayMemberBinding>
+                                <Binding Path="Escaños"/>
+                            </GridViewColumn.DisplayMemberBinding>
+                        </GridViewColumn>
+                        <GridViewColumn Header="COLOR" Width="80">
+                            <GridViewColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="COLOR" MouseLeftButtonDown="Header_Click"/>
+                                </DataTemplate>
+                            </GridViewColumn.HeaderTemplate>
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Rectangle Width="20" Height="20">
+                                        <Rectangle.Fill>
+                                            <SolidColorBrush Color="{Binding Color}"/>
+                                        </Rectangle.Fill>
+                                    </Rectangle>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                    </GridView>
+                </ListView.View>
+            </ListView>
     </Grid>
 </Window>

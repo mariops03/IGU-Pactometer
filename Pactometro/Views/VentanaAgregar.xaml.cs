@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 
 namespace Pactometro
@@ -77,6 +78,8 @@ namespace Pactometro
 
             nuevoProceso.coleccionPartidos = new ObservableCollection<Partido>(nuevoProceso.coleccionPartidos.OrderByDescending(partido => partido.Escaños));
 
+            viewModel.EleccionSeleccionada = nuevoProceso;
+
             // Actualizar la lista de partidos en el ListView
             lvPartidos.ItemsSource = nuevoProceso.coleccionPartidos;
 
@@ -147,8 +150,10 @@ namespace Pactometro
                 return;
             }
 
-            // Crear una instancia de la clase ProcesoElectoral
-            nuevoProceso = new ProcesoElectoral(nombreProceso, fechaProceso, numEscañosProceso, mayoriaAbsoluta: (numEscañosProceso / 2) + 1);
+            nuevoProceso.nombre = nombreProceso;
+            nuevoProceso.fecha = fechaProceso;
+            nuevoProceso.numEscaños = numEscañosProceso;
+            nuevoProceso.mayoriaAbsoluta = (numEscañosProceso / 2) + 1;
 
             // Agregar el nuevo proceso a la colección principal de forma ordenada por fecha de mayor a menor
             ColeccionElecciones.Add(nuevoProceso);
@@ -156,7 +161,10 @@ namespace Pactometro
             // Puedes realizar otras acciones aquí, como limpiar otros campos de entrada
             LimpiarCamposProceso();
 
-            viewModel.OrdenarPorFecha(ColeccionElecciones);
+            viewModel.OrdenarPorFecha();
+
+            // Cerrar la ventana
+            this.Close();
         }
 
         private void BtnModificarPartido_Click(object sender, RoutedEventArgs e)
@@ -197,5 +205,22 @@ namespace Pactometro
             colorSeleccionado= (Color)(seleccionadorColor.SelectedItem as PropertyInfo).GetValue(null, null);
 
         }
+
+        private void PartidoHeader_Click(object sender, MouseButtonEventArgs e)
+        {
+            if (viewModel != null)
+            {
+                viewModel.OrdenarPorNombrePartido();
+            }
+        }
+
+        private void EscañosHeader_Click(object sender, MouseButtonEventArgs e)
+        {
+            if (viewModel != null)
+            {
+                viewModel.OrdenarPorEscañosPartido();
+            }
+        }
+
     }
 }
