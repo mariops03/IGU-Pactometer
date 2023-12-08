@@ -76,18 +76,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Class1.cs" />
     <Compile Include="Model\DatosElectorales.cs" />
     <Compile Include="Model\IDatosElectorales.cs" />
     <Compile Include="Helpers\Validaciones.cs" />
-    <Compile Include="Views\VentanaAgregar.xaml.cs">
-      <DependentUpon>VentanaAgregar.xaml</DependentUpon>
+    <Compile Include="Views\VentanaAñadirModificar.xaml.cs">
+      <DependentUpon>VentanaAñadirModificar.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\VentanaExportar.xaml.cs">
       <DependentUpon>VentanaExportar.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\VentanaModificar.xaml.cs">
-      <DependentUpon>VentanaModificar.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\VentanaModificarPartido.xaml.cs">
       <DependentUpon>VentanaModificarPartido.xaml</DependentUpon>
@@ -110,15 +106,11 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Views\VentanaAgregar.xaml">
+    <Page Include="Views\VentanaAñadirModificar.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\VentanaExportar.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\VentanaModificar.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -152,6 +144,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="ClassDiagram1.cd" />
+    <None Include="Diagrama de objetos.cd" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

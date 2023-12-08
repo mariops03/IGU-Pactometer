@@ -123,7 +123,6 @@ namespace Pactometro.ViewModels
         public MainWindowViewModel(IDatosElectorales datosElectorales)
         {
             Elecciones = datosElectorales.GenerarDatosElectorales(); // Usar la propiedad heredada
-            OrdenarPorFecha(); // Usar el método heredado para ordenar
         }
 
         public void ActualizarElecciones()
@@ -188,24 +187,12 @@ namespace Pactometro.ViewModels
 
             foreach (ProcesoElectoral proceso in Elecciones)
             {
-                if (proceso != null && ObtenerParteAlfabética(proceso.nombre) == ObtenerParteAlfabética(procesoElectoralBase.nombre))
+                if (proceso != null &&  ObtenerParteAlfabetica(proceso.nombre) == ObtenerParteAlfabetica(procesoElectoralBase.nombre))
                 {
                     procesosEquivalentes.Add(proceso);
                 }
             }
             return procesosEquivalentes;
-        }
-
-        // Método auxiliar para obtener la parte alfabética del nombre
-        private string ObtenerParteAlfabética(string nombre)
-        {
-            if (string.IsNullOrEmpty(nombre))
-            {
-                throw new ArgumentNullException(nameof(nombre));
-            }
-
-            int indiceUltimoEspacio = nombre.LastIndexOf(' ');
-            return indiceUltimoEspacio >= 0 ? nombre.Substring(0, indiceUltimoEspacio) : nombre;
         }
 
         public void reiniciarPactometro()

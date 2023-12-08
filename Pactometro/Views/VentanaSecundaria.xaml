@@ -131,7 +131,7 @@
             </ListView>
 
             <!-- ListView secundario -->
-            <ListView Name="secondaryTable" Grid.Row="2" Margin="10" SelectionMode="Single" ItemsSource="{Binding Partidos}" SelectedItem="{Binding EleccionSeleccionada, Mode=TwoWay}" HorizontalContentAlignment="Center">
+            <ListView Name="secondaryTable" Grid.Row="2" Margin="10" SelectionMode="Single" ItemsSource="{Binding Partidos}">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Header="PARTIDO">
@@ -164,7 +164,7 @@
                                 <DataTemplate>
                                     <Rectangle Width="20" Height="20">
                                         <Rectangle.Fill>
-                                            <SolidColorBrush Color="{Binding Color}"/>
+                                        <SolidColorBrush Color="{Binding Color}"/>
                                         </Rectangle.Fill>
                                     </Rectangle>
                                 </DataTemplate>

@@ -31,7 +31,7 @@ namespace Pactometro
 
 
             // Ajustar el tamaño de la ventana para PNG
-            this.Height = 205; // Ajusta este valor según tus necesidades
+            this.Height = 205;
         }
 
         private void ExportButton_Click(object sender, RoutedEventArgs e)
@@ -114,8 +114,8 @@ namespace Pactometro
 
         private int GetQualityFromRadioButtons()
         {
-            if (radioButtonLow.IsChecked == true) return 30;
-            if (radioButtonMedium.IsChecked == true) return 60;
+            if (radioButtonLow.IsChecked == true) return 33;
+            if (radioButtonMedium.IsChecked == true) return 66;
             return 100; // High quality or default
         }
 
@@ -147,7 +147,9 @@ namespace Pactometro
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog
             {
-                Filter = $"Image files (*.{format.ToLower()})|*.{format.ToLower()}"
+                Filter = $"Image files (*.{format.ToLower()})|*.{format.ToLower()}",
+                // Poner el nombre predeterminado del archivo con la fecha en formato dd-MM-yyyy y la hora en formato HH-mm-ss
+                FileName = $"Pactometro {DateTime.Now.ToString("dd-MM-yyyy HHmmss")}.{format.ToLower()}"
             };
 
             if (saveFileDialog.ShowDialog() == true)

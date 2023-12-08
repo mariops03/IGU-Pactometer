@@ -4,6 +4,7 @@ using Pactometro.Model; // Asegúrate de que este espacio de nombres contenga tu
 using System.Linq;
 using System.Collections.Generic;
 using System.Windows;
+using System;
 
 namespace Pactometro.ViewModels
 {
@@ -42,117 +43,26 @@ namespace Pactometro.ViewModels
             }
         }
 
-        // Método para ordenar por fecha
-        public void OrdenarPorFecha()
+        public string ObtenerParteAlfabetica(string nombre)
         {
-            List<ProcesoElectoral> ordenada;
-
-            if (Elecciones.SequenceEqual(Elecciones.OrderBy(e => e.fecha)))
+            // Verificar si el nombre es null
+            if (nombre == null)
             {
-                ordenada = Elecciones.OrderByDescending(e => e.fecha).ToList();
-            }
-            else
-            {
-                ordenada = Elecciones.OrderBy(e => e.fecha).ToList();
+                throw new ArgumentNullException(nameof(nombre));
             }
 
-            Elecciones.Clear();
-            foreach (var item in ordenada)
-            {
-                Elecciones.Add(item);
-            }
-        }
+            // Buscar la posición del último espacio en blanco
+            int indiceUltimoEspacio = nombre.LastIndexOf(' ');
 
-        // Método para ordenar por nombre
-        public void OrdenarPorNombre()
-        {
-            List<ProcesoElectoral> ordenada;
-
-            if (Elecciones.SequenceEqual(Elecciones.OrderBy(e => e.nombre)))
+            // Verificar si se encontró un espacio en blanco
+            if (indiceUltimoEspacio >= 0)
             {
-                ordenada = Elecciones.OrderByDescending(e => e.nombre).ToList();
-            }
-            else
-            {
-                ordenada = Elecciones.OrderBy(e => e.nombre).ToList();
+                // Obtener la parte alfabética antes del último espacio en blanco
+                return nombre.Substring(0, indiceUltimoEspacio);
             }
 
-            Elecciones.Clear();
-            foreach (var item in ordenada)
-            {
-                Elecciones.Add(item);
-            }
-        }
-
-        // Método para ordenar por número de escaños
-        public void OrdenarPorEscaños()
-        {
-            List<ProcesoElectoral> ordenada;
-
-            if (Elecciones.SequenceEqual(Elecciones.OrderBy(e => e.numEscaños)))
-            {
-                ordenada = Elecciones.OrderByDescending(e => e.numEscaños).ToList();
-            }
-            else
-            {
-                ordenada = Elecciones.OrderBy(e => e.numEscaños).ToList();
-            }
-
-            Elecciones.Clear();
-            foreach (var item in ordenada)
-            {
-                Elecciones.Add(item);
-            }
-        }
-
-        // Método para ordenar por nombre del partido
-        public void OrdenarPorNombrePartido()
-        {
-            if (EleccionSeleccionada == null || EleccionSeleccionada.coleccionPartidos == null)
-                return;
-
-            var coleccion = EleccionSeleccionada.coleccionPartidos;
-            List<Partido> ordenada;
-
-            if (coleccion.SequenceEqual(coleccion.OrderBy(p => p.Nombre)))
-            {
-                ordenada = coleccion.OrderByDescending(p => p.Nombre).ToList();
-            }
-            else
-            {
-                ordenada = coleccion.OrderBy(p => p.Nombre).ToList();
-            }
-
-            coleccion.Clear();
-            foreach (var partido in ordenada)
-            {
-                coleccion.Add(partido);
-            }
-        }
-
-        // Método para ordenar por escaños del partido
-        public void OrdenarPorEscañosPartido()
-        {
-            if (EleccionSeleccionada == null || EleccionSeleccionada.coleccionPartidos == null)
-                return;
-
-            var coleccion = EleccionSeleccionada.coleccionPartidos;
-            List<Partido> ordenada;
-
-            if (coleccion.SequenceEqual(coleccion.OrderBy(p => p.Escaños)))
-            {
-                ordenada = coleccion.OrderByDescending(p => p.Escaños).ToList();
-            }
-            else
-            {
-                ordenada = coleccion.OrderBy(p => p.Escaños).ToList();
-            }
-
-            coleccion.Clear();
-            foreach (var partido in ordenada)
-            {
-                coleccion.Add(partido);
-            }
+            // En caso de que no haya espacio en blanco, devolver el nombre original
+            return nombre;
         }
     }
 }

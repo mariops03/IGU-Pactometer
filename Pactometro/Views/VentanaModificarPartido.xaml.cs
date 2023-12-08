@@ -18,6 +18,7 @@ namespace Pactometro
         Partido Partido;
         ProcesoElectoral ProcesoElectoral;
         ObservableCollection<Partido> PartidosTemporales; 
+
         public VentanaModificarPartido(Partido partido, ProcesoElectoral procesoElectoral)
         {
             InitializeComponent();
@@ -85,7 +86,7 @@ namespace Pactometro
             }
 
             // Verificar si ya hay un partido con el mismo nombre
-            if (PartidosTemporales.Any(partido => partido.Nombre.ToLower() == nombrePartido))
+            if (PartidosTemporales.Any(partido => partido.Nombre.ToLower() == nombrePartido.ToLower()))
             {
                 MessageBox.Show("Ya hay un partido con el mismo nombre.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
@@ -98,8 +99,6 @@ namespace Pactometro
             ProcesoElectoral.coleccionPartidos.Remove(Partido);
             
             ProcesoElectoral.coleccionPartidos.Add(partidoModificado);
-
-            ProcesoElectoral.coleccionPartidos = new ObservableCollection<Partido>(ProcesoElectoral.coleccionPartidos.OrderByDescending(partido => partido.Escaños));
 
             this.Close();
         }

@@ -9,6 +9,7 @@ using Pactometro; // Asegúrate de que este espacio de nombres contenga tus clas
 using System.Linq;
 using System.IO;
 using System.Windows.Media;
+using System.Collections.Generic;
 
 namespace Pactometro.ViewModels
 {
@@ -27,7 +28,7 @@ namespace Pactometro.ViewModels
             {
                 Filter = "Archivo CSV (*.csv)|*.csv",
                 //Crea un file name con la fecha actual
-                FileName = $"DatosExportados_{DateTime.Now.ToString("yyyyMMddHHmmss")}.csv"
+                FileName = $"DatosExportados {DateTime.Now.ToString("dd-MM-yyyy HHmmss")}.csv"
             };
 
             if (saveFileDialog.ShowDialog() == true)
@@ -58,8 +59,6 @@ namespace Pactometro.ViewModels
                 }
             }
         }
-
-
 
         public void ImportarDatosCSV()
         {
@@ -132,7 +131,7 @@ namespace Pactometro.ViewModels
             {
                 Filter = "Archivo JSON (*.json)|*.json",
                 // Crea un file name con la fecha actual
-                FileName = $"DatosExportados_{DateTime.Now.ToString("yyyyMMddHHmmss")}.json"
+                FileName = $"DatosExportados {DateTime.Now.ToString("dd-MM-yyyy HHmmss")}.json"
             };
 
             if (saveFileDialog.ShowDialog() == true)
@@ -185,6 +184,150 @@ namespace Pactometro.ViewModels
                 }
             }
             OrdenarPorFecha();
+        }
+
+        public void OrdenarPorFecha()
+        {
+            List<ProcesoElectoral> ordenada;
+
+            if (Elecciones.SequenceEqual(Elecciones.OrderBy(e => e.fecha)))
+            {
+                ordenada = Elecciones.OrderByDescending(e => e.fecha).ToList();
+            }
+            else
+            {
+                ordenada = Elecciones.OrderBy(e => e.fecha).ToList();
+            }
+
+            Elecciones.Clear();
+            foreach (var item in ordenada)
+            {
+                Elecciones.Add(item);
+            }
+        }
+
+        // Método para ordenar por nombre
+        public void OrdenarPorNombre()
+        {
+            List<ProcesoElectoral> ordenada;
+
+            if (Elecciones.SequenceEqual(Elecciones.OrderBy(e => e.nombre)))
+            {
+                ordenada = Elecciones.OrderByDescending(e => e.nombre).ToList();
+            }
+            else
+            {
+                ordenada = Elecciones.OrderBy(e => e.nombre).ToList();
+            }
+
+            Elecciones.Clear();
+            foreach (var item in ordenada)
+            {
+                Elecciones.Add(item);
+            }
+        }
+
+        // Método para ordenar por número de escaños
+        public void OrdenarPorEscaños()
+        {
+            List<ProcesoElectoral> ordenada;
+
+            if (Elecciones.SequenceEqual(Elecciones.OrderBy(e => e.numEscaños)))
+            {
+                ordenada = Elecciones.OrderByDescending(e => e.numEscaños).ToList();
+            }
+            else
+            {
+                ordenada = Elecciones.OrderBy(e => e.numEscaños).ToList();
+            }
+
+            Elecciones.Clear();
+            foreach (var item in ordenada)
+            {
+                Elecciones.Add(item);
+            }
+        }
+
+        // Método para ordenar por nombre del partido
+        public void OrdenarPorNombrePartido()
+        {
+            if (EleccionSeleccionada == null || EleccionSeleccionada.coleccionPartidos == null)
+                return;
+
+            var coleccion = EleccionSeleccionada.coleccionPartidos;
+            List<Partido> ordenada;
+
+            if (coleccion.SequenceEqual(coleccion.OrderBy(p => p.Nombre)))
+            {
+                ordenada = coleccion.OrderByDescending(p => p.Nombre).ToList();
+            }
+            else
+            {
+                ordenada = coleccion.OrderBy(p => p.Nombre).ToList();
+            }
+
+            coleccion.Clear();
+            foreach (var partido in ordenada)
+            {
+                coleccion.Add(partido);
+            }
+        }
+
+        // Método para ordenar por escaños del partido
+        public void OrdenarPorEscañosPartido()
+        {
+            if (EleccionSeleccionada == null || EleccionSeleccionada.coleccionPartidos == null)
+                return;
+
+            var coleccion = EleccionSeleccionada.coleccionPartidos;
+            List<Partido> ordenada;
+
+            if (coleccion.SequenceEqual(coleccion.OrderBy(p => p.Escaños)))
+            {
+                ordenada = coleccion.OrderByDescending(p => p.Escaños).ToList();
+            }
+            else
+            {
+                ordenada = coleccion.OrderBy(p => p.Escaños).ToList();
+            }
+
+            coleccion.Clear();
+            foreach (var partido in ordenada)
+            {
+                coleccion.Add(partido);
+            }
+        }
+
+        //Funcion para ordenar los partidos por escaños de forma descendente
+        public void OrdenarPorEscañosDescendente()
+        {
+            if (EleccionSeleccionada == null || EleccionSeleccionada.coleccionPartidos == null)
+                return;
+
+            var coleccion = EleccionSeleccionada.coleccionPartidos;
+            List<Partido> ordenada;
+
+            ordenada = coleccion.OrderByDescending(p => p.Escaños).ToList();
+
+            coleccion.Clear();
+            foreach (var partido in ordenada)
+            {
+                coleccion.Add(partido);
+            }
+        }
+
+        //Funcion para ordenar las elecciones por fecha de forma descendente
+        public void OrdenarPorFechaDescendente()
+        {
+            List<ProcesoElectoral> ordenada;
+
+            ordenada = Elecciones.OrderByDescending(e => e.fecha).ToList();
+
+            Elecciones.Clear();
+            foreach (var item in ordenada)
+            {
+                Elecciones.Add(item);
+            }
         }
     }
 }

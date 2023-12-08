@@ -32,6 +32,8 @@ namespace Pactometro
             _viewModelVentanaSecundaria = new VentanaSecundariaViewModel(coleccionElecciones);
             this.DataContext = _viewModelVentanaSecundaria;
             ColeccionElecciones = coleccionElecciones;
+            _viewModelVentanaSecundaria.OrdenarPorFechaDescendente();
+            _viewModelVentanaSecundaria.OrdenarPorEscañosDescendente();
         }
 
         private void mainTable_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -93,7 +95,6 @@ namespace Pactometro
             }
         }
 
-
         private void btnImportarCSV_Click(object sender, RoutedEventArgs e)
         {
             _viewModelVentanaSecundaria.ImportarDatosCSV();
@@ -117,36 +118,43 @@ namespace Pactometro
 
         private void btnAñadir_Click(object sender, RoutedEventArgs e)
         {
-            // Crea una instancia de la clase VentanaAñadirProceso, que es una ventana modal y hazte su propietario
-            VentanaAgregar ventanaAñadirProceso = new VentanaAgregar(ColeccionElecciones);
+            // Crear una nueva instancia de ProcesoElectoral para añadir
+            ProcesoElectoral nuevoProceso = new ProcesoElectoral();
+
+            // Crear la ventana en modo Agregar, pasando el nuevo proceso electoral
+            VentanaAñadirModificar ventanaAñadirProceso = new VentanaAñadirModificar(ModoVentana.Agregar, ColeccionElecciones, nuevoProceso);
             ventanaAñadirProceso.Owner = this;
             ventanaAñadirProceso.ShowDialog();
+
             // Actualizar la colección de procesos electorales
-            _viewModelVentanaSecundaria.OrdenarPorFecha();
+            _viewModelVentanaSecundaria.OrdenarPorFechaDescendente();
             mainTable.InvalidateVisual();
         }
+
 
         private void btnModificar_Click(object sender, RoutedEventArgs e)
         {
             if (mainTable.SelectedItem != null)
             {
-                // Crea una instancia de la clase VentanaModificar con el proceso electoral seleccionado
-                VentanaModificar ventanaModificar = new VentanaModificar(ColeccionElecciones, mainTable.SelectedItem as ProcesoElectoral);
+                // Obtener el proceso electoral seleccionado para modificar
+                ProcesoElectoral procesoAEditar = mainTable.SelectedItem as ProcesoElectoral;
+
+                // Crear la ventana en modo Modificar, pasando el proceso existente
+                VentanaAñadirModificar ventanaModificar = new VentanaAñadirModificar(ModoVentana.Modificar, ColeccionElecciones, procesoAEditar);
                 ventanaModificar.Owner = this;
                 ventanaModificar.ShowDialog();
-                _viewModelVentanaSecundaria.OrdenarPorFecha();
+
+                // Actualizar la colección de procesos electorales
+                _viewModelVentanaSecundaria.OrdenarPorFechaDescendente();
             }
         }
 
         private void btnEliminar_Click(object sender, RoutedEventArgs e)
         {
-            // Lógica para eliminar un proceso electoral existente
-            // Asegúrate de que hay un proceso electoral seleccionado antes de continuar.
             if (mainTable.SelectedItem != null)
             {
                 // Elimina de la colección el elemento seleccionado
                 ColeccionElecciones.Remove(mainTable.SelectedItem as ProcesoElectoral);
-                _viewModelVentanaSecundaria.OrdenarPorFecha();
             }
             else 
             { 

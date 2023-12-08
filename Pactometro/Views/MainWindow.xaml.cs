@@ -191,6 +191,7 @@ namespace Pactometro
 
         private void MainWindow_Closed(object sender, EventArgs e)
         {
+            // Preguntar al usuario si desea salir
             Application.Current.Shutdown(); // Cierra la aplicación cuando la ventana principal se cierra
         }
 
