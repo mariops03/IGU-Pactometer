@@ -132,11 +132,11 @@ public class DatosElectorales : IDatosElectorales
 
             coleccionElecciones[1].coleccionPartidos[10].Nombre = "CUP_PR";
             coleccionElecciones[1].coleccionPartidos[10].Escaños = 2;
-            coleccionElecciones[1].coleccionPartidos[10].Color = Colors.MediumPurple; // lightPurple
+            coleccionElecciones[1].coleccionPartidos[10].Color = Colors.MediumPurple;
 
             coleccionElecciones[1].coleccionPartidos[11].Nombre = "CCA";
             coleccionElecciones[1].coleccionPartidos[11].Escaños = 2;
-            coleccionElecciones[1].coleccionPartidos[11].Color = Colors.LightCoral; // lightRed
+            coleccionElecciones[1].coleccionPartidos[11].Color = Colors.LightCoral;
 
             coleccionElecciones[1].coleccionPartidos[12].Nombre = "BNG";
             coleccionElecciones[1].coleccionPartidos[12].Escaños = 1;
@@ -172,7 +172,7 @@ public class DatosElectorales : IDatosElectorales
 
             coleccionElecciones[2].coleccionPartidos[3].Nombre = "UPL";
             coleccionElecciones[2].coleccionPartidos[3].Escaños = 3;
-            coleccionElecciones[2].coleccionPartidos[3].Color = Colors.MediumPurple; // lightPurple
+            coleccionElecciones[2].coleccionPartidos[3].Color = Colors.MediumPurple;
 
             coleccionElecciones[2].coleccionPartidos[4].Nombre = "SY";
             coleccionElecciones[2].coleccionPartidos[4].Escaños = 3;
@@ -188,7 +188,7 @@ public class DatosElectorales : IDatosElectorales
 
             coleccionElecciones[2].coleccionPartidos[7].Nombre = "XAV";
             coleccionElecciones[2].coleccionPartidos[7].Escaños = 1;
-            coleccionElecciones[2].coleccionPartidos[7].Color = Color.FromRgb(144, 238, 144); // lightGreen
+            coleccionElecciones[2].coleccionPartidos[7].Color = Color.FromRgb(144, 238, 144);
 
             // ELECCIONES AUTONÓMICAS CyL 26/5/2019
             for (int i = 0; i < 7; i++)
@@ -223,11 +223,11 @@ public class DatosElectorales : IDatosElectorales
 
             coleccionElecciones[3].coleccionPartidos[5].Nombre = "UPL";
             coleccionElecciones[3].coleccionPartidos[5].Escaños = 1;
-            coleccionElecciones[3].coleccionPartidos[5].Color = Colors.MediumPurple; // lightPurple
+            coleccionElecciones[3].coleccionPartidos[5].Color = Colors.MediumPurple;
 
             coleccionElecciones[3].coleccionPartidos[6].Nombre = "XAV";
             coleccionElecciones[3].coleccionPartidos[6].Escaños = 1;
-            coleccionElecciones[3].coleccionPartidos[6].Color = Color.FromRgb(144, 238, 144); // lightGreen
+            coleccionElecciones[3].coleccionPartidos[6].Color = Color.FromRgb(144, 238, 144);
 
             // ELECCIONES GENERALES 30-11-2023
             for (int i = 0; i < 7; i++)
@@ -262,7 +262,7 @@ public class DatosElectorales : IDatosElectorales
 
             coleccionElecciones[4].coleccionPartidos[5].Nombre = "JUNTS";
             coleccionElecciones[4].coleccionPartidos[5].Escaños = 10;
-            coleccionElecciones[4].coleccionPartidos[5].Color = Color.FromRgb(144, 238, 144); // lightGreen
+            coleccionElecciones[4].coleccionPartidos[5].Color = Color.FromRgb(144, 238, 144);
 
             coleccionElecciones[4].coleccionPartidos[6].Nombre = "EH_BILDU";
             coleccionElecciones[4].coleccionPartidos[6].Escaños = 10;

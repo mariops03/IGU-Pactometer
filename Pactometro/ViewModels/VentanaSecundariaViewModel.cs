@@ -5,7 +5,6 @@ using Newtonsoft.Json;
 using System.Globalization;
 using System.Text;
 using System.Windows;
-using Pactometro; // Asegúrate de que este espacio de nombres contenga tus clases de modelo
 using System.Linq;
 using System.IO;
 using System.Windows.Media;
@@ -186,6 +185,48 @@ namespace Pactometro.ViewModels
             OrdenarPorFecha();
         }
 
+        public void AñadirProcesoElectoral()
+        {
+            // Crear una nueva instancia de ProcesoElectoral para añadir
+            ProcesoElectoral nuevoProceso = new ProcesoElectoral();
+
+            // Crear la ventana en modo Agregar, pasando el nuevo proceso electoral
+            VentanaAñadirModificar ventanaAñadirProceso = new VentanaAñadirModificar(ModoVentana.Agregar, Elecciones, nuevoProceso);
+            ventanaAñadirProceso.ShowDialog();
+
+            // Actualizar la colección de procesos electorales
+            OrdenarPorFechaDescendente();
+        }
+
+        public void ModificarProcesoElectoral()
+        {
+            if (EleccionSeleccionada == null)
+            {
+                MessageBox.Show("No hay ningún proceso electoral seleccionado");
+                return;
+            }
+
+            // Crear la ventana en modo Modificar, pasando el proceso existente
+            VentanaAñadirModificar ventanaModificar = new VentanaAñadirModificar(ModoVentana.Modificar, Elecciones, EleccionSeleccionada);
+            ventanaModificar.Owner = Application.Current.MainWindow;
+            ventanaModificar.ShowDialog();
+
+            // Actualizar la colección de procesos electorales
+            OrdenarPorFechaDescendente();
+        }
+
+        public void eliminarProcesoElectoral()
+        {
+            if (EleccionSeleccionada == null)
+            {
+                MessageBox.Show("No hay ningún proceso electoral seleccionado");
+                return;
+            }
+
+            // Elimina de la colección el elemento seleccionado
+            Elecciones.Remove(EleccionSeleccionada);
+        }
+
         public void OrdenarPorFecha()
         {
             List<ProcesoElectoral> ordenada;
@@ -298,13 +339,9 @@ namespace Pactometro.ViewModels
             }
         }
 
-        //Funcion para ordenar los partidos por escaños de forma descendente
-        public void OrdenarPorEscañosDescendente()
+        //Funcion para ordenar los partidos por escaños de forma descendente, pero esta funcion recibe una coleccion de partidos como parametro
+        public void OrdenarPorEscañosPartidoDescendente(ObservableCollection<Partido> coleccion)
         {
-            if (EleccionSeleccionada == null || EleccionSeleccionada.coleccionPartidos == null)
-                return;
-
-            var coleccion = EleccionSeleccionada.coleccionPartidos;
             List<Partido> ordenada;
 
             ordenada = coleccion.OrderByDescending(p => p.Escaños).ToList();

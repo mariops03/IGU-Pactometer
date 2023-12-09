@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
@@ -18,6 +19,90 @@ namespace Pactometro.ViewModels
         private List<Partido> partidosEnSegundaBarra = new List<Partido>();
         private List<Rectangle> rectangulosClicados = new List<Rectangle>();
         private List<Rectangle> rectangulosNoClicados = new List<Rectangle>();
+
+
+        public MainWindowViewModel(IDatosElectorales datosElectorales)
+        {
+            Elecciones = datosElectorales.GenerarDatosElectorales(); // Usar la propiedad heredada
+        }
+        public MainWindowViewModel()
+        {
+        }
+
+        private VentanaSecundaria _ventanaSecundaria;
+
+        public VentanaSecundaria VentanaSecundaria
+        {
+            get => _ventanaSecundaria;
+            set
+            {
+                if (_ventanaSecundaria != value)
+                {
+                    _ventanaSecundaria = value;
+                    OnPropertyChanged(nameof(VentanaSecundaria));
+                }
+            }
+        }
+
+
+        public void AbrirVentanaSecundaria()
+        {
+            if (VentanaSecundaria == null)
+            {
+                VentanaSecundaria = new VentanaSecundaria(Elecciones);
+
+                // Así es como podrías acceder directamente a la instancia de MainWindow en el ViewModel
+                MainWindow mainWindow = Application.Current.MainWindow as MainWindow;
+
+                double nuevaPosX;
+                double nuevaPosY;
+                double distanciaEntreVentanas = 10; // Puedes ajustar esto a tu preferencia
+                if (mainWindow != null)
+                {
+                    nuevaPosX = mainWindow.Left + mainWindow.Width + distanciaEntreVentanas;
+                    nuevaPosY = mainWindow.Top;
+
+                    VentanaSecundaria.Left = nuevaPosX;
+                    VentanaSecundaria.Top = nuevaPosY;
+
+                    VentanaSecundaria.ProcesoEleccionSeleccionado += VentanaSecundaria_ProcesoEleccionSeleccionado;
+                    VentanaSecundaria.Closed += VentanaSecundaria_Closed;
+                    VentanaSecundaria.Show();
+                }                
+            }
+            else
+            {
+                VentanaSecundaria.Activate();
+            }
+        }
+
+        private void VentanaSecundaria_Closed(object sender, EventArgs e)
+        {
+            // Manejar el evento Closed de la ventana secundaria si es necesario
+            VentanaSecundaria = null; // Liberar la referencia a la ventana secundaria
+        }
+
+        public void MainWindow_Closed(object sender, EventArgs e)
+        {
+            // Preguntar al usuario si desea salir
+            Application.Current.Shutdown(); // Cierra la aplicación cuando la ventana principal se cierra
+        }
+
+        private void VentanaSecundaria_ProcesoEleccionSeleccionado(object sender, ProcesoElectoral procesoElectoral)
+        {
+            // Manejar el evento ProcesoEleccionSeleccionado de la ventana secundaria si es necesario
+            EleccionSeleccionada = procesoElectoral;
+        }
+
+        public void Exportar()
+        {
+            VentanaExportar ventanaExportar = new VentanaExportar();
+            // Puedes establecer el ViewModel como DataContext de la ventana si es necesario
+            ventanaExportar.Owner = Application.Current.MainWindow;
+            ventanaExportar.ShowDialog();
+        }
+
+
         public ObservableCollection<ProcesoElectoral> ColeccionEleccionesCheckBox
         {
             get => _coleccionEleccionesCheckBox;
@@ -120,11 +205,6 @@ namespace Pactometro.ViewModels
             }
         }
 
-        public MainWindowViewModel(IDatosElectorales datosElectorales)
-        {
-            Elecciones = datosElectorales.GenerarDatosElectorales(); // Usar la propiedad heredada
-        }
-
         public void ActualizarElecciones()
         {
             _coleccionEleccionesCheckBox = new ObservableCollection<ProcesoElectoral>(_coleccionEleccionesCheckBox.OrderByDescending(p => p.fecha).ToList());
@@ -181,9 +261,19 @@ namespace Pactometro.ViewModels
         }
 
         // Método para obtener procesos electorales equivalentes por nombre
-        public Collection<ProcesoElectoral> ObtenerProcesosEquivalentesPorNombre(ProcesoElectoral procesoElectoralBase)
+        public Collection<ProcesoElectoral> ObtenerProcesosEquivalentesPorNombre()
         {
+            ProcesoElectoral procesoElectoralBase = EleccionSeleccionada;
             Collection<ProcesoElectoral> procesosEquivalentes = new Collection<ProcesoElectoral>();
+
+            //Restablecer la opacidad de los colores de los partidos
+            foreach (ProcesoElectoral proceso in Elecciones)
+            {
+                foreach (Partido partido in proceso.coleccionPartidos)
+                {
+                    partido.Color = Color.FromArgb(255, partido.Color.R, partido.Color.G, partido.Color.B);
+                }
+            }
 
             foreach (ProcesoElectoral proceso in Elecciones)
             {
@@ -206,6 +296,27 @@ namespace Pactometro.ViewModels
         public bool comprobarPacto()
         {
             return PartidosEnPrimeraBarra.Sum(partido => partido.Escaños) < EleccionSeleccionada.mayoriaAbsoluta;
+        }
+
+        public void pactoCompletado()
+        {
+            if (PartidosEnSegundaBarra.Any())
+            {
+                int numeroDeEscaños = PartidosEnSegundaBarra.Sum(partido => partido.Escaños);
+                string mensaje = "     ¡SE HA PRODUCIDO UN PACTO!\n           TOTAL DE ESCAÑOS: " + numeroDeEscaños + "\n\n     Partidos:\n";
+                foreach (var partido in PartidosEnSegundaBarra)
+                {
+                    if (partido != null)
+                    {
+                        mensaje += "     - " + partido.Nombre + "\n";
+                    }
+                }
+                MessageBox.Show(mensaje);
+            }
+            else
+            {
+                MessageBox.Show("No hay partidos en la segunda barra.");
+            }
         }
     }
 }

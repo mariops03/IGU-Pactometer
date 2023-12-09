@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -31,74 +32,57 @@ namespace Pactometro
             InitializeComponent();
             _mainWindowViewModel = new MainWindowViewModel(new DatosElectorales());
             DataContext = _mainWindowViewModel;
+            _mainWindowViewModel.PropertyChanged += MainWindowViewModel_PropertyChanged;
             Loaded += MainWindowLoaded;
             coleccionElecciones = new ObservableCollection<ProcesoElectoral>();
-            Closed += MainWindow_Closed; // Suscribe un controlador para el evento Closed de la ventana principal
+            Closed += _mainWindowViewModel.MainWindow_Closed;
             btnExportar.IsEnabled = false;
             //Establece un tamaño minimo para la ventana
-            MinWidth = 400;
+            MinWidth = 460;
             MinHeight = 400;
+        }
 
+        private void MainWindowViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            // Aquí maneja los cambios en las propiedades del ViewModel
+            if (e.PropertyName == "EleccionSeleccionada")
+            {
+                // Actualiza la lógica o la interfaz de usuario según sea necesario
+                procesoElectoralActual = _mainWindowViewModel.EleccionSeleccionada;
+                if(procesoElectoralActual != null)
+                {
+                    comprobarGrafico();
+                }
+                else
+                {
+                    noHayProcesoElectoralSeleccionado();
+                }
+            }
+            //Copmprueba si la ventana secundaria esta abierta
+            if(_mainWindowViewModel.VentanaSecundaria == null)
+            {
+                menuGraficos.IsEnabled = false;
+                // Poner todos los graficos a false
+                grafico1 = false;
+                grafico2 = false;
+                grafico3 = false;
+                noHayProcesoElectoralSeleccionado();
+            }else
+            {
+                menuGraficos.IsEnabled = true;
+            }
         }
 
         private void MainWindowLoaded(object sender, RoutedEventArgs e)
         {
             coleccionElecciones = _mainWindowViewModel.Elecciones;
-            AbrirVentanaSecundaria();
+            _mainWindowViewModel.AbrirVentanaSecundaria();
+            procesoElectoralActual = _mainWindowViewModel.EleccionSeleccionada;
         }
 
         private void menuVentanaSecundaria(object sender, RoutedEventArgs e)
         {
-            AbrirVentanaSecundaria();
-        }
-
-        private void AbrirVentanaSecundaria()
-        {
-            if (ventanaSecundaria == null)
-            {
-                MainWindowViewModel vm = this.DataContext as MainWindowViewModel;
-
-                // Asegúrate de que vm no es null y de que vm.Elecciones está inicializado
-                if (vm != null && coleccionElecciones != null)
-                {
-                    ventanaSecundaria = new VentanaSecundaria(coleccionElecciones);
-                    ventanaSecundaria.Owner = this;
-
-                    double distanciaEntreVentanas = 10; // Puedes ajustar esto a tu preferencia
-                    double nuevaPosX = Left + Width + distanciaEntreVentanas;
-                    double nuevaPosY = Top;
-
-                    ventanaSecundaria.Left = nuevaPosX;
-                    ventanaSecundaria.Top = nuevaPosY;
-
-                    ventanaSecundaria.ProcesoEleccionSeleccionado += VentanaSecundaria_ProcesoEleccionSeleccionado;
-                    ventanaSecundaria.Closed += VentanaSecundaria_Closed;
-                    ventanaSecundaria.Show();
-                }
-            }
-            else
-            {
-                ventanaSecundaria.Activate();
-            }
-        }
-
-        private void VentanaSecundaria_ProcesoEleccionSeleccionado(object sender, ProcesoElectoral procesoElectoral)
-        {
-            if (DataContext is MainWindowViewModel viewModel)
-            {
-                viewModel.EleccionSeleccionada = procesoElectoral;
-                if (procesoElectoral == null)
-                {
-                    noHayProcesoElectoralSeleccionado();
-                    procesoElectoralActual = null;
-                }
-                else
-                {
-                    procesoElectoralActual = procesoElectoral;
-
-                    comprobarGrafico();
-                }
-            }
+            _mainWindowViewModel.AbrirVentanaSecundaria();
         }
 
         //Funcion que cree un textblock en el canvas indicando que no hay ningun proceso electoral seleccionado, que por favor seleccione uno
@@ -124,6 +108,7 @@ namespace Pactometro
             informar.FontSize = 20;
             informar.Width = 500;
             informar.Height = 100;
+            informar.FontWeight = FontWeights.Bold;
             chartCanvas.Children.Add(informar);
             //Ajusta la posicion del textblock al centro del canvas
             Canvas.SetLeft(informar, (chartCanvas.ActualWidth - informar.Width) / 2);
@@ -148,12 +133,11 @@ namespace Pactometro
             informar.FontSize = 20;
             informar.Width = 500;
             informar.Height = 100;
+            informar.FontWeight = FontWeights.Bold;
             chartCanvas.Children.Add(informar);
             Canvas.SetLeft(informar, (chartCanvas.ActualWidth - informar.Width) / 2);
             Canvas.SetTop(informar, (chartCanvas.ActualHeight - informar.Height) / 2);
-
         }
-
 
         private void procesoSeleccionado()
         {
@@ -164,7 +148,7 @@ namespace Pactometro
             else if (grafico2 == true)
             {
                 // Obtener otros procesos electorales equivalentes para la comparación
-                Collection<ProcesoElectoral> procesosEquivalentes = _mainWindowViewModel.ObtenerProcesosEquivalentesPorNombre(procesoElectoralActual);
+                Collection<ProcesoElectoral> procesosEquivalentes = _mainWindowViewModel.ObtenerProcesosEquivalentesPorNombre();
 
                 // Llamar al método que crea el gráfico comparativo
                 mostrarGrafico2(procesosEquivalentes);
@@ -181,18 +165,6 @@ namespace Pactometro
             {
                 noHayGraficoSeleccionado();
             }
-        }
-
-        private void VentanaSecundaria_Closed(object sender, EventArgs e)
-        {
-            // Manejar el evento Closed de la ventana secundaria si es necesario
-            ventanaSecundaria = null; // Liberar la referencia a la ventana secundaria
-        }
-
-        private void MainWindow_Closed(object sender, EventArgs e)
-        {
-            // Preguntar al usuario si desea salir
-            Application.Current.Shutdown(); // Cierra la aplicación cuando la ventana principal se cierra
         }
 
         private void menuSalir(object sender, RoutedEventArgs e)
@@ -256,7 +228,6 @@ namespace Pactometro
             {
                 comprobarGrafico();
             }
-            
         }
 
         private void GuardarEstadosMarcado()
@@ -415,10 +386,7 @@ namespace Pactometro
         //Cre ael metodo para exportar el grafico
         private void Exportar_Click(object sender, RoutedEventArgs e)
         {
-            // Abrir la ventana de exportación
-            VentanaExportar ventanaExportar = new VentanaExportar();
-            ventanaExportar.Owner = this; // Establecer la ventana principal como propietaria de la ventana de exportación
-            ventanaExportar.ShowDialog(); // Mostrar la ventana de exportación como modal
+            _mainWindowViewModel.Exportar();
         }
 
         private Canvas checkBoxCanvas = null;
@@ -494,7 +462,6 @@ namespace Pactometro
                     }
                 };
             }
-
         }
 
         private void ManejarSeleccion(ProcesoElectoral proceso)
@@ -686,21 +653,17 @@ namespace Pactometro
             grafico3 = false;
 
             SizeChanged += Window_SizeChanged;
-            // Verificar si hay un proceso electoral actual antes de crear el gráfico
+
             if (procesoElectoralActual == null)
             {
                 noHayProcesoElectoralSeleccionado();
             }
             else
             {
-                // Obtener otros procesos electorales equivalentes para la comparación
-                Collection<ProcesoElectoral> procesosEquivalentes = _mainWindowViewModel.ObtenerProcesosEquivalentesPorNombre(procesoElectoralActual);
+                Collection<ProcesoElectoral> procesosEquivalentes = _mainWindowViewModel.ObtenerProcesosEquivalentesPorNombre();
 
-                // Llamar al método que crea el gráfico comparativo
                 mostrarGrafico2(procesosEquivalentes);
             }
-
-            
         }
 
 
@@ -717,7 +680,6 @@ namespace Pactometro
             }
             else
             {
-                
                 mostrarGrafico3();
             }
         }
@@ -962,23 +924,7 @@ namespace Pactometro
         //Crea un evento para completar un pacto
         private void Pacto_Click(object sender, RoutedEventArgs e)
         {
-            if (_mainWindowViewModel.PartidosEnSegundaBarra.Any())
-            {
-                int numeroDeEscaños = _mainWindowViewModel.PartidosEnSegundaBarra.Sum(partido => partido.Escaños);
-                string mensaje = "     ¡SE HA PRODUCIDO UN PACTO!\n           TOTAL DE ESCAÑOS: " + numeroDeEscaños + "\n\n     Partidos:\n";
-                foreach (var partido in _mainWindowViewModel.PartidosEnSegundaBarra)
-                {
-                    if (partido != null)
-                    {
-                        mensaje += "     - " + partido.Nombre + "\n";
-                    }
-                }
-                MessageBox.Show(mensaje);
-            }
-            else
-            {
-                MessageBox.Show("No hay partidos en la segunda barra.");
-            }
+            _mainWindowViewModel.pactoCompletado();
         }
     }
 }

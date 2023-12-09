@@ -1,43 +1,39 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
-  <Class Name="Pactometro.Validaciones">
-    <Position X="19.75" Y="1.75" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAQAAAAAABAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Helpers\Validaciones.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="Pactometro.Partido">
-    <Position X="26" Y="2.5" Width="1.5" />
+  <Class Name="Pactometro.Partido" Collapsed="true">
+    <Position X="11.5" Y="8.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAEAAAAgAAIAAAAAAAAAAAAgAAAAAA=</HashCode>
       <FileName>Model\Partido.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Pactometro.ProcesoElectoral">
-    <Position X="17" Y="13.75" Width="1.5" />
+  <Class Name="Pactometro.ProcesoElectoral" Collapsed="true">
+    <Position X="9" Y="8.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAQAAAACEAAAAAABAAAAAAAAAEABAAAAAAAA=</HashCode>
       <FileName>Model\ProcesoElectoral.cs</FileName>
     </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="coleccionPartidos" />
+    </ShowAsCollectionAssociation>
   </Class>
   <Class Name="Pactometro.MainWindow" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="10.75" Y="4.75" Width="1.5" />
+    <Position X="9.75" Y="4.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>ACAAQAYUAAwCIAICgMgBACCIQBAEAAwgIBBAIwQgCAA=</HashCode>
+      <HashCode>ACAAQAYUAAQCIAICgMgBACCAQRAAAAwgIBAAIwQgCAA=</HashCode>
       <FileName>Views\MainWindow.xaml.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
       <Field Name="ventanaSecundaria" />
-      <Field Name="procesoElectoralActual" />
       <Field Name="_mainWindowViewModel" />
+      <Field Name="procesoElectoralActual" />
     </ShowAsAssociation>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
-  <Class Name="Pactometro.VentanaExportar" BaseTypeListCollapsed="true">
-    <Position X="16.25" Y="3.75" Width="1.5" />
+  <Class Name="Pactometro.VentanaExportar" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="14.5" Y="5.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAgAAAQAAAAAEACAAAAAAAAABAkAAAAAAAACAAAAABA=</HashCode>
+      <HashCode>AAgAAAQAAAAAAACAAAAQAAAABAkAAAAAAAACAAAAAAA=</HashCode>
       <FileName>Views\VentanaExportar.xaml.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -45,36 +41,33 @@
     </ShowAsAssociation>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
-  <Class Name="Pactometro.VentanaModificarPartido" BaseTypeListCollapsed="true">
-    <Position X="19.75" Y="4" Width="1.25" />
+  <Class Name="Pactometro.VentanaModificarPartido" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="12" Y="7" Width="2" />
     <AssociationLine Name="Partido" Type="Pactometro.Partido" ManuallyRouted="true">
       <Path>
-        <Point X="20.173" Y="4" />
-        <Point X="20.173" Y="3.441" />
-        <Point X="26.508" Y="3.441" />
-        <Point X="26.508" Y="4.632" />
+        <Point X="12.531" Y="7.691" />
+        <Point X="12.531" Y="8.5" />
       </Path>
     </AssociationLine>
     <AssociationLine Name="PartidosTemporales" Type="Pactometro.Partido">
       <MemberNameLabel ManuallyPlaced="true">
-        <Position X="0.499" Y="-1.184" />
+        <Position X="-1.184" Y="0.499" />
       </MemberNameLabel>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>BAAAAAAABCAAAAAAAAAAAAAAAAAAAAAAAAACAAAACBA=</HashCode>
+      <HashCode>BAAEAAAABAAAAAAAAAAAAAAAAAAAAAAAAAACAAAACBA=</HashCode>
       <FileName>Views\VentanaModificarPartido.xaml.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
       <Field Name="Partido" />
-      <Field Name="ProcesoElectoral" />
     </ShowAsAssociation>
     <ShowAsCollectionAssociation>
       <Field Name="PartidosTemporales" />
     </ShowAsCollectionAssociation>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="Pactometro.VentanaSecundaria" BaseTypeListCollapsed="true">
-    <Position X="14.25" Y="6.25" Width="1.5" />
+  <Class Name="Pactometro.VentanaSecundaria" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="12" Y="4" Width="1.5" />
     <Compartments>
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
@@ -90,18 +83,10 @@
     </ShowAsCollectionAssociation>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
-  <Class Name="DatosElectorales" BaseTypeListCollapsed="true">
-    <Position X="22.5" Y="1.25" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Model\DatosElectorales.cs</FileName>
-    </TypeIdentifier>
-    <Lollipop Position="0.2" Collapsed="true" />
-  </Class>
   <Class Name="Pactometro.ViewModels.BaseViewModel" Collapsed="true">
     <Position X="11" Y="0.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAFCAFAIAAAAIAAAAAAIgAIAIAAAAKAAgAAAAAA=</HashCode>
+      <HashCode>AAAAAABAAAAAAAAAIBAAAAAIgAAAIAAAACAAAAAAAAA=</HashCode>
       <FileName>ViewModels\BaseViewModel.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -109,61 +94,51 @@
   <Class Name="Pactometro.ViewModels.MainWindowViewModel" Collapsed="true">
     <Position X="9.75" Y="2" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAgAAAAAKAAAAAAAZIBAkGAABJIAAAAAAgABQAgAAA=</HashCode>
+      <HashCode>AgAgAAAAAKgAAAAAAYIBAkGIABJMACAAQAhABQAgAAA=</HashCode>
       <FileName>ViewModels\MainWindowViewModel.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Pactometro.ViewModels.VentanaSecundariaViewModel" Collapsed="true">
     <Position X="12" Y="2" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAQAIAAAAAAAAIAEBAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>EAAAAAECAEAQAIBAAAABAAIAEFIAIAAAAIAAAAAAAAA=</HashCode>
       <FileName>ViewModels\VentanaSecundariaViewModel.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="System.Windows.Window" Collapsed="true">
-    <Position X="19.75" Y="7.5" Width="1.5" />
+    <Position X="17.25" Y="5.5" Width="1.5" />
     <TypeIdentifier />
   </Class>
-  <Class Name="Pactometro.App" Collapsed="true">
-    <Position X="15.5" Y="0.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>App.xaml.cs</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="Pactometro.VentanaAñadirModificar" Collapsed="true">
-    <Position X="13" Y="0.5" Width="1.5" />
+    <Position X="12" Y="5.5" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>BAAIACAADAABiAAAABAQABAACAAAEAQQAACAAAAAAIE=</HashCode>
+      <HashCode>BAAIACAADAABiAAAAAAQABAACAAAEAQQAACAAAAAAJE=</HashCode>
       <FileName>Views\VentanaAñadirModificar.xaml.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="ProcesoSeleccionado" />
+      <Field Name="viewModel" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Field Name="ColeccionElecciones" />
+      <Field Name="PartidosTemporales" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DatosElectorales" Collapsed="true">
+    <Position X="15.5" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Model\DatosElectorales.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="Pactometro.Properties.Resources" Collapsed="true">
-    <Position X="17.25" Y="0.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAABEAAAAQAAAAAAAAAAAAAAAIA=</HashCode>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="Pactometro.Properties.Settings" Collapsed="true">
-    <Position X="15.5" Y="1.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAIAAAAAABAAAAAAAAAAAAAAA=</HashCode>
-    </TypeIdentifier>
-  </Class>
-  <Interface Name="Pactometro.Model.IDatosElectorales">
-    <Position X="24.25" Y="7.5" Width="1.5" />
+  <Interface Name="Pactometro.Model.IDatosElectorales" Collapsed="true">
+    <Position X="15.5" Y="2.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Model\IDatosElectorales.cs</FileName>
     </TypeIdentifier>
   </Interface>
-  <Enum Name="Pactometro.ModoVentana" Collapsed="true">
-    <Position X="15.5" Y="2.75" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAQAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Views\VentanaAñadirModificar.xaml.cs</FileName>
-    </TypeIdentifier>
-  </Enum>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>

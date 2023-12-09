@@ -9,21 +9,18 @@ using System.Linq;
 
 namespace Pactometro
 {
-    /// <summary>
-    /// Lógica de interacción para VentanaModificarPartido.xaml
-    /// </summary>
     public partial class VentanaModificarPartido : Window
     {
         Color colorSeleccionado;
         Partido Partido;
-        ProcesoElectoral ProcesoElectoral;
+        ObservableCollection<Partido> ColeccionPartidos;
         ObservableCollection<Partido> PartidosTemporales; 
 
-        public VentanaModificarPartido(Partido partido, ProcesoElectoral procesoElectoral)
+        public VentanaModificarPartido(Partido partido, ObservableCollection<Partido> coleccionPartidos)
         {
             InitializeComponent();
             Partido = partido;
-            ProcesoElectoral = procesoElectoral;
+            ColeccionPartidos = coleccionPartidos;
             PartidosTemporales = new ObservableCollection<Partido>();
             txtEscaños.PreviewTextInput += Validaciones.AllowOnlyNumbers;
             seleccionadorColor.ItemsSource = typeof(Colors).GetProperties();
@@ -57,6 +54,13 @@ namespace Pactometro
                 return;
             }
 
+            //Verificar que el numero de escaños sea mayor que 0
+            if (int.Parse(escañosText) <= 0)
+            {
+                MessageBox.Show("Por favor, introduce un número válido para los escaños.\nSi deseas eliminar el partido, simplemente seleccionalo y pulsa el boton de eliminar", "Error de entrada", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
             // Validar la entrada de escaños
             if (!int.TryParse(escañosText, out int escañosPartido))
             {
@@ -70,7 +74,7 @@ namespace Pactometro
             PartidosTemporales.Clear();
 
 
-            foreach (Partido partidoProceso in ProcesoElectoral.coleccionPartidos)
+            foreach (Partido partidoProceso in ColeccionPartidos)
             {
                 PartidosTemporales.Add(partidoProceso);
 
@@ -95,10 +99,9 @@ namespace Pactometro
             Partido partidoModificado = new Partido(nombrePartido, escañosPartido, colorSeleccionado);
             PartidosTemporales.Add(partidoModificado);
 
-
-            ProcesoElectoral.coleccionPartidos.Remove(Partido);
+            ColeccionPartidos.Remove(Partido);
             
-            ProcesoElectoral.coleccionPartidos.Add(partidoModificado);
+            ColeccionPartidos.Add(partidoModificado);
 
             this.Close();
         }

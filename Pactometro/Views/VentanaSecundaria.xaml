@@ -14,7 +14,7 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <ToolBar Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Top">
-            <Menu Background="AliceBlue">
+            <Menu Background="AliceBlue" ToolTip="Importar datos en diferentes formatos">
                 <MenuItem Header="Importar Datos" Background="AliceBlue">
                     <MenuItem.Icon>
                         <Image Source="../src/import.png" Width="12" Height="12"/>
@@ -34,7 +34,7 @@
 
             <!-- Menú Exportar con submenús para CSV y JSON -->
             <Menu Background="AliceBlue">
-                <MenuItem Header="Exportar Datos" Background="AliceBlue">
+                <MenuItem Header="Exportar Datos" Background="AliceBlue" ToolTip="Exportar datos en diferentes formatos">
                     <MenuItem.Icon>
                         <Image Source="../src/export.png" Width="14" Height="12"/>
                     </MenuItem.Icon>
@@ -83,7 +83,7 @@
             </Button>
         </ToolBar>
 
-        <ListView Name="mainTable" Grid.Row="1" Margin="10" SelectionChanged="mainTable_SelectionChanged" SelectionMode="Single" ItemsSource="{Binding Elecciones}" HorizontalContentAlignment="Center">
+        <ListView Name="mainTable" Grid.Row="1" Margin="10" SelectionChanged="mainTable_SelectionChanged" SelectionMode="Single" ItemsSource="{Binding Elecciones}" HorizontalContentAlignment="Center" ToolTip="Pulsa en una cabecera para ordenar">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="ELECCIÓN">
@@ -131,7 +131,7 @@
             </ListView>
 
             <!-- ListView secundario -->
-            <ListView Name="secondaryTable" Grid.Row="2" Margin="10" SelectionMode="Single" ItemsSource="{Binding Partidos}">
+        <ListView Name="secondaryTable" Grid.Row="2" Margin="10" SelectionMode="Single" ItemsSource="{Binding Partidos}" ToolTip="Pulsa en una cabecera para ordenar">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Header="PARTIDO">

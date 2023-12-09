@@ -6,12 +6,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Media;
 using System.Drawing.Imaging;
 using Microsoft.Win32;
+using Pactometro.ViewModels;
 
 namespace Pactometro
 {
     public partial class VentanaExportar : Window
     {
         Window mainWindow;
+        private VentanaExportarViewModel viewModel;
 
         public VentanaExportar()
         {
@@ -22,15 +24,14 @@ namespace Pactometro
                 MessageBox.Show("Error: Ventana principal no disponible.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 this.Close();
             }
+            viewModel = new VentanaExportarViewModel();
+            this.DataContext = viewModel;
 
             // Establecer PNG como opción predeterminada
-            formatComboBox.SelectedIndex = 0; // Suponiendo que PNG es el primer ítem en tu ComboBox
+            formatComboBox.SelectedIndex = 0;
 
-            // Ocultar opciones de calidad inicialmente
             ToggleQualityOptionsVisibility(false);
 
-
-            // Ajustar el tamaño de la ventana para PNG
             this.Height = 205;
         }
 
@@ -64,8 +65,8 @@ namespace Pactometro
 
 
                 int quality = GetQualityFromRadioButtons();
-                BitmapEncoder encoder = GetEncoder(selectedFormat, quality);
-                RenderTargetBitmap capturedImage = CaptureContent();
+                BitmapEncoder encoder = viewModel.GetEncoder(selectedFormat, quality);
+                RenderTargetBitmap capturedImage = viewModel.CaptureContent();
 
 
                 // Muestra el menú de la ventana principal
@@ -84,9 +85,8 @@ namespace Pactometro
                 }
 
                 encoder.Frames.Add(BitmapFrame.Create(capturedImage));
-                SaveImage(encoder, selectedFormat);
+                viewModel.SaveImage(encoder, selectedFormat);
 
-                this.DialogResult = true;
                 this.Close();
             }
             catch (Exception ex)
@@ -95,73 +95,12 @@ namespace Pactometro
             }
         }
 
-
-        private BitmapEncoder GetEncoder(string format, int quality)
-        {
-            switch (format)
-            {
-                case "JPG":
-                    JpegBitmapEncoder jpegEncoder = new JpegBitmapEncoder();
-                    jpegEncoder.QualityLevel = quality;
-                    return jpegEncoder;
-                case "PNG":
-                    return new PngBitmapEncoder();
-                default:
-                    throw new InvalidOperationException("Formato no soportado");
-            }
-        }
-
-
         private int GetQualityFromRadioButtons()
         {
             if (radioButtonLow.IsChecked == true) return 33;
             if (radioButtonMedium.IsChecked == true) return 66;
             return 100; // High quality or default
         }
-
-        private RenderTargetBitmap CaptureContent()
-        {
-            if (mainWindow == null)
-            {
-                MessageBox.Show("La ventana principal no está disponible para la captura.");
-                return null;
-            }
-
-            int width = (int)mainWindow.ActualWidth - 15;
-            int height = (int)mainWindow.ActualHeight - 37;
-
-            RenderTargetBitmap rtb = new RenderTargetBitmap(
-                width,
-                height,
-                96, // dpiX
-                96, // dpiY
-                PixelFormats.Pbgra32);
-
-            rtb.Render(mainWindow);
-
-            return rtb;
-        }
-
-
-        private void SaveImage(BitmapEncoder encoder, string format)
-        {
-            SaveFileDialog saveFileDialog = new SaveFileDialog
-            {
-                Filter = $"Image files (*.{format.ToLower()})|*.{format.ToLower()}",
-                // Poner el nombre predeterminado del archivo con la fecha en formato dd-MM-yyyy y la hora en formato HH-mm-ss
-                FileName = $"Pactometro {DateTime.Now.ToString("dd-MM-yyyy HHmmss")}.{format.ToLower()}"
-            };
-
-            if (saveFileDialog.ShowDialog() == true)
-            {
-                using (FileStream fileStream = new FileStream(saveFileDialog.FileName, FileMode.Create))
-                {
-                    // Guarda la imagen en el archivo
-                    encoder.Save(fileStream);
-                }
-            }
-        }
-
 
         private void FormatComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -199,7 +138,7 @@ namespace Pactometro
             if (menu != null) menu.Visibility = Visibility.Collapsed;
 
 
-            RenderTargetBitmap capturedImage = CaptureContent();
+            RenderTargetBitmap capturedImage = viewModel.CaptureContent();
             using (System.Drawing.Bitmap bmp = new System.Drawing.Bitmap(capturedImage.PixelWidth, capturedImage.PixelHeight, System.Drawing.Imaging.PixelFormat.Format32bppArgb))
             {
                 BitmapData data = bmp.LockBits(
@@ -217,26 +156,15 @@ namespace Pactometro
 
                 using (System.Drawing.Bitmap clipboardBmp = new System.Drawing.Bitmap(bmp))
                 {
-                    Clipboard.SetImage(ConvertBitmapToBitmapSource(clipboardBmp));
+                    Clipboard.SetImage(viewModel.ConvertBitmapToBitmapSource(clipboardBmp));
                 }
             }
-
             if (menu != null) menu.Visibility = Visibility.Visible;
             if(flag == 0)
             {
                 if (btnPacto != null) btnPacto.Visibility = Visibility.Visible;
                 if (btnReiniciar != null) btnReiniciar.Visibility = Visibility.Visible;
             }
-            
         }
-        private BitmapSource ConvertBitmapToBitmapSource(System.Drawing.Bitmap bitmap)
-        {
-            var rect = new System.Drawing.Rectangle(0, 0, bitmap.Width, bitmap.Height);
-            var bitmapData = bitmap.LockBits(rect, ImageLockMode.ReadWrite, bitmap.PixelFormat);
-            var bitmapSource = BitmapSource.Create(bitmapData.Width, bitmapData.Height, bitmap.HorizontalResolution, bitmap.VerticalResolution, PixelFormats.Bgra32, null, bitmapData.Scan0, bitmapData.Stride * bitmapData.Height, bitmapData.Stride);
-            bitmap.UnlockBits(bitmapData);
-            return bitmapSource;
-        }
-
     }
 }

@@ -79,6 +79,7 @@
     <Compile Include="Model\DatosElectorales.cs" />
     <Compile Include="Model\IDatosElectorales.cs" />
     <Compile Include="Helpers\Validaciones.cs" />
+    <Compile Include="ViewModels\VentanaExportarViewModel.cs" />
     <Compile Include="Views\VentanaAñadirModificar.xaml.cs">
       <DependentUpon>VentanaAñadirModificar.xaml</DependentUpon>
     </Compile>
@@ -143,7 +144,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="ClassDiagram1.cd" />
     <None Include="Diagrama de objetos.cd" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

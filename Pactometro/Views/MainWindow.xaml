@@ -24,7 +24,7 @@
                 <Separator/>
                 <MenuItem Header="Salir" Click="menuSalir" />
             </MenuItem>
-            <MenuItem Header="Gráficos">
+            <MenuItem Name="menuGraficos" Header="Gráficos">
                 <MenuItem Header="Gráfico 1" Click="Grafico1_Click"/>
                 <MenuItem Header="Gráfico 2" Click="Grafico2_Click"/>
                 <MenuItem Header="Gráfico 3" Click="Grafico3_Click"/>
