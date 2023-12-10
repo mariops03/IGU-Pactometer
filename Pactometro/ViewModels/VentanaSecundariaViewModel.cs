@@ -14,7 +14,6 @@ namespace Pactometro.ViewModels
 {
     public class VentanaSecundariaViewModel : BaseViewModel
     {
-        public ObservableCollection<Partido> Partidos => EleccionSeleccionada?.coleccionPartidos;
 
         public VentanaSecundariaViewModel(ObservableCollection<ProcesoElectoral> elecciones)
         {
@@ -187,6 +186,8 @@ namespace Pactometro.ViewModels
 
         public void AñadirProcesoElectoral()
         {
+            
+
             // Crear una nueva instancia de ProcesoElectoral para añadir
             ProcesoElectoral nuevoProceso = new ProcesoElectoral();
 
@@ -204,6 +205,14 @@ namespace Pactometro.ViewModels
             {
                 MessageBox.Show("No hay ningún proceso electoral seleccionado");
                 return;
+            }
+            // Reestablecer la opacidad de todos los partidos de todos los procesos electorales a 1
+            foreach (var proceso in Elecciones)
+            {
+                foreach (Partido partido in proceso.coleccionPartidos)
+                {
+                    partido.Color = Color.FromArgb(255, partido.Color.R, partido.Color.G, partido.Color.B);
+                }
             }
 
             // Crear la ventana en modo Modificar, pasando el proceso existente
@@ -345,6 +354,48 @@ namespace Pactometro.ViewModels
             List<Partido> ordenada;
 
             ordenada = coleccion.OrderByDescending(p => p.Escaños).ToList();
+
+            coleccion.Clear();
+            foreach (var partido in ordenada)
+            {
+                coleccion.Add(partido);
+            }
+        }
+
+        //Funon para ordenar los partidos por nombre, si ya estan ordenados de forma ascendente, los ordena de forma descendente
+        public void OrdenarPorNombreAlternar(ObservableCollection<Partido> coleccion)
+        {
+            List<Partido> ordenada;
+
+            if (coleccion.SequenceEqual(coleccion.OrderBy(p => p.Nombre)))
+            {
+                ordenada = coleccion.OrderByDescending(p => p.Nombre).ToList();
+            }
+            else
+            {
+                ordenada = coleccion.OrderBy(p => p.Nombre).ToList();
+            }
+
+            coleccion.Clear();
+            foreach (var partido in ordenada)
+            {
+                coleccion.Add(partido);
+            }
+        }
+
+        //Funcion para ordenar los partidos por numnero de escaños, si ya estan ordenadas de forma ascendente, las ordena de forma descendente, recibe la coleccion de partidos como parametro y la ordena
+        public void OrdenarPorEscañosAlternar(ObservableCollection<Partido> coleccion)
+        {
+            List<Partido> ordenada;
+
+            if (coleccion.SequenceEqual(coleccion.OrderBy(p => p.Escaños)))
+            {
+                ordenada = coleccion.OrderByDescending(p => p.Escaños).ToList();
+            }
+            else
+            {
+                ordenada = coleccion.OrderBy(p => p.Escaños).ToList();
+            }
 
             coleccion.Clear();
             foreach (var partido in ordenada)

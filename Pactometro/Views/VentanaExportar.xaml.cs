@@ -3,9 +3,7 @@ using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
-using System.Windows.Media;
 using System.Drawing.Imaging;
-using Microsoft.Win32;
 using Pactometro.ViewModels;
 
 namespace Pactometro
@@ -56,8 +54,8 @@ namespace Pactometro
                 if (btnPacto != null)
                 {
                     if (btnPacto.Visibility == Visibility.Visible) btnPacto.Visibility = Visibility.Collapsed;
+                    else if (btnPacto.Visibility == Visibility.Hidden) flag = 2;
                     else flag = 1;
-
                 }
 
                 var btnReiniciar = (Button)mainWindow.FindName("btnReiniciar");
@@ -69,13 +67,15 @@ namespace Pactometro
                 RenderTargetBitmap capturedImage = viewModel.CaptureContent();
 
 
-                // Muestra el menú de la ventana principal
                 if (menu != null) menu.Visibility = Visibility.Visible;
-
                 if (flag == 0)
                 {
                     if (btnPacto != null) btnPacto.Visibility = Visibility.Visible;
                     if (btnReiniciar != null) btnReiniciar.Visibility = Visibility.Visible;
+                }
+                else if (flag == 2)
+                {
+                    if (btnPacto != null) btnReiniciar.Visibility = Visibility.Visible;
                 }
 
                 if (capturedImage == null)
@@ -127,8 +127,8 @@ namespace Pactometro
             if (btnPacto != null)
             {
                 if(btnPacto.Visibility == Visibility.Visible) btnPacto.Visibility = Visibility.Collapsed;
-                else flag = 1;
-                    
+                else if (btnPacto.Visibility == Visibility.Hidden) flag = 2;
+                else flag = 1;                    
             }
             
             var btnReiniciar = (Button)mainWindow.FindName("btnReiniciar");
@@ -164,6 +164,10 @@ namespace Pactometro
             {
                 if (btnPacto != null) btnPacto.Visibility = Visibility.Visible;
                 if (btnReiniciar != null) btnReiniciar.Visibility = Visibility.Visible;
+            }
+            else if(flag == 2)
+            {
+                if (btnPacto != null) btnReiniciar.Visibility = Visibility.Visible;
             }
         }
     }

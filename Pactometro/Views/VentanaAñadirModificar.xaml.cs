@@ -13,8 +13,7 @@ namespace Pactometro
 {
     public enum ModoVentana
     {
-        Agregar,
-        Modificar
+        Agregar,Modificar
     }
 
     public partial class VentanaAñadirModificar : Window
@@ -66,9 +65,7 @@ namespace Pactometro
                 PartidosTemporales.Add(partido);
             }
         }
-
-        
-
+               
         private void BtnActualizarCrearProceso_Click(object sender, RoutedEventArgs e)
         {
             if (ModoActual == ModoVentana.Agregar)
@@ -202,11 +199,15 @@ namespace Pactometro
             // Verificar si hay un partido seleccionado
             if (lvPartidos.SelectedItem != null)
             {
-                // Eliminar el partido seleccionado de la colección temporal
-                Partido partidoSeleccionado = (Partido)lvPartidos.SelectedItem;
-                PartidosTemporales.Remove(partidoSeleccionado);
+                MessageBoxResult result = MessageBox.Show("¿Estás seguro de que deseas eliminar el partido seleccionado?", "Eliminar partido político", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                if(result == MessageBoxResult.Yes)
+                {
+                    // Eliminar el partido seleccionado de la colección temporal
+                    Partido partidoSeleccionado = (Partido)lvPartidos.SelectedItem;
+                    PartidosTemporales.Remove(partidoSeleccionado);
 
-                lvPartidos.ItemsSource = PartidosTemporales;
+                    lvPartidos.ItemsSource = PartidosTemporales;
+                }
             }
         }
 
@@ -314,7 +315,7 @@ namespace Pactometro
         {
             if (viewModel != null)
             {
-                viewModel.OrdenarPorNombrePartido();
+                viewModel.OrdenarPorNombreAlternar(PartidosTemporales);
             }
         }
 
@@ -322,7 +323,7 @@ namespace Pactometro
         {
             if (viewModel != null)
             {
-                viewModel.OrdenarPorEscañosPartido();
+                viewModel.OrdenarPorEscañosAlternar(PartidosTemporales);
             }
         }
     }

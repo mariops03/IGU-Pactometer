@@ -19,23 +19,23 @@
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <Menu Name="menu" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3">
-            <MenuItem Header="Opciones">
+            <MenuItem Header="Opciones" ToolTip="Opciones de la aplicación">
                 <MenuItem Header="Abrir ventana de datos" Click="menuVentanaSecundaria"/>
                 <Separator/>
                 <MenuItem Header="Salir" Click="menuSalir" />
             </MenuItem>
-            <MenuItem Name="menuGraficos" Header="Gráficos">
+            <MenuItem Name="menuGraficos" Header="Gráficos" ToolTip="Elige entre tres gráficos distintos">
                 <MenuItem Header="Gráfico 1" Click="Grafico1_Click"/>
                 <MenuItem Header="Gráfico 2" Click="Grafico2_Click"/>
                 <MenuItem Header="Gráfico 3" Click="Grafico3_Click"/>
             </MenuItem>
-            <MenuItem Name="btnExportar" Header="Exportar como imagen" Click="Exportar_Click"/>
+            <MenuItem Name="btnExportar" Header="Exportar como imagen" Click="Exportar_Click" ToolTip="Exporta el gráfico actual como imagen"/>
         </Menu>
         <TextBlock Name="txtTitulo" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold"/>
         <Canvas Name="chartCanvas" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Margin="10" Background="LavenderBlush"/>
         
-        <Button Name="btnReiniciar" Grid.Row="3" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Top" Content="Reiniciar" Height="25" Width="125" Click="Reiniciar_Click" Visibility="Collapsed"/>
-        <Button Name="btnPacto" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Top" Content="Pacto" Height="25" Width="125" Click="Pacto_Click" Visibility="Collapsed" IsDefault="True"/>
+        <Button Name="btnReiniciar" Grid.Row="3" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Top" Content="Reiniciar" Height="25" Width="125" Click="Reiniciar_Click" Visibility="Hidden" ToolTip="Pulsa para reiniciar el seleccionador de pactos"/>
+        <Button Name="btnPacto" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Top" Content="Pacto" Height="25" Width="125" Click="Pacto_Click" Visibility="Hidden" IsDefault="True" ToolTip="Pulsa para completar el pacto"/>
             
     </Grid>
 </Window>

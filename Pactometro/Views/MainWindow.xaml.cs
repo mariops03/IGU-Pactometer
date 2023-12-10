@@ -169,8 +169,9 @@ namespace Pactometro
 
         private void menuSalir(object sender, RoutedEventArgs e)
         {
+
             // Preguntar al usuario si desea salir
-            MessageBoxResult result = MessageBox.Show("¿Estás seguro de que quieres salir?", "Salir", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            MessageBoxResult result = MessageBox.Show("¿Estás seguro de que quieres salir?", "Salir", MessageBoxButton.YesNo, MessageBoxImage.Warning);
 
             if (result == MessageBoxResult.Yes)
             {
@@ -818,9 +819,52 @@ namespace Pactometro
 
             emptyBarYPos = yPos + barHeight + barGap;
 
+            bool flag = false;
             // Draw a filled rectangle for each party, within the bounds of the first empty rectangle
             foreach (var partido in procesoElectoralActual.coleccionPartidos)
             {
+                // SI el numero de escaños del partido es superior a la mayoria absoluta, se hace el codigo de la segunda barra
+                if (partido.Escaños >= procesoElectoralActual.mayoriaAbsoluta)
+                {
+                    // Calculate the width of each filled rectangle based on the number of seats
+                    double rectWidth = (anchoTotalBarras / procesoElectoralActual.numEscaños) * partido.Escaños;
+
+                    // Create the filled rectangle
+                    Rectangle filledBar = new Rectangle
+                    {
+                        Height = barHeight,
+                        Width = rectWidth,
+                        ToolTip = partido.Nombre + ": " + partido.Escaños + " escaños",
+                        Tag = partido
+                    };
+
+                    filledBar.MouseLeftButtonDown += Rectangle_Click;
+
+                    try
+                    {
+                        filledBar.Fill = new SolidColorBrush(partido.Color);
+                    }
+                    catch (FormatException)
+                    {
+                        filledBar.Fill = Brushes.Gray; // Usa gris si hay una excepción
+                    }
+
+                    //Se añaade el rectangulo a la lista de rectangulos clicados
+                    _mainWindowViewModel.RectangulosClicados.Add(filledBar);
+
+                    // Position the filled rectangle within the second empty bar
+                    Canvas.SetTop(filledBar, emptyBarYPos);
+                    Canvas.SetLeft(filledBar, xPos);
+
+                    _mainWindowViewModel.OriginalPositions[filledBar] = xPos;
+                    _mainWindowViewModel.PartidosEnSegundaBarra.Add(partido);
+                    xPos += rectWidth;
+                    // Collpased a los botones de pacto y reiniciar
+                    btnPacto.Visibility = Visibility.Collapsed;
+                    btnReiniciar.Visibility = Visibility.Collapsed;
+                    flag = true;
+                }
+
                 //Si el partido no esta en ninguna lista, se hace el codigo normal
                 if (!_mainWindowViewModel.PartidosEnPrimeraBarra.Contains(partido) && !_mainWindowViewModel.PartidosEnSegundaBarra.Contains(partido))
                 {
@@ -912,6 +956,21 @@ namespace Pactometro
             // Añadir la barra de mayoría absoluta al canvas
             chartCanvas.Children.Add(barraMayoriaAbsoluta);
 
+            if(flag == true)
+            {
+                MessageBox.Show("¡EL PARTIDO " + _mainWindowViewModel.PartidosEnSegundaBarra.FirstOrDefault().Nombre + " TIENE MAYORÍA ABSOLUTA!");
+                // Desuscribirse del evento de click de los rectangulos
+                foreach (var rectangulo in _mainWindowViewModel.RectangulosClicados)
+                {
+                    rectangulo.MouseLeftButtonDown -= Rectangle_Click;
+                }
+
+                foreach (var rectangulo in _mainWindowViewModel.RectangulosNoClicados)
+                {
+                    rectangulo.MouseLeftButtonDown -= Rectangle_Click;
+                }
+            }
+
         }
 
         //Crea un evento para reiniciar el grafico
@@ -919,12 +978,30 @@ namespace Pactometro
         {
             _mainWindowViewModel.reiniciarPactometro();
             mostrarGrafico3();
+            Grid.SetColumnSpan(btnReiniciar, 1);
         }
 
         //Crea un evento para completar un pacto
         private void Pacto_Click(object sender, RoutedEventArgs e)
         {
             _mainWindowViewModel.pactoCompletado();
+            // Desuscribirse del evento de click de los rectangulos
+            foreach (var rectangulo in _mainWindowViewModel.RectangulosClicados)
+            {
+                rectangulo.MouseLeftButtonDown -= Rectangle_Click;
+            }
+
+            foreach (var rectangulo in _mainWindowViewModel.RectangulosNoClicados)
+            {
+                rectangulo.MouseLeftButtonDown -= Rectangle_Click;
+            }
+
+            // Oculta el boton de pacto y pon el de reiniciar en el medio, que ocupe todo el ancho
+            btnPacto.Visibility = Visibility.Hidden;
+            
+            //haz que el columnspan del boton de reiniciar sea 3
+            Grid.SetColumnSpan(btnReiniciar, 3);
+
         }
     }
 }

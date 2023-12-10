@@ -12,8 +12,6 @@ namespace Pactometro
     /// </summary>
     public partial class VentanaSecundaria : Window
     {
-        private ObservableCollection<ProcesoElectoral> ColeccionElecciones;
-
         // Definir el evento para notificar la selección
         public event EventHandler<ProcesoElectoral> ProcesoEleccionSeleccionado;
 
@@ -24,7 +22,6 @@ namespace Pactometro
             InitializeComponent();
             _viewModelVentanaSecundaria = new VentanaSecundariaViewModel(coleccionElecciones);
             this.DataContext = _viewModelVentanaSecundaria;
-            ColeccionElecciones = coleccionElecciones;
             _viewModelVentanaSecundaria.OrdenarPorFechaDescendente();
         }
 
@@ -122,7 +119,11 @@ namespace Pactometro
 
         private void btnEliminar_Click(object sender, RoutedEventArgs e)
         {
-            _viewModelVentanaSecundaria.eliminarProcesoElectoral();
+            MessageBoxResult result = MessageBox.Show("¿Estás seguro de que deseas eliminar el proceso electoral seleccionado?", "Eliminar proceso electoral", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            if (result == MessageBoxResult.Yes)
+            {
+                _viewModelVentanaSecundaria.eliminarProcesoElectoral();
+            }
         }
     }
 }

@@ -65,7 +65,7 @@
         <!-- Botones -->
         <Button Name="btnAñadirModificar"  Grid.Column="1" Grid.Row="8" Width="120" Height="30" Margin="10" Content="Añadir Proceso" Click="BtnActualizarCrearProceso_Click" IsDefault="True"/>
         <!-- ListView para mostrar los partidos -->
-        <ListView Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="7" Margin="10" Name="lvPartidos" Height="150" SelectionChanged="lvPartidos_SelectionChanged" SelectionMode="Single">
+        <ListView Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="7" Margin="10" Name="lvPartidos" Height="150" SelectionChanged="lvPartidos_SelectionChanged" SelectionMode="Single" ToolTip="Pulsa en una cabecera para ordenar">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="PARTIDO" DisplayMemberBinding="{Binding Nombre}" Width="200">

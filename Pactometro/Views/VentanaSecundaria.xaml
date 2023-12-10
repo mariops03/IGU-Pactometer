@@ -131,7 +131,7 @@
             </ListView>
 
             <!-- ListView secundario -->
-        <ListView Name="secondaryTable" Grid.Row="2" Margin="10" SelectionMode="Single" ItemsSource="{Binding Partidos}" ToolTip="Pulsa en una cabecera para ordenar">
+        <ListView Name="secondaryTable" Grid.Row="2" Margin="10" SelectionMode="Single" ToolTip="Pulsa en una cabecera para ordenar">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Header="PARTIDO">
